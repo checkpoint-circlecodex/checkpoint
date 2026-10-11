@@ -9,16 +9,15 @@
 
 ## Prochaine action
 
-**Étape 4, troisième passe — la feuille de personnage et les Quêtes.**
+**Étape 4, quatrième passe — les Quêtes, la Loge, la lignée, le Greffe.**
 
-Quatre vues réelles tiennent (11 octobre) : l'accueil, le Répertoire, la
-**fiche** d'une œuvre et les **Ordres** — racine et chambres, avec les cinq
-trames animées.
+Cinq vues réelles tiennent (11 octobre) : l'accueil, le Répertoire, la fiche,
+les Ordres (racine et chambres), et la **feuille de personnage** avec ses
+volets à glissement latéral et sa ligne de caractère.
 
-Restent : la **feuille** de personnage (et ses volets), les **Quêtes** et
-leurs planches, la **lignée**, la **Grande Loge**, le **Greffe**, le
-**volet-lanceur**. Puis les écritures — inscrire, poser un checkpoint,
-prendre la parole, distinguer.
+Restent : les **Quêtes** et leurs planches, la **Grande Loge**, la
+**lignée**, le **Greffe**, le **volet-lanceur**. Puis les écritures —
+inscrire, poser un checkpoint, prendre la parole, distinguer.
 
 Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
 
@@ -256,6 +255,25 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — la feuille, et la ligne de caractère
+
+- **La saillance tient ses promesses.** Sept feuilles, sept lignes
+  différentes : *« N'a jamais rien lâché, écrit sur presque tout, CCI heures
+  au compteur »*, *« IV œuvres laissées en chemin, CDIX heures au compteur,
+  juge plus durement que l'Ordre »*, *« Surtout des jeux, se lasse plus
+  souvent que les autres »*. C'était tout l'enjeu : réciter les mêmes trois
+  traits pour tout le monde aurait produit des feuilles interchangeables.
+  **Vérifié sur sept personnes, pas sur une.**
+- **Les volets glissent, ils ne zooment pas.** Un composant de noyau
+  (`Panes`) porte le geste une fois pour toutes, avec le même filet que la
+  Scène : clone du volet sortant, minuteur qui l'emporte. Mesuré : un seul
+  volet après trois changements.
+- **Le HMR a encore menti.** Deuxième fois dans la même soirée : la feuille
+  rendait le Répertoire. Recharger avant de conclure est désormais un réflexe
+  — et c'est moins cher qu'une demi-heure à débuguer du code juste.
+- La feuille **porte la trame de son Ordre à présence réduite** (45 %) :
+  touchée par lui, sans être la chambre.
 
 ### 11 octobre 2026 — la fiche, les Ordres, et les cinq trames
 

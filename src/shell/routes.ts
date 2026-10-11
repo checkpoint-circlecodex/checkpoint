@@ -3,10 +3,12 @@
 
 import type { ViewEntry } from "$core/ui/registry.ts";
 import type { CircleId, MediaType } from "$core/model/schema.ts";
+import { registre } from "$core/model/store.svelte.ts";
 import { home } from "$features/home/index.ts";
 import { works } from "$features/works/index.ts";
 import { folio } from "$features/folio/index.ts";
 import { orders } from "$features/orders/index.ts";
+import { soul } from "$features/soul/index.ts";
 
 export const REGISTRY: ViewEntry[] = [orders, works];
 export const HOME = home;
@@ -19,6 +21,10 @@ export type Route = { entry: ViewEntry; props: Record<string, unknown>; key: str
     produirait un geste au hasard, donc un geste qui ne veut plus rien dire. */
 export function route(hash: string): Route {
   const h = hash || "#/";
+  if (h.startsWith("#/personne/"))
+    return { entry: soul, props: { id: h.slice(11) }, key: h, depth: 3 };
+  if (h.startsWith("#/profil"))
+    return { entry: soul, props: { id: registre.me ?? "" }, key: "#/profil", depth: 3 };
   if (h.startsWith("#/fiche/"))
     return { entry: folio, props: { id: h.slice(8) }, key: h, depth: 2 };
   if (h.startsWith("#/cercles/"))

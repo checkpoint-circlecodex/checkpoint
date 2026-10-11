@@ -44,3 +44,30 @@ export function magnum(w: World, cid: CircleId, pref: "vo" | "fr" = "fr"): Magnu
       (b.avg ?? 0) - (a.avg ?? 0) ||
       titleOf(w, a.id, pref).localeCompare(titleOf(w, b.id, pref), "fr"));
 }
+
+/* --- Le tempérament, et la ligne de caractère ---------------------------- */
+
+export type Temper = {
+  avg: number | null; gavg: number | null;
+  /** L'écart au jugement du groupe. Négatif : juge plus durement. */
+  sev: number | null;
+  rate: number; grate: number;
+  pref: string | null; prefShare: number;
+};
+
+export function temper(w: World, rows: typeof w.rows): Temper {
+  const all = w.rows;
+  const a = avgOf(rows), ga = avgOf(all);
+  const done = (r: { status: string }) => r.status === "completed" || r.status === "mastered";
+  const fin = rows.filter(done).length, eng = rows.filter(r => r.status !== "wishlist").length;
+  const gfin = all.filter(done).length, geng = all.filter(r => r.status !== "wishlist").length;
+  const k: Record<string, number> = {};
+  for (const r of rows) { const t = w.catalog[r.mediaId]?.mediaType; if (t) k[t] = (k[t] ?? 0) + 1; }
+  const top = Object.entries(k).sort((x, y) => y[1] - x[1])[0];
+  return {
+    avg: a, gavg: ga,
+    sev: a !== null && ga !== null ? a - ga : null,
+    rate: eng ? fin / eng : 0, grate: geng ? gfin / geng : 0,
+    pref: top ? top[0] : null, prefShare: top && rows.length ? top[1] / rows.length : 0,
+  };
+}
