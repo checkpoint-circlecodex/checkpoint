@@ -23,3 +23,20 @@ jobs:
         run: npm run check
       - name: Construction
         run: npx vite build
+
+  natif:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Dépendances système de Tauri
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: "src-tauri -> target" }
+      - name: Compilation et essais
+        # Sans CHECKPOINT_TOKEN les essais d'intégration s'abstiennent au lieu
+        # d'échouer : la CI n'a rien à écrire dans le dépôt de données, et on
+        # n'y met pas de jeton.
+        run: cargo test --manifest-path src-tauri/Cargo.toml -- --nocapture
