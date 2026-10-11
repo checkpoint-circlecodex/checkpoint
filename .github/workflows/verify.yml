@@ -1,0 +1,25 @@
+name: Vérifier
+
+# L'invariant 11 dit « vérifié par une règle de lint, pas par la discipline ».
+# Un script qu'on lance quand on y pense EST de la discipline : il faut qu'une
+# machine le lance à chaque poussée, sinon la règle n'en est pas une.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  front:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: "24", cache: npm }
+      - run: npm ci
+      - name: Dépendances entre couches
+        run: npm run check:layers
+      - name: Types
+        run: npm run check
+      - name: Construction
+        run: npx vite build

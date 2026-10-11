@@ -1,0 +1,38 @@
+/* ============================================================================
+   Les jetons de l'identité, repris tels quels du prototype — qui fait foi.
+   Ne rien inventer ici : une teinte qui dérive de quelques points casse le
+   « blanc cassé » plus sûrement qu'une faute franche.
+   ============================================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Spectral:ital,wght@0,300;0,400;1,300;1,400&display=swap");
+
+:root{
+  --paper:#EFEDE7; --raise:#F6F5F1; --sink:#E5E2D9;
+  --ink:#141412; --ink2:#46443E; --dim:#8B877E; --faint:#B4AFA4;
+  --rule:#D6D1C6; --rule2:#C2BCAE;
+  --une:#F5F4EF; --une-hi:#FFFEFB;   /* la feuille de la une, et sa respiration */
+  --mage:#3F6FB8; --guerrier:#B5453A; --ranger:#2F7D55;
+  --soigneur:#A8762A; --barde:#6E4B9E;
+  --fs:"Instrument Serif",Georgia,serif;
+  --fr:"Spectral",Georgia,serif;
+  --fu:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --rail:236px; --railc:60px;
+  --e:cubic-bezier(.2,.75,.25,1); --e-io:cubic-bezier(.6,0,.25,1);
+  --t1:120ms; --t2:220ms; --t3:380ms;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--paper);color:var(--ink);font-family:var(--fu);font-size:13px;
+  line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden;
+  font-variant-numeric:tabular-nums;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left;}
+input{font:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:1.5px solid var(--ink);outline-offset:2px;}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-thumb{background:var(--rule2);border:3px solid transparent;background-clip:content-box;}
+
+/* ---- grain : une surface, pas un effet ---- */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.33;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");}
