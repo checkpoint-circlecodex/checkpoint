@@ -1,59 +1,61 @@
-/* Le faux stockage, en mémoire. Il existe pour que le noyau et les vues
-   puissent être écrits et vérifiés avant que la vraie couche GitHub ne soit
-   là — et pour que les tests n'aient jamais besoin du réseau. */
+/* Le faux, en mémoire. Il existe pour que le noyau et les vues s'écrivent et
+   se vérifient sans réseau ni jeton — et pour que le serveur de
+   développement, ouvert dans un navigateur, montre quelque chose.
 
-import { ConflictError, type Blob, type Cache, type Platform, type Secrets, type Storage } from "./types";
+   Règle : **un faux ment sur la source, jamais sur la forme.** Le conflit se
+   déclenche ici par comparaison de SHA, exactement comme GitHub le rend ; un
+   faux qui accepterait toujours l'écriture ne vaudrait rien. */
 
-export function fakeStorage(seed: Record<string, string> = {}): Storage {
-  const files = new Map<string, Blob>();
+import { ConflictError, type Cache, type Platform, type Session, type Storage, type TreeEntry } from "./types";
+
+export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmichael"): Platform {
+  const files = new Map<string, { sha: string; text: string }>();
+  const blobs = new Map<string, string>();
   let n = 0;
-  const sha = () => `fake${(++n).toString(16).padStart(8, "0")}`;
-  for (const [path, text] of Object.entries(seed)) files.set(path, { path, sha: sha(), text });
+  const put = (path: string, text: string) => {
+    const sha = `fake${(++n).toString(16).padStart(36, "0")}`;
+    files.set(path, { sha, text });
+    blobs.set(sha, text);
+    return sha;
+  };
+  for (const [path, text] of Object.entries(seed)) put(path, text);
 
-  return {
-    async list() {
-      return [...files.values()].map(({ path, sha }) => ({ path, sha }));
+  const storage: Storage = {
+    async me() { return who; },
+    async list(): Promise<TreeEntry[]> {
+      return [...files].map(([path, f]) => ({ path, sha: f.sha }));
     },
-    async read(path) {
-      return files.get(path) ?? null;
+    async readBlob(sha) {
+      const t = blobs.get(sha);
+      if (t === undefined) throw new Error(`blob inconnu : ${sha}`);
+      return t;
     },
-    async write(path, text, expected, _message) {
+    async write(path, text, sha, _message) {
       const cur = files.get(path) ?? null;
-      /* Le conflit se simule exactement comme GitHub le rend : on compare le
-         SHA qu'on croyait remplacer, pas le contenu. */
-      if ((cur?.sha ?? null) !== expected) throw new ConflictError(path);
-      const next: Blob = { path, sha: sha(), text };
-      files.set(path, next);
-      return next;
+      if ((cur?.sha ?? null) !== sha) throw new ConflictError(path);
+      return { path, sha: put(path, text) };
     },
-    async openIssue(title, _body) {
+    async openIssue(title) {
       return { number: 1, url: `fake://issue/1#${encodeURIComponent(title)}` };
     },
-    async roleOf(login) {
-      return login === "ncarmichael" ? "admin" : "member";
+    async roleOf(login) { return login === "ncarmichael" ? "admin" : "member"; },
+  };
+
+  const mem = new Map<string, string>();
+  const cache: Cache = {
+    async get(k) { return mem.get(k) ?? null; },
+    async set(k, v) { mem.set(k, v); },
+    async clear() { const n = mem.size; mem.clear(); return n; },
+  };
+
+  const session: Session = {
+    async has() { return true; },
+    async start() {
+      return { deviceCode: "fake", userCode: "FAKE-0000", uri: "https://github.com/login/device", expiresIn: 900, interval: 5 };
     },
+    async poll() { return { state: "ok", login: who }; },
+    async forget() {},
   };
-}
 
-export function fakeSecrets(): Secrets {
-  const m = new Map<string, string>();
-  return {
-    async get(k) { return m.get(k) ?? null; },
-    async set(k, v) { m.set(k, v); },
-    async clear(k) { m.delete(k); },
-  };
+  return { storage, cache, session };
 }
-
-export function fakeCache(): Cache {
-  const m = new Map<string, string>();
-  return {
-    async get(k) { return m.get(k) ?? null; },
-    async set(k, v) { m.set(k, v); },
-  };
-}
-
-export const fakePlatform = (seed?: Record<string, string>): Platform => ({
-  storage: fakeStorage(seed),
-  secrets: fakeSecrets(),
-  cache: fakeCache(),
-});

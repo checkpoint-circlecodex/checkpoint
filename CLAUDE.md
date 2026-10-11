@@ -171,12 +171,19 @@ pas contourner.
 27. **Écrire dans la Loge se groupe, ça ne se commite pas message par message.**
    Un fil bavard sans regroupement noierait l'historique du dépôt — l'historique
    est ce qui rend les données réparables, c'est lui qu'on protège.
-   ⚠️ **Corrigé le 10 octobre, par la mesure :** un `304 Not Modified` **décompte
-   du quota**, contrairement à ce qu'on lit partout — cinq relectures
-   conditionnelles, cinq décomptes. Le raisonnement porte donc sur le
-   **budget**, jamais sur une gratuité : 5 000 appels/h et par personne,
-   relire l'arbre toutes les 20 s en coûte 180, soit 3,6 %. L'`ETag` reste
-   utile — il économise la bande passante et le temps, pas le quota.
+   ⚠️ **Corrigé deux fois. Lire la deuxième correction, pas la première.**
+   Le 10 octobre, le spike a mesuré qu'un `304 Not Modified` décompte du
+   quota — **mais sans jeton**, et il l'avait lui-même signalé : « à refaire
+   authentifié ». Le 11 octobre, authentifié, **c'est l'inverse : trois
+   relectures conditionnelles, aucun décompte** (4 976 → 4 976 → 4 976).
+   Un essai d'intégration le tient désormais (`src-tauri/tests/github.rs`),
+   pour que ce soit une machine qui le dise si GitHub change d'avis.
+   **La leçon est méthodologique et elle vaut plus que le fait :
+   on mesure dans la condition où l'on sera, pas dans celle qui se mesure
+   facilement.** Un chiffre juste pris dans le mauvais régime est un faux.
+   Le raisonnement reste prudent pour autant : relire l'arbre toutes les 20 s
+   coûterait 180 appels/h sur 5 000 **si rien n'était conditionnel**, soit
+   3,6 % — c'est le plafond, et il tient même si la gratuité disparaissait.
 28. *(Données)* **Une quête vit dans le fragment de qui l'ouvre ; son
    accomplissement ne se stocke jamais.** `quests[]` porte un nom, une ligne et
    des **épreuves** — un palier atteint sur un groupe d'œuvres. Qui l'a

@@ -38,7 +38,22 @@ réelle rangera le jeton dans le trousseau système (invariant 15).
 *Nettoyage fait le 11 octobre : `data/_spike.json` retiré, issue de test
 refermée.*
 
-### Sur ce dernier point
+### ⚠️ Et cette ligne-là a été corrigée le 11 octobre
+
+**Le `304` ne décompte pas, quand on est authentifié.** Le tableau ci-dessous
+avait raison de ce qu'il mesurait et tort de ce qu'il en concluait : il
+mesurait **sans jeton**, parce qu'il n'en avait pas encore. Il l'avait d'ailleurs
+écrit lui-même, plus bas : *« à refaire authentifié »*.
+
+Refait le 11 octobre, authentifié : **trois relectures conditionnelles, aucun
+décompte** (4 976 → 4 976 → 4 976). Le fait est désormais tenu par un essai
+d'intégration, `src-tauri/tests/github.rs`, pour que ce soit une machine qui
+parle si GitHub change d'avis.
+
+**La leçon vaut plus que le fait : on mesure dans la condition où l'on sera,
+pas dans celle qui se mesure facilement.**
+
+## Sur ce dernier point
 
 On lit partout qu'un `304 Not Modified` ne compte pas dans le quota. **Mesuré,
 c'est faux** : `restant 34 → 33 → 32 → 31 → 30 → 29` sur cinq relectures.

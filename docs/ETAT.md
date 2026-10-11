@@ -9,28 +9,22 @@
 
 ## Prochaine action
 
-**Étape 2 du portage — la plateforme réelle.**
+**Étape 3 du portage — le noyau.**
 
-Le squelette tient (étape 1, 11 octobre) : Tauri 2 + Svelte 5 + TypeScript,
-les trois couches, le vérificateur de dépendances, la CI verte, une fenêtre
-qui s'ouvre. La plateforme n'est encore que ses **interfaces** et un **faux en
-mémoire**.
+La plateforme est réelle (étape 2, 11 octobre) : arbre Git, blobs adressés par
+leur contenu, écriture avec `ConflictError`, ouverture d'issue, lecture de
+rôle, device flow, jeton qui ne traverse jamais le pont, cache de blobs sans
+invalidation. **Quatre essais d'intégration tournent contre le vrai dépôt.**
 
-L'étape 2 écrit les vraies implémentations, en reprenant ce que le spike a
-mesuré — **réécrit, pas copié** :
+L'étape 3 : le modèle et sa migration, la fusion (avec le repli des alias à la
+lecture), les sélecteurs partagés, le design system, les surfaces. C'est le
+cœur recopié du prototype — mais typé, découpé, et vérifiable.
 
-- `storage.ts` — arbre Git en un appel, blobs conditionnels, écriture avec
-  `ConflictError` sur SHA périmé, ouverture d'issue, lecture de rôle.
-- `secrets.ts` — jeton dans le trousseau, via Rust. Implémentation
-  **portable** (invariant 15, et c'est ce qui garde l'APK bon marché).
-- `cache.ts` — cache fichier, pour que seule la première ouverture paie.
-- Le **device flow** côté Rust : c'est là que la coque native gagne sa place.
-
-Les étapes suivantes : 3 le noyau · 4 les vues · 5 l'entrée dans le groupe en
-dur · 6 la livraison (Actions trois OS, updater, bandeau de version).
+Ensuite : 4 les vues · 5 l'entrée dans le groupe en dur · 6 la livraison.
 
 ⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding dans la barre
-latérale, et la section « banc d'essai » du Greffe.
+latérale, la section « banc d'essai » du Greffe, et l'écran d'essai actuel de
+`App.svelte`.
 
 ---
 
@@ -263,6 +257,38 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — la plateforme réelle, et une correction de correction
+
+- **Le jeton ne traverse jamais le pont.** L'interface `Session` n'a pas de
+  `get()` : le device flow l'écrit côté Rust, le client GitHub le lit côté
+  Rust, et l'interface web ne peut que demander *s'il y en a un*. **Une
+  méthode qui rend un secret finit par être appelée** — mieux vaut qu'elle
+  n'existe pas.
+- **Une commande générique, mais pas un passe-partout.** `gh(method, path)`
+  concatène `path` à `https://api.github.com` : la page ne peut désigner aucun
+  autre hôte. Si elle était compromise un jour, elle ne pourrait pas faire
+  voyager le jeton ailleurs.
+- **Le cache est adressé par le contenu.** Un blob Git ne change jamais de
+  SHA : ce cache n'a donc **aucune politique d'invalidation à tenir**, et
+  c'est la seule sorte de cache qui ne peut pas mentir. Les clés sont
+  vérifiées comme hexadécimales avant de devenir des noms de fichiers.
+- **Un faux ment sur la source, jamais sur la forme.** Le faux stockage
+  déclenche son conflit par comparaison de SHA, comme GitHub.
+- **La requête HTTP a été séparée de la commande Tauri** pour être essayable
+  sans coque. Quatre essais tournent maintenant contre le vrai dépôt :
+  l'arbre, le 409 sur SHA périmé (provoqué puis nettoyé), le rôle dans
+  l'organisation, et le quota.
+- ⚠️ **Et c'est le quatrième qui a corrigé une correction.** Le spike avait
+  mesuré qu'un `304` décompte du quota ; **authentifié, il ne décompte pas**
+  — trois relectures, 4 976 → 4 976 → 4 976. Le spike mesurait **sans jeton**,
+  faute d'en avoir un, et il avait lui-même noté « à refaire authentifié ».
+  J'avais propagé le chiffre dans trois documents sans honorer la réserve.
+  **On mesure dans la condition où l'on sera, pas dans celle qui se mesure
+  facilement** — un chiffre juste pris dans le mauvais régime est pire qu'une
+  ignorance, parce qu'on s'y appuie. Corrigé dans la note mère, la spec v17 et
+  le README du spike, et **tenu par un essai** pour que la prochaine
+  contradiction vienne d'une machine.
 
 ### 11 octobre 2026 — le portage commence
 

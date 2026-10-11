@@ -370,7 +370,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 <div class="page">
 
 <header class="masthead">
-  <p class="eyebrow">Document de conception · v16 · 11 octobre 2026</p>
+  <p class="eyebrow">Document de conception · v17 · 11 octobre 2026</p>
   <h1>Checkpoint</h1>
   <p class="deck">Un tracker de jeux partagé au sein d'un groupe d'une vingtaine de personnes. Une application de bureau — Mac, Windows, Linux — distribuée librement, dont l'accès aux données passe par une adhésion validée. Pas de serveur, pas de base à administrer.</p>
   <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v16</span> ou <span class="rev">révisé v16</span> ont bougé depuis la version précédente.</p>
@@ -641,11 +641,12 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
     <div class="callout">
       <span class="lbl">Mesuré, pas supposé — 10 octobre 2026</span>
       <p>Ce tableau a d'abord été écrit de mémoire, et <strong>une de ses lignes était fausse</strong>. Le spike (<code>spike/spike.mjs</code>) interroge GitHub pour de vrai&nbsp;: l'arbre Git rend <strong>319 entrées en un appel, 218&nbsp;ms</strong>&nbsp;; vingt fichiers à froid en parallèle prennent <strong>395&nbsp;ms</strong>&nbsp;; et le device flow n'expose <strong>aucun en-tête CORS</strong>, préflight compris — la coque native est donc la condition, pas un confort.</p>
+      <p><span class="rev new">nouveau v17</span> <strong>Puis la correction a été corrigée</strong>, et c'est la leçon la plus utile de tout ce tableau&nbsp;: le spike mesurait <em>sans jeton</em>, faute d'en avoir un. Le même essai, authentifié, dit l'inverse. <strong>On mesure dans la condition où l'on sera, pas dans celle qui se mesure facilement</strong> — un chiffre juste pris dans le mauvais régime est un faux, et il est pire qu'une ignorance parce qu'on s'y appuie.</p>
     </div>
     <div class="tw"><table>
       <thead><tr><th>Ce qu'on craint</th><th>Ce qu'il en est</th></tr></thead>
       <tbody>
-        <tr><td>Le quota d'API explose si on relit souvent</td><td><strong>Non, mais pas pour la raison qu'on croit.</strong> <span class="rev">corrigé v14</span> On lit partout qu'un <code>304 Not Modified</code> ne compte pas&nbsp;; <strong>le spike l'a mesuré et c'est faux</strong> — cinq relectures conditionnelles, cinq décomptes. L'argument porte donc sur le <em>budget</em>&nbsp;: <strong>5 000 appels par heure et par personne</strong>, et relire l'arbre toutes les vingt secondes en coûte 180, soit <strong>3,6 %</strong>. L'<code>ETag</code> reste utile — il économise la bande passante et le temps, pas le quota</td></tr>
+        <tr><td>Le quota d'API explose si on relit souvent</td><td><strong>Non.</strong> <span class="rev">corrigé v17</span> ⚠️ <strong>Cette ligne a été fausse deux fois, dans les deux sens.</strong> Le spike du 10 octobre avait mesuré qu'un <code>304</code> décompte — <strong>mais sans jeton</strong>, et il avait lui-même écrit «&nbsp;à refaire authentifié&nbsp;». Authentifié, le 11 octobre&nbsp;: <strong>trois relectures conditionnelles, aucun décompte</strong> (4 976 → 4 976). Un essai d'intégration le tient maintenant. Et l'argument reste prudent&nbsp;: même si la gratuité disparaissait, relire l'arbre toutes les vingt secondes coûterait 180 appels sur <strong>5 000 par heure et par personne</strong>, soit <strong>3,6 %</strong></td></tr>
         <tr><td>Vingt personnes qui écrivent en même temps</td><td><strong>Tenable, à une condition</strong>&nbsp;: grouper. Un commit par message heurterait les limites secondaires de GitHub et noierait l'historique. Le client accumule et écrit après quelques secondes d'inactivité&nbsp;; une rafale de dix messages fait un ou deux commits</td></tr>
         <tr><td>Le dépôt gonfle sans fin</td><td><strong>Lentement.</strong> Du texte, compressé et repaqueté par GitHub. À vingt personnes et trente messages par jour, on parle de dizaines de méga-octets par <em>an</em>, très loin des seuils. Les Loges anciennes s'archivent par année si besoin</td></tr>
         <tr><td>Ce ne sera jamais instantané</td><td><strong>Exact, et c'est le seul vrai coût.</strong> Le plancher de latence est l'intervalle de relecture — quinze à trente secondes. Aucun hébergement Git ne changera ça</td></tr>
@@ -1112,7 +1113,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 </section>
 
 <footer>
-  <span>Checkpoint — document de conception v16</span>
+  <span>Checkpoint — document de conception v17</span>
   <span>11 octobre 2026</span>
   <span><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience →</a></span>
 </footer>
