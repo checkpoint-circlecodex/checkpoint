@@ -9,15 +9,17 @@
 
 ## Prochaine action
 
-**Étape 4, quatrième passe — les Quêtes, la Loge, la lignée, le Greffe.**
+**Étape 4, dernière passe de lecture — la lignée, le Greffe, le
+volet-lanceur.** Puis les **écritures**.
 
-Cinq vues réelles tiennent (11 octobre) : l'accueil, le Répertoire, la fiche,
-les Ordres (racine et chambres), et la **feuille de personnage** avec ses
-volets à glissement latéral et sa ligne de caractère.
+Sept vues réelles tiennent (11 octobre) : l'accueil, le Répertoire, la fiche,
+les Ordres avec leurs **cinq volets** (chambre, annales, magnum opus, quêtes,
+**Grande Loge**), la feuille de personnage, les **Quêtes** et leurs planches.
 
-Restent : les **Quêtes** et leurs planches, la **Grande Loge**, la
-**lignée**, le **Greffe**, le **volet-lanceur**. Puis les écritures —
-inscrire, poser un checkpoint, prendre la parole, distinguer.
+Restent en lecture : la **lignée**, le **Greffe**, le **volet-lanceur**.
+Puis les écritures — inscrire une œuvre, poser un checkpoint, prendre la
+parole, surligner, distinguer, ouvrir une quête. **Tout ce qui est fait
+jusqu'ici est en lecture seule.**
 
 Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
 
@@ -255,6 +257,31 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — les Quêtes et la Grande Loge
+
+- ⚠️ **Deux intentions se disputaient le même défilement.** « Le fil s'ouvre
+  en bas » et « rouvrir ramène à l'endroit exact d'où l'on vient » visaient
+  tous deux `scrollTop`, et le défaut écrasait l'explicite : le retour visait
+  juste, puis sautait en fin de fil sans que rien ne le dise. **L'intention
+  explicite doit gagner sur le défaut** — un drapeau le dit maintenant.
+  Mesuré : les trois surlignés reviennent à 143 px, soit exactement le tiers
+  de la vue, à chaque fois.
+- **`offsetTop` se mesure depuis le premier ancêtre positionné.** Le fil
+  n'était pas positionné, donc le retour partait de 400 px trop haut. Et
+  c'est bien `offsetTop` qu'il faut, pas `getBoundingClientRect` : le volet
+  est peut-être en train de glisser, et une mesure prise pendant une
+  transformation inclut la transformation (invariant 18).
+- **La chambre a repris ses cinq volets** — chambre, annales, magnum opus,
+  quêtes, Grande Loge — à glissement latéral. Le compteur de la Loge affiche
+  **zéro** pour qui n'est pas de l'Ordre : on ne révèle pas même le nombre.
+- **La porte close vouvoie**, seule de toute l'application. Vérifié depuis un
+  Mage dans la Loge des Guerriers.
+- **L'inclinaison d'une planche est tirée de son nom**, pas du hasard : une
+  pancarte doit pencher pareil à chaque ouverture, sinon ce n'est plus la
+  même pancarte.
+- Vérifié : 12 messages, 7 séparateurs de jour, 1 groupement, 3 surlignés,
+  le fil ouvert en bas ; VII planches, I accomplie, IV en chemin.
 
 ### 11 octobre 2026 — la feuille, et la ligne de caractère
 

@@ -7,7 +7,9 @@
   import { Face } from "$core/ui/index.ts";
   import { burst } from "$core/ui/burst.ts";
   import { weave } from "$core/ui/weave.ts";
-  import { avgOf, magnum, membersOf, register, titleOf } from "$core/selectors/index.ts";
+  import { Panes } from "$core/ui/index.ts";
+  import Loge from "./Loge.svelte";
+  import { avgOf, logeOf, magnum, membersOf, questsInCircle, register, speaksIn, titleOf } from "$core/selectors/index.ts";
   import { inCircle } from "$core/model/world.ts";
   import type { CircleId } from "$core/model/schema.ts";
 
@@ -20,6 +22,19 @@
   const rows = $derived(cid ? w.rows.filter(inCircle(w, cid)) : []);
   const annals = $derived(cid ? register(w, inCircle(w, cid)).slice(0, 12) : []);
   const opus = $derived(cid ? magnum(w, cid, pref) : []);
+  const cquests = $derived(cid ? questsInCircle(w, cid) : []);
+  const me = $derived(registre.me ?? "");
+
+  /* La chambre a cinq volets, et le mouvement y est LATÉRAL : changer de
+     volet n'est pas descendre d'un cran. */
+  let tab = $state("chamber");
+  const tabs = $derived(cid ? [
+    { k: "chamber", l: "La chambre" },
+    { k: "annals",  l: "Annales" },
+    { k: "magnum",  l: "Magnum opus", n: opus.filter(x => x.holders.length > 1).length },
+    { k: "quests",  l: "Quêtes", n: cquests.length },
+    { k: "loge",    l: "La grande loge", n: speaksIn(w, me, cid) ? logeOf(w, cid).length : 0 },
+  ] : []);
 
   const go = (e: MouseEvent, id: CircleId) => {
     e.preventDefault();
@@ -68,61 +83,89 @@
         </div>
       </header>
 
-      <section class="sect">
-        <h2>Les membres</h2>
-        <div class="troop">
-          {#each members as p (p.id)}
-            <a class="sold" href="#/personne/{p.id}">
-              <Face who={p} size="m" />
-              <b>{p.firstName}</b>
-              <i>{roman(w.rows.filter(r => r.personId === p.id).length)}</i>
-            </a>
-          {/each}
-        </div>
-      </section>
+      <Panes {tabs} bind:active={tab}>
+        {#snippet children(k)}
+          {#if k === "chamber"}
+            <section class="pane-b">
+              <h2>Les membres</h2>
+              <div class="troop">
+                {#each members as p (p.id)}
+                  <a class="sold" href="#/personne/{p.id}">
+                    <Face who={p} size="m" />
+                    <b>{p.firstName}</b>
+                    <i>{roman(w.rows.filter(r => r.personId === p.id).length)}</i>
+                  </a>
+                {/each}
+              </div>
+              <p class="temper">
+                Jugement moyen de l'Ordre : <b>{(a => a === null ? "—" : dec(a))(avgOf(rows))}</b>
+                sur {roman(rows.length)} inscriptions.
+              </p>
+            </section>
 
-      <section class="sect">
-        <h2>Magnum opus</h2>
-        <p class="legend">
-          Ce que les membres ont <strong>déclaré</strong>, jamais ce qu'ils ont le mieux noté.
-        </p>
-        {#if opus.length && opus[0].holders.length > 1}
-          <div class="reg">
-            {#each opus.filter(x => x.holders.length > 1) as x (x.id)}
-              <a class="r" href="#/fiche/{x.id}">
-                <span class="t">{titleOf(w, x.id, pref)}</span>
-                <span class="hold">{#each x.holders as h (h.id)}<Face who={h} size="s" />{/each}</span>
-                <span class="sc">{x.avg === null ? "—" : dec(x.avg)}</span>
-              </a>
-            {/each}
-          </div>
-        {:else}
-          <!-- Quand aucune œuvre ne réunit deux voix, on le dit plutôt que de
-               feindre l'unanimité. -->
-          <p class="none">Aucune œuvre ne réunit deux voix de cet Ordre. L'accord viendra, ou pas.</p>
-        {/if}
-      </section>
+          {:else if k === "annals"}
+            <section class="pane-b">
+              <h2>Annales de l'Ordre</h2>
+              <div class="reg">
+                {#each annals as r (r.personId + r.mediaId)}
+                  {@const m = w.catalog[r.mediaId]}
+                  {@const p = w.people[r.personId]}
+                  <a class="r r-ann" href="#/fiche/{r.mediaId}">
+                    {#if p}<Face who={p} size="s" />{/if}
+                    <span class="t">{titleOf(w, r.mediaId, pref)}</span>
+                    <span class="st">{STATUS[m.mediaType][r.status]}</span>
+                    <span class="sc">{typeof r.rating === "number" ? r.rating : "—"}</span>
+                  </a>
+                {/each}
+              </div>
+            </section>
 
-      <section class="sect">
-        <h2>Annales de l'Ordre</h2>
-        <div class="reg">
-          {#each annals as r (r.personId + r.mediaId)}
-            {@const m = w.catalog[r.mediaId]}
-            {@const p = w.people[r.personId]}
-            <a class="r r-ann" href="#/fiche/{r.mediaId}">
-              {#if p}<Face who={p} size="s" />{/if}
-              <span class="t">{titleOf(w, r.mediaId, pref)}</span>
-              <span class="st">{STATUS[m.mediaType][r.status]}</span>
-              <span class="sc">{typeof r.rating === "number" ? r.rating : "—"}</span>
-            </a>
-          {/each}
-        </div>
-      </section>
+          {:else if k === "magnum"}
+            <section class="pane-b">
+              <h2>Magnum opus</h2>
+              <p class="legend">
+                Ce que les membres ont <strong>déclaré</strong>, jamais ce qu'ils ont le mieux noté.
+              </p>
+              {#if opus.filter(x => x.holders.length > 1).length}
+                <div class="reg">
+                  {#each opus.filter(x => x.holders.length > 1) as x (x.id)}
+                    <a class="r" href="#/fiche/{x.id}">
+                      <span class="t">{titleOf(w, x.id, pref)}</span>
+                      <span class="hold">{#each x.holders as h (h.id)}<Face who={h} size="s" />{/each}</span>
+                      <span class="sc">{x.avg === null ? "—" : dec(x.avg)}</span>
+                    </a>
+                  {/each}
+                </div>
+              {:else}
+                <!-- Quand aucune œuvre ne réunit deux voix, on le dit plutôt
+                     que de feindre l'unanimité. -->
+                <p class="none">Aucune œuvre ne réunit deux voix de cet Ordre. L'accord viendra, ou pas.</p>
+              {/if}
+            </section>
 
-      <p class="temper">
-        Jugement moyen de l'Ordre : <b>{(a => a === null ? "—" : dec(a))(avgOf(rows))}</b>
-        sur {roman(rows.length)} inscriptions.
-      </p>
+          {:else if k === "quests"}
+            <section class="pane-b">
+              <h2>Planches de l'Ordre</h2>
+              {#if cquests.length}
+                <div class="reg">
+                  {#each cquests as x (x.q.id)}
+                    <a class="r" href="#/quete/{x.q.id}">
+                      <span class="t">{x.q.title}</span>
+                      <span class="hold">{#each x.holders as h (h.id)}<Face who={h} size="s" />{/each}</span>
+                      <span class="sc">{roman(x.holders.length)}</span>
+                    </a>
+                  {/each}
+                </div>
+              {:else}
+                <p class="none">Aucune planche accomplie par cet Ordre.</p>
+              {/if}
+            </section>
+
+          {:else}
+            <Loge {cid} />
+          {/if}
+        {/snippet}
+      </Panes>
     </div>
   </div>
 {/if}
@@ -174,7 +217,7 @@
   .sigil { display: grid; place-items: center; width: 64px; height: 64px; flex: none;
            border-radius: 50%; background: var(--c); font-size: 30px; letter-spacing: 0; }
 
-  .sect { margin-top: 32px; }
+  .pane-b { padding-top: 18px; }
   h2 { font-family: var(--fs); font-weight: 400; font-size: 20px; margin-bottom: 10px; }
 
   .troop { display: flex; flex-wrap: wrap; gap: 4px; }
