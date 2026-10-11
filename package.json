@@ -11,7 +11,7 @@
     "check:layers": "node scripts/check-layers.mjs",
     "verify": "npm run check:layers && npm run check && npm run test",
     "tauri": "tauri",
-    "test": "node --test test/"
+    "test": "node --test \"test/**/*.test.ts\""
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
@@ -25,5 +25,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.3"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
