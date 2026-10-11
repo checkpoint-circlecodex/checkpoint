@@ -12,11 +12,11 @@
      est la seule à connaître celle qu'on quitte. Déduit après coup, il aurait
      toujours un cran de retard. */
   let forward = $state(true);
-  let lastDepth = route(location.hash || "#/").entry.depth;
+  let lastDepth = route(location.hash || "#/").depth;
 
   const onHash = () => {
     const next = location.hash || "#/";
-    const d = route(next).entry.depth;
+    const d = route(next).depth;
     forward = d >= lastDepth;
     lastDepth = d;
     hash = next;

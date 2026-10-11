@@ -9,16 +9,16 @@
 
 ## Prochaine action
 
-**Étape 4 du portage, suite — les vues qui restent.**
+**Étape 4, troisième passe — la feuille de personnage et les Quêtes.**
 
-La première passe est faite (11 octobre) : la coque, la barre, la bascule de
-mise au point, les surfaces, et **deux vues réelles** — l'accueil et le
-Répertoire — nourries par le jeu d'essai du prototype, extrait tel quel.
+Quatre vues réelles tiennent (11 octobre) : l'accueil, le Répertoire, la
+**fiche** d'une œuvre et les **Ordres** — racine et chambres, avec les cinq
+trames animées.
 
-Restent, dans l'ordre du registre : la **fiche** d'une œuvre, les **Ordres**
-et leurs chambres, la **feuille** de personnage, les **Quêtes**, la
-**lignée**, le **Greffe**, le **volet-lanceur**. Puis les écritures —
-inscrire une œuvre, poser un checkpoint, prendre la parole.
+Restent : la **feuille** de personnage (et ses volets), les **Quêtes** et
+leurs planches, la **lignée**, la **Grande Loge**, le **Greffe**, le
+**volet-lanceur**. Puis les écritures — inscrire, poser un checkpoint,
+prendre la parole, distinguer.
 
 Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
 
@@ -256,6 +256,37 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — la fiche, les Ordres, et les cinq trames
+
+- **La trame est reprise telle quelle**, à la typographie des signatures près.
+  Ce n'est pas de la paresse : *un générateur ne se juge qu'à l'image*, et
+  celle-ci a été jugée — la réécrire « plus proprement » reviendrait à la
+  rejuger sans la regarder.
+- **Le type a imposé de déclarer la profondeur route par route.** En ajoutant
+  `depth` au type `Route`, le vérificateur a refusé les cinq routes
+  existantes jusqu'à ce que chacune dise à quelle profondeur elle se trouve.
+  *Une route qui ne sait pas sa profondeur produit un geste au hasard, donc un
+  geste qui ne veut plus rien dire.*
+- **La trame ne couvrait que le premier écran.** `height:100%` sur la chambre
+  arrêtait le canevas au bas de la fenêtre, et la page continuait sur du
+  papier nu dès qu'on défilait. `min-height` règle ça.
+- ⚠️ **L'encre ne se mesure pas dans une fenêtre masquée.** Le volet du
+  navigateur ne composait pas : `document.hidden` vrai, aucune image, donc
+  zéro pixel dessiné — et ce n'était **pas** un défaut du moteur. Mesure
+  refaite en remplaçant l'horloge d'animation par une minuterie, le temps de
+  quelques images : **mage 0,25 % · ranger 0,72 % · guerrier 1,19 % ·
+  soigneur 1,71 % · barde 2,13 %.** Le guerrier retombe exactement sur le
+  1,2 % visé. *Encore la même règle qu'au 304 : on mesure dans la condition
+  où l'on sera, et quand on ne peut pas, on le dit.*
+- **Le HMR m'a menti pendant dix minutes.** La chambre rendait l'accueil
+  parce que le module de routes avait été remplacé à chaud sans que la coque
+  s'en aperçoive. **Un état incohérent après remplacement à chaud n'est pas un
+  bug du code** — recharger avant de conclure fait partie de la mesure.
+- La fiche porte la **couleur de la jaquette en ambiance**, qui s'éteint avant
+  les chiffres, et **la forme du désaccord** : un trait par jugement sur une
+  réglette de I à X, aucune couleur. Vérifié sur Elden Ring — V témoins,
+  moyenne 7,7, discorde V, deux chroniques dépliables.
 
 ### 11 octobre 2026 — la coque et les deux premières vues
 

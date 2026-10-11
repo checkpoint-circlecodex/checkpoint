@@ -2,23 +2,32 @@
    tous** — et elle ne connaît de chacun que sa ligne de registre. */
 
 import type { ViewEntry } from "$core/ui/registry.ts";
-import type { MediaType } from "$core/model/schema.ts";
+import type { CircleId, MediaType } from "$core/model/schema.ts";
 import { home } from "$features/home/index.ts";
 import { works } from "$features/works/index.ts";
+import { folio } from "$features/folio/index.ts";
+import { orders } from "$features/orders/index.ts";
 
-export const REGISTRY: ViewEntry[] = [works];
+export const REGISTRY: ViewEntry[] = [orders, works];
 export const HOME = home;
 
-export type Route = { entry: ViewEntry; props: Record<string, unknown>; key: string };
+export type Route = { entry: ViewEntry; props: Record<string, unknown>; key: string; depth: number };
 
-/** La profondeur décide du geste, pas le goût : zoom si elle change,
-    glissement latéral sinon. */
+/** **La profondeur décide du geste**, et elle se déclare route par route :
+    zoom si elle change, glissement latéral sinon. Le type l'exige, et c'est
+    volontaire — une route qui ne sait pas à quelle profondeur elle est
+    produirait un geste au hasard, donc un geste qui ne veut plus rien dire. */
 export function route(hash: string): Route {
   const h = hash || "#/";
-  if (h.startsWith("#/media/t/")) {
-    const kind = h.slice(10) as MediaType;
-    return { entry: works, props: { kind }, key: h };
-  }
-  if (h.startsWith("#/media")) return { entry: works, props: { kind: null }, key: "#/media" };
-  return { entry: home, props: {}, key: "#/" };
+  if (h.startsWith("#/fiche/"))
+    return { entry: folio, props: { id: h.slice(8) }, key: h, depth: 2 };
+  if (h.startsWith("#/cercles/"))
+    return { entry: orders, props: { cid: h.slice(10) as CircleId }, key: h, depth: 2 };
+  if (h.startsWith("#/cercles"))
+    return { entry: orders, props: { cid: null }, key: "#/cercles", depth: 1 };
+  if (h.startsWith("#/media/t/"))
+    return { entry: works, props: { kind: h.slice(10) as MediaType }, key: h, depth: 1 };
+  if (h.startsWith("#/media"))
+    return { entry: works, props: { kind: null }, key: "#/media", depth: 1 };
+  return { entry: home, props: {}, key: "#/", depth: 0 };
 }
