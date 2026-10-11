@@ -3,11 +3,11 @@
    désigner aucun hôte. */
 
 import { invoke } from "@tauri-apps/api/core";
-import { fromB64, toB64 } from "./b64";
+import { fromB64, toB64 } from "./b64.ts";
 import {
   AuthError, ConflictError,
   type Cache, type Platform, type Session, type Storage, type TreeEntry,
-} from "./types";
+} from "./types.ts";
 
 type Reply = { status: number; body: string; etag: string | null; remaining: number | null };
 

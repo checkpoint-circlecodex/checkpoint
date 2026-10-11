@@ -9,22 +9,24 @@
 
 ## Prochaine action
 
-**Étape 3 du portage — le noyau.**
+**Étape 4 du portage — les vues.**
 
-La plateforme est réelle (étape 2, 11 octobre) : arbre Git, blobs adressés par
-leur contenu, écriture avec `ConflictError`, ouverture d'issue, lecture de
-rôle, device flow, jeton qui ne traverse jamais le pont, cache de blobs sans
-invalidation. **Quatre essais d'intégration tournent contre le vrai dépôt.**
+Le noyau est là (étape 3, 11 octobre) : schéma typé, migrations montantes,
+fusion avec repli des alias à la lecture, lexique accordé par nature, et les
+sélecteurs — œuvres, gens, quêtes, Loge, lignée, Greffe. **Dix-sept essais
+tournent sans réseau ni navigateur**, parce que le noyau est une fonction pure
+de ce qu'on lui donne.
 
-L'étape 3 : le modèle et sa migration, la fusion (avec le repli des alias à la
-lecture), les sélecteurs partagés, le design system, les surfaces. C'est le
-cœur recopié du prototype — mais typé, découpé, et vérifiable.
+L'étape 4 porte les vues dans l'ordre du registre, en reprenant le prototype
+qui fait foi. Elle commence par ce qui leur manque : les **primitives du
+design system** et les **surfaces** (invariant 14) — un bloc ne réinvente
+jamais les siennes, et chacune a une forme large et une forme étroite décidée
+dans le noyau (invariant 22).
 
-Ensuite : 4 les vues · 5 l'entrée dans le groupe en dur · 6 la livraison.
+Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
 
-⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding dans la barre
-latérale, la section « banc d'essai » du Greffe, et l'écran d'essai actuel de
-`App.svelte`.
+⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding, la section
+« banc d'essai » du Greffe, et l'écran d'essai actuel de `App.svelte`.
 
 ---
 
@@ -257,6 +259,36 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — le noyau
+
+- **Le noyau est une fonction pure de ce qu'on lui donne**, et c'est ce qui
+  rend les essais possibles : aucun sélecteur ne lit de variable globale, tous
+  prennent le monde en premier argument. Dix-sept essais tournent **sans
+  réseau, sans jeton, sans navigateur**, en 170 ms.
+- **Les alias se collectent avant tout le reste.** Ils changent la lecture de
+  *tous* les fragments, y compris de ceux lus avant eux — les ramasser au fil
+  de l'eau aurait donné un repli dépendant de l'ordre des fichiers.
+- **Les essais disent les règles, pas le code.** « une parenté déclarée à
+  contresens des deux côtés n'existe pas non plus », « renoncer compte comme
+  entrepris », « le magnum opus somme des déclarations, pas des notes » : un
+  essai qui nomme l'invariant se relit dans six mois, un essai qui nomme la
+  fonction ne se relit pas.
+- **Node refuse les propriétés de paramètre** (`constructor(public x)`) : il
+  efface les types, il ne les compile pas. Contrainte acceptée volontiers —
+  **ce qui tourne sous Node tel quel est ce qui ne dépend d'aucune
+  transformation**, donc pas d'enums, pas de namespaces, pas de décorateurs.
+  Et les imports relatifs portent désormais leur extension, ce qui est de
+  toute façon la règle des modules ES.
+- **Un fragment cassé n'emporte pas les autres** — la propriété qu'achète « un
+  fichier par personne ». Elle est maintenant essayée : trois fragments dont
+  un JSON illisible, deux personnes affichées, un ennui rendu à l'appelant.
+  *Une propriété qu'on n'essaie pas n'est pas achetée.*
+- **La deuxième ouverture ne retélécharge rien**, et le troisième essai le
+  montre finement : un seul fragment modifié, un seul blob relu.
+- Les migrations sont **montantes seulement**, et un fragment plus récent que
+  l'application **se refuse** au lieu de s'afficher amputé. C'est à ça que
+  servira le bandeau « nouvelle version disponible ».
 
 ### 11 octobre 2026 — la plateforme réelle, et une correction de correction
 

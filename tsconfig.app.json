@@ -16,6 +16,7 @@
     "allowJs": true,
     "checkJs": true,
     "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
     "paths": {
       "$core/*":     ["./src/core/*"],
       "$platform/*": ["./src/platform/*"],

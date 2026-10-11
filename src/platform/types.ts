@@ -28,9 +28,11 @@ export interface Storage {
 }
 
 export class ConflictError extends Error {
-  constructor(public path: string) {
+  path: string;
+  constructor(path: string) {
     super(`Le fichier ${path} a changé depuis la dernière lecture.`);
     this.name = "ConflictError";
+    this.path = path;
   }
 }
 

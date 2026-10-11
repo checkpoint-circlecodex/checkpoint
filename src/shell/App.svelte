@@ -3,8 +3,8 @@
      cet écran sert à vérifier la couche plateforme à la main, dans la vraie
      coque, contre le vrai dépôt. Il disparaît à l'étape 4, quand le registre
      de vues prend la place. */
-  import { inShell, platform, type TreeEntry } from "$platform/index";
-  import { shardPath, type Shard } from "$core/model/schema";
+  import { inShell, platform, type TreeEntry } from "$platform/index.ts";
+  import { shardPath, type Shard } from "$core/model/schema.ts";
 
   const P = platform();
   let log = $state<string[]>([]);

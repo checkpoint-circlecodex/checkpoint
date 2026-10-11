@@ -21,6 +21,8 @@ jobs:
         run: npm run check:layers
       - name: Types
         run: npm run check
+      - name: Essais du noyau
+        run: npm test
       - name: Construction
         run: npx vite build
 

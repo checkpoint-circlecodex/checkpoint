@@ -6,7 +6,7 @@
    déclenche ici par comparaison de SHA, exactement comme GitHub le rend ; un
    faux qui accepterait toujours l'écriture ne vaudrait rien. */
 
-import { ConflictError, type Cache, type Platform, type Session, type Storage, type TreeEntry } from "./types";
+import { ConflictError, type Cache, type Platform, type Session, type Storage, type TreeEntry } from "./types.ts";
 
 export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmichael"): Platform {
   const files = new Map<string, { sha: string; text: string }>();

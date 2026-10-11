@@ -2,10 +2,10 @@
    `tauri.ts` ni `fake.ts` directement : le choix de l'adaptateur se fait ici,
    et il se fait une fois. */
 
-export * from "./types";
-import { fakePlatform } from "./fake";
-import { inShell, tauriPlatform } from "./tauri";
-import type { Platform } from "./types";
+export * from "./types.ts";
+import { fakePlatform } from "./fake.ts";
+import { inShell, tauriPlatform } from "./tauri.ts";
+import type { Platform } from "./types.ts";
 
 export { fakePlatform, inShell };
 
