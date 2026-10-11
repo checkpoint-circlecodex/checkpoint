@@ -1,0 +1,20 @@
+# Dépendances et produits de compilation
+node_modules/
+dist/
+dist-ssr/
+src-tauri/target/
+*.local
+
+# Secrets — rien de tout ça ne doit quitter cette machine
+spike/.token
+spike/spike.config.json
+.env
+.env.*
+!.env.example
+
+# Système
+.DS_Store
+*.swp
+
+# Pièce déposée par Nathan, nature non vérifiée — à inclure sciemment ou pas
+Fildefer.pdf

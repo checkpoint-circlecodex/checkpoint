@@ -1,0 +1,1120 @@
+<title>Conception de Checkpoint</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --paper:#F3F5F8;
+  --surface:#FFFFFF;
+  --surface-alt:#EDEFF4;
+  --ink:#191D24;
+  --ink-soft:#3A414E;
+  --muted:#5C6473;
+  --line:#DBE0E8;
+  --line-soft:#E7EAF0;
+  --brass:#8F6114;
+  --brass-soft:#F0E5CE;
+  --s-wish:#65758F;
+  --s-play:#2A6BBC;
+  --s-pause:#7D7362;
+  --s-done:#27754F;
+  --s-master:#8F6114;
+  --s-drop:#9E4A38;
+  --font-ui:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#13161B;
+    --surface:#1A1E25;
+    --surface-alt:#20252E;
+    --ink:#E7EAF0;
+    --ink-soft:#C3C9D4;
+    --muted:#959EAE;
+    --line:#2B313B;
+    --line-soft:#242A33;
+    --brass:#D8A54D;
+    --brass-soft:#332913;
+    --s-wish:#8797B0;
+    --s-play:#6FA7E6;
+    --s-pause:#A79B85;
+    --s-done:#57B387;
+    --s-master:#D8A54D;
+    --s-drop:#D07C69;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#13161B;
+  --surface:#1A1E25;
+  --surface-alt:#20252E;
+  --ink:#E7EAF0;
+  --ink-soft:#C3C9D4;
+  --muted:#959EAE;
+  --line:#2B313B;
+  --line-soft:#242A33;
+  --brass:#D8A54D;
+  --brass-soft:#332913;
+  --s-wish:#8797B0;
+  --s-play:#6FA7E6;
+  --s-pause:#A79B85;
+  --s-done:#57B387;
+  --s-master:#D8A54D;
+  --s-drop:#D07C69;
+}
+
+*{box-sizing:border-box;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:1000px;margin:0 auto;padding:0 28px 120px;}
+
+/* ---------- header ---------- */
+.masthead{padding:64px 0 34px;border-bottom:2px solid var(--ink);}
+.eyebrow{
+  font-family:var(--font-ui);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--brass);
+  margin:0 0 20px;
+}
+.masthead h1{
+  font-family:var(--font-ui);font-weight:700;
+  font-size:clamp(44px,7.5vw,76px);line-height:.98;letter-spacing:-.035em;
+  margin:0;text-wrap:balance;
+}
+.deck{
+  font-size:19px;line-height:1.55;color:var(--ink-soft);
+  max-width:60ch;margin:20px 0 0;
+}
+.factbar{
+  display:flex;flex-wrap:wrap;gap:0;
+  margin:34px 0 0;border-top:1px solid var(--line);
+}
+.fact{
+  flex:1 1 190px;padding:16px 20px 4px 0;
+  display:flex;flex-direction:column;gap:5px;
+}
+.fact dt{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+}
+.fact dd{margin:0;font-family:var(--font-ui);font-size:14.5px;font-weight:500;color:var(--ink);}
+
+/* ---------- sections ---------- */
+.sec{
+  display:grid;grid-template-columns:3.4rem 1fr;column-gap:2rem;
+  padding:52px 0 0;
+}
+.sec + .sec{border-top:1px solid var(--line-soft);margin-top:52px;}
+.num{
+  font-family:var(--font-mono);font-size:13px;color:var(--brass);
+  padding-top:.55rem;font-variant-numeric:tabular-nums;
+}
+.body{min-width:0;}
+h2{
+  font-family:var(--font-ui);font-weight:600;font-size:29px;
+  letter-spacing:-.022em;line-height:1.15;margin:0 0 6px;text-wrap:balance;
+}
+.subhead{font-family:var(--font-ui);font-size:14px;color:var(--muted);margin:0 0 26px;}
+h3{
+  font-family:var(--font-ui);font-weight:600;font-size:15px;
+  letter-spacing:.005em;margin:34px 0 10px;color:var(--ink);
+}
+p{margin:0 0 15px;max-width:66ch;}
+p.wide{max-width:none;}
+strong{font-weight:600;color:var(--ink);}
+em{font-style:italic;}
+a{color:var(--brass);text-decoration:none;border-bottom:1px solid var(--brass-soft);}
+a:hover{border-bottom-color:var(--brass);}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
+
+ul.plain{margin:0 0 15px;padding:0;list-style:none;max-width:66ch;}
+ul.plain li{position:relative;padding-left:1.15rem;margin-bottom:8px;}
+ul.plain li::before{
+  content:"";position:absolute;left:1px;top:.72em;
+  width:5px;height:5px;background:var(--brass);
+}
+ul.no li::before{
+  content:"×";background:none;left:0;top:0;
+  font-family:var(--font-ui);font-size:14px;color:var(--s-drop);width:auto;height:auto;
+}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:0 0 18px;}
+table{border-collapse:collapse;width:100%;min-width:520px;font-family:var(--font-ui);font-size:14px;}
+th{
+  text-align:left;font-weight:600;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 16px 9px 0;border-bottom:1px solid var(--ink);
+}
+td{
+  padding:12px 16px 12px 0;border-bottom:1px solid var(--line-soft);
+  vertical-align:top;color:var(--ink-soft);line-height:1.45;
+}
+td:first-child{color:var(--ink);font-weight:500;white-space:nowrap;}
+td code{font-size:12.5px;}
+.tag{
+  font-family:var(--font-mono);font-size:11.5px;color:var(--brass);
+  white-space:nowrap;
+}
+
+/* ---------- callout ---------- */
+.callout{
+  background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--brass);
+  padding:20px 24px;margin:24px 0;
+}
+.callout .lbl{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--brass);
+  display:block;margin-bottom:8px;
+}
+.callout p:last-child{margin-bottom:0;}
+
+/* ---------- decisions ---------- */
+.adr{display:flex;flex-direction:column;gap:0;margin:0 0 4px;}
+.adr-row{
+  display:grid;grid-template-columns:2.6rem 1fr;column-gap:1.1rem;
+  padding:20px 0;border-top:1px solid var(--line-soft);
+}
+.adr-row:first-child{border-top:1px solid var(--ink);}
+.adr-id{
+  font-family:var(--font-mono);font-size:12px;color:var(--brass);
+  padding-top:2px;
+}
+.adr-body h4{
+  font-family:var(--font-ui);font-weight:600;font-size:16px;
+  margin:0 0 8px;letter-spacing:-.01em;
+}
+.adr-body dl{margin:0;display:grid;grid-template-columns:auto 1fr;column-gap:.85rem;row-gap:5px;}
+.adr-body dt{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);padding-top:.32em;
+}
+.adr-body dd{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-soft);}
+
+/* ---------- code ---------- */
+pre{
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.72;
+  background:var(--surface-alt);border:1px solid var(--line-soft);
+  padding:18px 20px;overflow-x:auto;margin:0 0 18px;color:var(--ink-soft);
+}
+code{font-family:var(--font-mono);font-size:.88em;color:var(--ink);}
+pre code{font-size:inherit;color:inherit;}
+.c-key{color:var(--ink);font-weight:500;}
+.c-str{color:var(--s-done);}
+.c-num{color:var(--s-play);}
+.c-com{color:var(--muted);font-style:italic;}
+
+/* ---------- status vocabulary ---------- */
+.statuses{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+  gap:0 34px;margin:0 0 8px;
+}
+.st{
+  display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;
+  align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line-soft);
+}
+.pill{
+  font-family:var(--font-ui);font-size:11px;font-weight:600;
+  letter-spacing:.045em;padding:3px 9px;border:1px solid;border-radius:11px;
+  white-space:nowrap;
+}
+.st span:last-child{font-size:14.5px;color:var(--muted);line-height:1.4;}
+.p-wish{color:var(--s-wish);border-color:var(--s-wish);}
+.p-play{color:var(--s-play);border-color:var(--s-play);}
+.p-pause{color:var(--s-pause);border-color:var(--s-pause);}
+.p-done{color:var(--s-done);border-color:var(--s-done);}
+.p-master{color:var(--s-master);border-color:var(--s-master);box-shadow:0 0 0 2px var(--brass-soft);}
+.p-drop{color:var(--s-drop);border-color:var(--s-drop);border-style:dashed;}
+
+/* ---------- fsm diagram ---------- */
+.fsm-wrap{overflow-x:auto;margin:22px 0 10px;}
+.fsm{display:block;min-width:620px;width:100%;height:auto;}
+.fsm rect{fill:var(--surface);stroke-width:1.5;}
+.fsm text{font-family:var(--font-ui);font-size:13px;font-weight:500;}
+.fsm .edge{stroke:var(--muted);stroke-width:1.3;fill:none;}
+.fsm .edge-dash{stroke:var(--muted);stroke-width:1.2;fill:none;stroke-dasharray:4 4;}
+.fsm .ah{fill:var(--muted);stroke:none;}
+.fsm .lbl{font-family:var(--font-ui);font-size:11px;font-weight:500;fill:var(--muted);}
+.n-wish rect{stroke:var(--s-wish);}   .n-wish text{fill:var(--s-wish);}
+.n-play rect{stroke:var(--s-play);}   .n-play text{fill:var(--s-play);}
+.n-pause rect{stroke:var(--s-pause);} .n-pause text{fill:var(--s-pause);}
+.n-done rect{stroke:var(--s-done);}   .n-done text{fill:var(--s-done);}
+.n-master rect{stroke:var(--s-master);stroke-width:2.5;} .n-master text{fill:var(--s-master);}
+.n-drop rect{stroke:var(--s-drop);stroke-dasharray:4 3;} .n-drop text{fill:var(--s-drop);}
+
+/* ---------- steps ---------- */
+.steps{margin:0;padding:0;counter-reset:st;list-style:none;}
+.steps li{
+  counter-increment:st;position:relative;padding:16px 0 16px 3.1rem;
+  border-bottom:1px solid var(--line-soft);
+}
+.steps li:first-child{border-top:1px solid var(--ink);}
+.steps li::before{
+  content:counter(st,decimal-leading-zero);
+  position:absolute;left:0;top:17px;
+  font-family:var(--font-mono);font-size:12px;color:var(--brass);
+}
+.steps strong{display:block;font-family:var(--font-ui);font-size:15px;margin-bottom:3px;}
+.steps span{font-size:15px;color:var(--muted);line-height:1.5;}
+
+/* ---------- phases ---------- */
+.phases{display:flex;flex-direction:column;}
+.ph{
+  display:grid;grid-template-columns:5.4rem 1fr;column-gap:1.4rem;
+  padding:17px 0;border-top:1px solid var(--line-soft);align-items:start;
+}
+.ph:first-child{border-top:1px solid var(--ink);}
+.ph-v{
+  font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--brass);
+  padding-top:1px;
+}
+.ph-t{font-family:var(--font-ui);font-weight:600;font-size:15.5px;margin:0 0 3px;}
+.ph-d{margin:0;font-size:15px;color:var(--muted);line-height:1.5;max-width:62ch;}
+
+/* ---------- views ---------- */
+.views{border-top:1px solid var(--ink);}
+.view{
+  display:grid;grid-template-columns:1fr 1.55fr;column-gap:2rem;
+  padding:15px 0;border-bottom:1px solid var(--line-soft);align-items:baseline;
+}
+.view b{font-family:var(--font-ui);font-weight:600;font-size:15px;letter-spacing:-.005em;}
+.view span{font-size:15px;color:var(--muted);line-height:1.5;}
+.grp{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--brass);margin:30px 0 10px;
+}
+.grp:first-of-type{margin-top:0;}
+
+/* ---------- tree ---------- */
+.tree{
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.85;
+  color:var(--muted);background:var(--surface-alt);
+  border:1px solid var(--line-soft);padding:18px 20px;margin:0 0 18px;
+  overflow-x:auto;
+}
+.tree b{color:var(--ink);font-weight:500;}
+.tree i{color:var(--brass);font-style:normal;}
+
+footer{
+  margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);
+  font-family:var(--font-ui);font-size:13px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:10px 26px;
+}
+
+@media (max-width:720px){
+  .page{padding:0 20px 80px;}
+  .sec{grid-template-columns:1fr;column-gap:0;}
+  .num{padding:0 0 6px;}
+  .view{grid-template-columns:1fr;row-gap:3px;}
+  .ph{grid-template-columns:1fr;row-gap:4px;}
+  .adr-row{grid-template-columns:1fr;row-gap:6px;}
+  .adr-body dl{grid-template-columns:1fr;row-gap:2px;}
+  .adr-body dt{padding-top:8px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+
+/* ---------- v2 additions ---------- */
+.status-note{
+  margin:26px 0 0;padding:14px 18px;
+  border:1px solid var(--line);border-left:3px solid var(--s-play);
+  background:var(--surface);font-size:15px;line-height:1.5;color:var(--ink-soft);
+  max-width:70ch;
+}
+h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
+.rev{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:400;
+  letter-spacing:.06em;color:var(--muted);
+  border:1px solid var(--line);padding:2px 7px;white-space:nowrap;
+}
+.rev.new{color:var(--brass);border-color:var(--brass);}
+.layers-wrap{overflow-x:auto;margin:24px 0 12px;}
+.layers{display:block;min-width:600px;width:100%;height:auto;}
+.layers rect.band{fill:var(--surface-alt);stroke:var(--line);stroke-width:1;}
+.layers rect.band-top{fill:var(--surface-alt);stroke:var(--brass);stroke-width:1.4;stroke-dasharray:5 4;}
+.layers rect.chip{fill:var(--surface);stroke:var(--line);stroke-width:1;}
+.layers text.band-lbl{
+  font-family:var(--font-ui);font-size:10px;font-weight:600;
+  letter-spacing:.14em;fill:var(--muted);
+}
+.layers text.chip-lbl{font-family:var(--font-ui);font-size:11px;font-weight:400;fill:var(--ink-soft);}
+.layers .dep{stroke:var(--brass);stroke-width:1.3;fill:none;}
+.layers .ah2{fill:var(--brass);stroke:none;}
+.layers text.dep-lbl{
+  font-family:var(--font-ui);font-size:10px;font-weight:600;
+  letter-spacing:.12em;fill:var(--brass);
+}
+.rules{margin:22px 0 4px;border-top:1px solid var(--ink);}
+.rule{
+  display:grid;grid-template-columns:2.2rem 1fr;column-gap:1.1rem;
+  padding:16px 0;border-bottom:1px solid var(--line-soft);
+}
+.rule-n{font-family:var(--font-mono);font-size:12px;color:var(--brass);padding-top:2px;}
+.rule b{display:block;font-family:var(--font-ui);font-weight:600;font-size:15px;margin-bottom:4px;letter-spacing:-.005em;}
+.rule span{font-size:15px;color:var(--muted);line-height:1.52;display:block;max-width:64ch;}
+.dead{text-decoration:line-through;text-decoration-color:var(--muted);opacity:.6;}
+.pending{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--s-play);
+}
+@media (max-width:720px){
+  .rule{grid-template-columns:1fr;row-gap:4px;}
+}
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Document de conception · v16 · 11 octobre 2026</p>
+  <h1>Checkpoint</h1>
+  <p class="deck">Un tracker de jeux partagé au sein d'un groupe d'une vingtaine de personnes. Une application de bureau — Mac, Windows, Linux — distribuée librement, dont l'accès aux données passe par une adhésion validée. Pas de serveur, pas de base à administrer.</p>
+  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v16</span> ou <span class="rev">révisé v16</span> ont bougé depuis la version précédente.</p>
+  <dl class="factbar">
+    <div class="fact"><dt>Nom</dt><dd>Provisoire</dd></div>
+    <div class="fact"><dt>Forme</dt><dd>Application de bureau, Tauri</dd></div>
+    <div class="fact"><dt>Stockage</dt><dd>GitHub, dépôt privé</dd></div>
+    <div class="fact"><dt>Groupe visé</dt><dd>~20 personnes</dd></div>
+    <div class="fact"><dt>Décisions actées</dt><dd>10 ici, 27 au total</dd></div>
+    <div class="fact"><dt>Document lié</dt><dd><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience</a></dd></div>
+    <div class="fact"><dt>Prochaine étape</dt><dd>Portage Svelte — le spike est fini</dd></div>
+  </dl>
+</header>
+
+<section class="sec">
+  <div class="num">§1</div>
+  <div class="body">
+    <h2>Le projet en une phrase</h2>
+    <p class="subhead">Ce qu'on construit, et surtout ce qu'on ne construit pas.</p>
+    <p>Une application de bureau qui lit un dépôt GitHub privé et en tire une bibliothèque de jeux commune, alimentée au fil de l'eau par un petit groupe d'amis, avec les vues qui rendent la comparaison agréable.</p>
+    <p>Le tracker solo existe déjà — Backloggd, Grouvee, Steam lui-même. <strong>La valeur ajoutée est entièrement collective :</strong> savoir qui a fini quoi, sur quoi on n'est pas d'accord, ce qu'un ami a adoré et qui traîne dans ta liste d'envies. Toute fonctionnalité qui ne sert pas ça est du poids mort.</p>
+    <p>Le binaire est distribuable&nbsp;: on l'envoie à quelqu'un, il l'installe, il demande à rejoindre le groupe, un administrateur valide. <strong>L'application est ouverte, ce sont les données qui sont fermées.</strong> Cible&nbsp;: une vingtaine de personnes — assez pour que la comparaison soit intéressante, assez peu pour qu'aucune modération lourde ne soit nécessaire.</p>
+    <p>Ce n'est pas un réseau social, pas un service, pas un produit. L'administration se limite à accepter des gens et, plus tard, à faire le ménage dans le catalogue.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§2</div>
+  <div class="body">
+    <h2>Forme de l'application <span class="rev new">nouveau v2</span></h2>
+    <p class="subhead">Une application installée, pas une page web. Et pourquoi la distinction n'est pas celle qu'on croit.</p>
+
+    <p>« Application HTML » recouvre deux choses très différentes. Ce qui est écarté : <strong>un fichier qu'on double-clique</strong> — pas d'installation, pas d'accès au disque, coincé par les règles du navigateur, aucune présence dans le dock. Ce qui est retenu : <strong>une application installée dont la couche de rendu est du HTML et du CSS</strong> — ce que sont VS Code, Figma, Linear ou Obsidian.</p>
+
+    <p>Il faut l'assumer clairement : avec Tauri, <em>l'interface reste écrite en HTML et CSS</em>. Ce n'est pas là que se joue la différence. Elle se joue ici :</p>
+
+    <div class="tw"><table>
+      <thead><tr><th>Ce que la coque native débloque</th><th>Ce que ça change pour ce projet</th></tr></thead>
+      <tbody>
+        <tr><td>Plus aucune contrainte CORS</td><td>Les requêtes partent du code natif, pas du navigateur</td></tr>
+        <tr><td>Le <em>device flow</em> GitHub redevient possible</td><td>L'onboarding passe de six écrans à trois. Plus aucun jeton à copier-coller</td></tr>
+        <tr><td>Trousseau du système</td><td>Le jeton va dans le Keychain ou le Credential Manager, plus dans le navigateur</td></tr>
+        <tr><td>Vrai système de fichiers</td><td>Cache local, mode hors ligne quasi gratuit, export réel</td></tr>
+        <tr><td>N'importe quelle API</td><td>Y compris IGDB, qui exige un secret et était hors de portée</td></tr>
+        <tr><td>Installateurs et mise à jour automatique</td><td><code>.dmg</code>, <code>.msi</code>, <code>.AppImage</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Le device flow justifie à lui seul le changement : il supprime le point le plus fragile de toute la conception, celui où l'on risquait de perdre un ami à l'étape 4.</p>
+
+    <h3>Le coût, sans le maquiller</h3>
+    <ul class="plain">
+      <li><strong>Signature de code.</strong> Sans compte développeur Apple (99 $/an), le premier lancement affichera un avertissement Gatekeeper, contournable par un clic droit → Ouvrir. Windows affichera un avertissement SmartScreen sans certificat. Acceptable entre amis, à condition de le dire d'avance.</li>
+      <li><strong>Compilation par plateforme.</strong> Trois binaires à produire. GitHub Actions le fait gratuitement, sur les trois OS.</li>
+      <li><strong>Chaîne Rust.</strong> Nécessaire pour compiler. La part native du projet reste petite — quelques commandes exposées au frontend.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="lbl">La porte mobile reste ouverte</span>
+      <p>Tauri 2 vise aussi Android et iOS. Le choix du bureau aujourd'hui ne ferme rien : le jour venu, il faudra une passe d'ergonomie tactile sur la couche du haut, pas un autre projet. C'était le seul argument sérieux en faveur de Flutter, et il tombe.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§3</div>
+  <div class="body">
+    <h2>Contraintes <span class="rev">révisé v2</span></h2>
+    <p class="subhead">Ce qui est posé, et ce que ça entraîne mécaniquement.</p>
+
+    <h3>Posées</h3>
+    <div class="tw"><table>
+      <thead><tr><th>Réf</th><th>Contrainte</th><th>Conséquence directe</th></tr></thead>
+      <tbody>
+        <tr><td class="tag">C1</td><td>Pas de serveur applicatif</td><td>Aucun secret partagé ne peut être distribué</td></tr>
+        <tr><td class="tag">C2</td><td>Stockage tiers accessible en permanence</td><td>Le stockage devient l'API</td></tr>
+        <tr><td class="tag">C3</td><td>Plusieurs personnes écrivent</td><td>La concurrence se règle par le modèle de données</td></tr>
+        <tr><td class="tag">C4</td><td>Application de bureau, trois OS</td><td>Compilation croisée, signature, mise à jour</td></tr>
+        <tr><td class="tag">C5</td><td>Cercle d'amis, minimaliste</td><td>Pas de rôles, pas d'admin, pas de modération</td></tr>
+        <tr><td class="tag">C6</td><td>L'UI est la priorité</td><td>Le budget d'effort va aux vues, pas à la plomberie</td></tr>
+        <tr><td class="tag">C7</td><td>Extensible par blocs de fonction</td><td>Architecture en couches à sens unique — voir §6</td></tr>
+        <tr><td class="tag">C8</td><td>Application distribuée, adhésion sur demande</td><td>Un parcours d'entrée pour inconnus, et des administrateurs pour valider</td></tr>
+        <tr><td class="tag">C9</td><td>Une seule interface, du bureau à l'écran de 390&nbsp;px</td><td>Android doit rester livrable sans refonte — voir D8</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Induites</h3>
+    <div class="tw"><table>
+      <thead><tr><th>Réf</th><th>Ce qui en découle</th><th>Traitement</th></tr></thead>
+      <tbody>
+        <tr><td class="tag">I1</td><td>Le binaire est distribuable, donc inspectable</td><td>Chaque personne s'authentifie avec son propre jeton, gardé dans le trousseau du système</td></tr>
+        <tr><td class="tag">I2</td><td>Pas de transaction : deux sauvegardes simultanées effacent des données, en silence</td><td>Un fichier par personne — voir §5</td></tr>
+        <tr><td class="tag">I3</td><td>Personne pour migrer les anciens fichiers</td><td><code>schemaVersion</code> dès le jour 1, migrations côté client</td></tr>
+        <tr><td class="tag">I4</td><td class="dead">file:// casse OAuth et une partie de fetch</td><td><strong>Caduque.</strong> La coque native supprime la contrainte</td></tr>
+        <tr><td class="tag">I5</td><td>Pas de tâche planifiée, pas de webhook</td><td>Ni notification, ni import automatique. Assumé.</td></tr>
+        <tr><td class="tag">I6</td><td>Une application installée ne se met pas à jour toute seule</td><td>Mise à jour automatique Tauri dès la V1 — sinon les versions divergent entre membres et les schémas aussi. <strong>Elle ne couvre pas Android</strong>&nbsp;: un bandeau «&nbsp;nouvelle version disponible&nbsp;» prend le relais, et il marche partout</td></tr>
+        <tr><td class="tag">I7</td><td>Vingt fichiers à lire à chaque ouverture</td><td>Un appel à l'arbre Git donne tous les SHA d'un coup&nbsp;; on ne télécharge que ce qui a changé — voir §5</td></tr>
+        <tr><td class="tag">I8</td><td>Pas de notification possible</td><td>Une demande d'adhésion en attente ne peut pas être signalée. L'écran d'attente doit le dire, et le pseudo Discord sert de canal de relance</td></tr>
+        <tr><td class="tag">I9</td><td>Le trousseau du bureau n'existe pas sur Android</td><td>Le stockage du jeton passe par l'interface <code>secrets</code> avec une implémentation portable, jamais par une bibliothèque de trousseau propre au bureau — c'est le seul choix technique qui rendrait l'APK coûteux</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout">
+      <span class="lbl">Le vrai risque</span>
+      <p>Ce n'est pas la fuite de données — un cercle d'amis, des notes sur des jeux. C'est la <strong>corruption ou l'effacement accidentel</strong>. Tout le reste de l'architecture découle de ce constat, à commencer par le choix de GitHub.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§4</div>
+  <div class="body">
+    <h2>Décisions actées <span class="rev">révisé v16</span></h2>
+    <p class="subhead">Les choix structurants. Revenir en arrière coûtera cher ; les tenir ne coûte rien.</p>
+    <p>⚠️ <strong>D9 à D25 ne figurent pas ici</strong> mais dans le journal de bord (<code>docs/ETAT.md</code>)&nbsp;: ce sont des décisions d'interface et de lexique, qui relèvent du prototype. Ce document ne porte que celles qui engagent l'architecture ou le modèle.</p>
+
+    <div class="adr">
+      <div class="adr-row">
+        <div class="adr-id">D1</div>
+        <div class="adr-body">
+          <h4>Les données vivent dans un dépôt GitHub privé</h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>Chaque écriture est un commit. Face au vrai risque — la corruption — n'importe quelle bêtise se répare en une commande. Drive écrase, Git conserve.</dd>
+            <dt>En prime</dt><dd>Détection de conflit native via le SHA du fichier.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D2</div>
+        <div class="adr-body">
+          <h4>Le dépôt appartient à une organisation, pas à un compte personnel</h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>Les permissions par dépôt — jetons fine-grained comme GitHub Apps — se déclarent au niveau d'une organisation. Sur un dépôt personnel, un ami collaborateur devrait passer par un jeton donnant accès à <strong>tous</strong> ses dépôts.</dd>
+            <dt>Conséquence</dt><dd>Créer une organisation GitHub gratuite, y placer <code>tracker-data</code> en privé.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D3</div>
+        <div class="adr-body">
+          <h4>Jeux vidéo aujourd'hui, modèle extensible aux films</h4>
+          <dl>
+            <dt>Conséquence</dt><dd>Un champ <code>mediaType</code> présent dès le départ, et <code>progress: { unit, value }</code> plutôt que <code>hours</code>. Une seule machine à états, un vocabulaire différent par média : « Fini » pour un jeu, « Vu » pour un film, « Terminée » pour une série.</dd>
+            <dt>Mise à jour <span class="rev new">v5</span></dt><dd>Films et séries <strong>entrent dès la V1</strong>, pas en V3. La décision tient sa promesse : le champ existait déjà, il n'y a aucune migration à écrire. C'est exactement le cas pour lequel il avait été posé.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D4</div>
+        <div class="adr-body">
+          <h4>Données privées — une authentification est requise même pour lire</h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>Personne n'a à réfléchir à ce qu'il écrit dans ses notes. C'est ce qui rend l'outil honnête.</dd>
+            <dt>Conséquence</dt><dd>L'application s'ouvre sur un écran de connexion. Pas de vitrine publique.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D5</div>
+        <div class="adr-body">
+          <h4>Application de bureau en Tauri, interface en React et TypeScript <span class="rev new">nouveau v2</span></h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>Une vraie application installée sur les trois OS, un binaire d'une dizaine de méga-octets, et surtout la fin des contraintes du navigateur — voir §2.</dd>
+            <dt>TypeScript</dt><dd>Ce n'est pas un détail de confort : le typage est le mécanisme qui empêche l'ajout d'un bloc de casser un autre en silence. C'est une pièce de C7, pas une préférence.</dd>
+            <dt>Repli</dt><dd>Electron, si la chaîne Rust devient un obstacle. Même architecture, même code d'interface ; on n'y perd que la taille du binaire.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D6</div>
+        <div class="adr-body">
+          <h4>Trois couches, dépendances à sens unique <span class="rev new">nouveau v2</span></h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>Permettre d'ajouter une fonction sans toucher aux autres, sans pour autant tout isoler au point de dupliquer. Détail en §6.</dd>
+            <dt>Conséquence</dt><dd>Le sens des dépendances est vérifié par une règle de lint, pas par la discipline. Une violation fait échouer la compilation.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D7</div>
+        <div class="adr-body">
+          <h4>L'adhésion se demande depuis l'application ; les droits sont ceux de GitHub <span class="rev new">nouveau v3</span></h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>L'application étant distribuable, il faut un chemin d'entrée pour quelqu'un qui ne connaît personne dans l'organisation. Et il faut qu'un humain décide.</dd>
+            <dt>Mécanisme</dt><dd>La demande ouvre une <em>issue</em> sur le dépôt de code public — n'importe quel compte GitHub peut le faire. Un administrateur la voit et valide depuis l'application, ce qui appelle l'API d'adhésion à l'organisation et referme l'issue.</dd>
+            <dt>Qui est admin</dt><dd><strong>Les rôles GitHub, pas une liste maison.</strong> Est administrateur qui possède ce rôle dans l'organisation. Une liste dans un fichier finirait par diverger des droits réels et créerait une autorité fictive.</dd>
+            <dt>Repli</dt><dd>Si l'appel d'API se heurte à une permission, l'application ouvre dans le navigateur une issue pré-remplie. Aucun droit particulier n'est alors requis.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D8</div>
+        <div class="adr-body">
+          <h4>Responsive dès l'origine, pour garder Android ouvert à moindre coût <span class="rev new">nouveau v4</span></h4>
+          <dl>
+            <dt>Pourquoi</dt><dd>Une version Android doit rester une <em>production secondaire</em>&nbsp;: décidée sur un coup de tête, livrée en quelques jours. C'est possible — la plomberie Tauri est bon marché — mais seulement si l'interface n'a pas à être refaite.</dd>
+            <dt>Ce que ça impose</dt><dd>Mobile d'abord sur les primitives de mise en page&nbsp;; requêtes de conteneur plutôt que de fenêtre&nbsp;; cibles tactiles d'au moins 44&nbsp;px partout, y compris sur bureau&nbsp;; <strong>aucune action accessible par le seul survol</strong>&nbsp;; les surfaces du noyau ont une forme étroite déclarée&nbsp;; chaque vue déclare comment elle dégrade.</dd>
+            <dt>Ce que ça coûte</dt><dd>Environ 10 à 15&nbsp;% d'effort de conception en plus par vue, et l'abandon de quelques dispositions luxueuses qui ne tiendraient qu'en large. À comparer à une réécriture de toutes les vues.</dd>
+            <dt>Hors sujet</dt><dd>iOS. Techniquement possible, mais la distribution exige un compte Apple et un passage par TestFlight ou l'App&nbsp;Store. Pas un coup de tête.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D26</div>
+        <div class="adr-body">
+          <h4>Le Greffe — l'autorité se range, elle ne se dissimule pas <span class="rev new">nouveau v16</span></h4>
+          <dl>
+            <dt>La distinction</dt><dd>Deux besoins se ressemblent et ne sont pas le même&nbsp;: ce qui demande une <strong>autorité</strong> (admettre, écarter, fondre un doublon, passer la charge) et ce qui demande seulement de la <strong>discrétion</strong> (resynchroniser, lire son fragment brut, régler l'affichage des titres). Les réunir donnerait un panneau où une préférence anodine côtoie une exclusion.</dd>
+            <dt>Où</dt><dd>L'autorité dans le Greffe, troisième zone de la barre latérale sous sa propre règle — ni <em>agir</em>, ni <em>parcourir</em>&nbsp;: <strong>tenir</strong>. La discrétion au pied de sa propre feuille.</dd>
+            <dt>Qui le voit</dt><dd><strong>Personne d'autre que ceux qui l'ont.</strong> L'entrée n'est pas grisée pour les autres&nbsp;: elle est absente. Le rôle est lu dans l'organisation GitHub (D7), jamais dans une liste maison.</dd>
+            <dt>Ce qu'il n'est pas</dt><dd>Pas de modération — ce n'est pas une fonction qu'on refuse, c'est une chose <strong>non représentable</strong>&nbsp;: on n'a pas accès en écriture au fichier d'un autre. Et rien n'y est en coulisse&nbsp;: tout le monde lit le même dépôt, donc tout acte paraît dans l'historique de chacun. L'écran le dit.</dd>
+            <dt>Palier</dt><dd>Le <strong>guichet des admissions est V1</strong> — le critère de la V1 est qu'un inconnu entre sans explication, et il n'entre pas si personne ne peut l'admettre. Le reste (doublons, journal, passation) est V2.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D27</div>
+        <div class="adr-body">
+          <h4>Un doublon se fond par un alias déclaré, appliqué à la lecture <span class="rev new">nouveau v16</span></h4>
+          <dl>
+            <dt>Le problème</dt><dd>Deux personnes inscrivent la même œuvre à la main faute de l'avoir trouvée, et le catalogue en porte deux. Corriger imposerait d'éditer leurs fichiers — ce qu'interdit «&nbsp;un seul écrivain par fichier&nbsp;».</dd>
+            <dt>La forme</dt><dd>Le greffier déclare <code>{ from, to }</code> <strong>dans son propre fragment</strong>, et la fusion applique le repli <strong>à la lecture</strong>. Rien n'est réécrit, rien n'est supprimé, et <strong>l'alias se retire</strong> — la seule garantie qui tienne quand on s'est trompé.</dd>
+            <dt>Cas limite</dt><dd>Si une même personne tenait les deux entrées, la fusion n'en garde qu'une&nbsp;: la plus récente.</dd>
+            <dt>Portée</dt><dd>C'est la même grammaire que les favoris, les surlignages et les quêtes&nbsp;: <em>une déclaration rangée chez soi, sommée à la lecture.</em> Tout fait collectif à venir prendra cette forme — c'est ce qu'impose le modèle, pas un choix de style.</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§5</div>
+  <div class="body">
+    <h2>Architecture des données</h2>
+    <p class="subhead">Un fichier par personne — la décision qui empêche le projet de se casser en silence.</p>
+
+    <p>Plutôt qu'une base partagée, <strong>chaque participant possède son fichier et n'écrit que dedans.</strong> L'application lit les N fichiers et les fusionne à l'affichage.</p>
+
+    <div class="tree">
+<b>tracker-data/</b>            <i>dépôt privé, organisation</i>
+├── <b>data/</b>
+│   ├── nathan.json      <i>seul Nathan y écrit</i>
+│   ├── alice.json       <i>seule Alice y écrit</i>
+│   └── bob.json
+└── <b>meta/</b>
+    └── members.json     <i>liste des participants — rare, édité à la main</i>
+    </div>
+
+    <p>Ce que ça donne gratuitement :</p>
+    <ul class="plain">
+      <li><strong>Zéro conflit d'écriture, par construction.</strong> Pas de verrou, pas de fusion à trois voies, pas de perte silencieuse.</li>
+      <li><strong>Rayon de dégât limité.</strong> Un fichier corrompu n'emporte pas les autres.</li>
+      <li><strong>Le catalogue devient dérivé.</strong> Un jeu existe parce qu'au moins une personne le suit — ce qui correspond exactement à l'usage.</li>
+      <li><strong>Ajouter un ami, c'est ajouter un fichier.</strong> Aucune migration.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="lbl">Règle d'or</span>
+      <p>On ne stocke que des <strong>faits</strong>, jamais des <strong>agrégats</strong>. Le catalogue, les moyennes, les classements, les compteurs : tout se recalcule au chargement, à chaque fois. Un agrégat stocké est un agrégat qui devient faux, puis qu'on ne sait plus régénérer. C'est précisément ce qui tue ce genre de projet au sixième mois.</p>
+    </div>
+
+    <h3>Lire vingt fichiers sans ramer</h3>
+    <p>Un appel à l'arbre Git du dépôt rend en une fois le chemin et le SHA de tous les fichiers. On ne télécharge ensuite que les blobs dont le SHA a bougé depuis la dernière ouverture, les autres sortant du cache local. Une ouverture sans changement coûte <strong>une seule requête</strong>. À vingt personnes c'est confortable ; à cent ça le resterait.</p>
+
+    <h3>Git tient-il encore, maintenant qu'il y a un fil&nbsp;? <span class="rev">révisé v14</span></h3>
+    <p>La question est juste&nbsp;: une conversation n'a pas le même profil d'écriture qu'un journal de lectures. Elle mérite une réponse chiffrée plutôt qu'un réflexe.</p>
+    <div class="callout">
+      <span class="lbl">Mesuré, pas supposé — 10 octobre 2026</span>
+      <p>Ce tableau a d'abord été écrit de mémoire, et <strong>une de ses lignes était fausse</strong>. Le spike (<code>spike/spike.mjs</code>) interroge GitHub pour de vrai&nbsp;: l'arbre Git rend <strong>319 entrées en un appel, 218&nbsp;ms</strong>&nbsp;; vingt fichiers à froid en parallèle prennent <strong>395&nbsp;ms</strong>&nbsp;; et le device flow n'expose <strong>aucun en-tête CORS</strong>, préflight compris — la coque native est donc la condition, pas un confort.</p>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Ce qu'on craint</th><th>Ce qu'il en est</th></tr></thead>
+      <tbody>
+        <tr><td>Le quota d'API explose si on relit souvent</td><td><strong>Non, mais pas pour la raison qu'on croit.</strong> <span class="rev">corrigé v14</span> On lit partout qu'un <code>304 Not Modified</code> ne compte pas&nbsp;; <strong>le spike l'a mesuré et c'est faux</strong> — cinq relectures conditionnelles, cinq décomptes. L'argument porte donc sur le <em>budget</em>&nbsp;: <strong>5 000 appels par heure et par personne</strong>, et relire l'arbre toutes les vingt secondes en coûte 180, soit <strong>3,6 %</strong>. L'<code>ETag</code> reste utile — il économise la bande passante et le temps, pas le quota</td></tr>
+        <tr><td>Vingt personnes qui écrivent en même temps</td><td><strong>Tenable, à une condition</strong>&nbsp;: grouper. Un commit par message heurterait les limites secondaires de GitHub et noierait l'historique. Le client accumule et écrit après quelques secondes d'inactivité&nbsp;; une rafale de dix messages fait un ou deux commits</td></tr>
+        <tr><td>Le dépôt gonfle sans fin</td><td><strong>Lentement.</strong> Du texte, compressé et repaqueté par GitHub. À vingt personnes et trente messages par jour, on parle de dizaines de méga-octets par <em>an</em>, très loin des seuils. Les Loges anciennes s'archivent par année si besoin</td></tr>
+        <tr><td>Ce ne sera jamais instantané</td><td><strong>Exact, et c'est le seul vrai coût.</strong> Le plancher de latence est l'intervalle de relecture — quinze à trente secondes. Aucun hébergement Git ne changera ça</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout">
+      <span class="lbl">Le conflit d'écriture, provoqué exprès — 11 octobre 2026 <span class="rev new">nouveau v16</span></span>
+      <p>Écriture acceptée, puis <strong><code>409 Conflict</code> sur un SHA périmé</strong>. Le signal «&nbsp;relis, fusionne, réessaie&nbsp;» existe donc bel et bien&nbsp;— et comme un seul écrivain touche chaque fichier, <strong>il ne devrait jamais se déclencher</strong>. C'est un filet, pas un mécanisme de fonctionnement&nbsp;: le jour où il se déclenche, c'est qu'un invariant a été enfreint ailleurs.</p>
+    </div>
+    <p><strong>Verdict&nbsp;: Git reste le bon choix</strong>, et rien ne s'en approche sur l'axe qui compte ici — gratuit, sans serveur à administrer, sans compte à gérer, et surtout <em>versionné</em>, donc réparable. La Loge ne remet pas ce choix en cause&nbsp;; elle ajoute deux règles de client, pas une migration.</p>
+    <p><strong>Le seuil où la réponse basculerait est précis</strong>&nbsp;: le jour où quelqu'un attendra de voir un message apparaître <em>sans rien rafraîchir</em>, ou d'être averti. Et même là, la bonne réponse ne serait pas de déplacer les données&nbsp;:</p>
+    <ul class="plain">
+      <li><strong>Un canal de réveil qui ne stocke rien.</strong> Un relais minuscule — un worker gratuit, un courtier de messages — qui ne transporte qu'un signal «&nbsp;quelque chose a changé&nbsp;». Les données restent dans Git, aucun invariant ne tombe, et le relais peut mourir sans rien emporter. C'est l'échappatoire à retenir.</li>
+      <li><strong>Pas</strong> une base temps réel hébergée (Firebase, Supabase). Elle rendrait le direct, mais réintroduirait exactement ce qu'on a supprimé&nbsp;: un magasin partagé modifiable, donc le conflit d'écriture et la corruption silencieuse. Elle ajouterait un compte à administrer, un propriétaire unique, et des paliers gratuits qui se suspendent. On échangerait un défaut visible contre un défaut invisible.</li>
+      <li><strong>Pas</strong> Discord non plus — qu'ils ont déjà, et qui fait mieux le travail de salon. <strong>Si la Loge n'était qu'un salon, Discord gagnerait et il faudrait la retirer.</strong> Sa raison d'être est d'être attachée à l'Ordre et aux œuvres&nbsp;: on y cite une fiche, on y surligne, on retrouve un passage six mois plus tard. C'est ce que Discord ne fait pas.</li>
+    </ul>
+
+    <h3>Identifier un jeu : le piège discret</h3>
+    <p>Si chacun saisit le titre à la main, « Zelda BOTW » et « Breath of the Wild » deviennent deux jeux distincts et toutes les vues de comparaison s'effondrent. La parade : une recherche sur une base externe au moment de l'ajout, qui rend un identifiant canonique <code>igdb:1020</code> <strong>et la jaquette</strong>. Un seul mécanisme règle la déduplication et alimente la beauté visuelle. Saisie manuelle possible en repli, avec un identifiant <code>local:hollow-knight</code>.</p>
+    <p>La coque native rend IGDB accessible — sa clé secrète voyage dans la partie Rust, jamais dans l'interface. C'est la base la plus complète du domaine ; RAWG reste le repli si l'authentification Twitch qu'elle exige s'avère pénible.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§6</div>
+  <div class="body">
+    <h2>Architecture logicielle <span class="rev new">nouveau v2</span></h2>
+    <p class="subhead">Ajouter sans casser, sans pour autant tout isoler au point de devoir réécrire.</p>
+
+    <p>C'est une tension réelle, et les deux moitiés comptent autant. Des blocs parfaitement étanches, c'est du copier-coller partout et une interface qui part dans tous les sens. Des blocs qui se connaissent tous, c'est le retour de l'effet domino. <strong>La sortie n'est pas dans le cloisonnement, elle est dans un noyau partagé et un sens de dépendance unique.</strong></p>
+
+    <div class="layers-wrap">
+      <svg class="layers" viewBox="0 0 720 278" role="img" aria-label="Trois couches empilées : Fonctions en haut, Noyau au milieu, Plateforme en bas. Les dépendances ne vont que du haut vers le bas.">
+        <defs>
+          <marker id="ah2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path class="ah2" d="M0,0 L8,4 L0,8 z"></path>
+          </marker>
+        </defs>
+
+        <rect class="band band-top" x="20" y="18" width="560" height="88" rx="3"></rect>
+        <text class="band-lbl" x="36" y="40">FONCTIONS — S'AJOUTENT ET SE RETIRENT</text>
+        <g>
+          <rect class="chip" x="36" y="56" width="86" height="24" rx="2"></rect><text class="chip-lbl" x="79" y="72" text-anchor="middle">bibliothèque</text>
+          <rect class="chip" x="130" y="56" width="62" height="24" rx="2"></rect><text class="chip-lbl" x="161" y="72" text-anchor="middle">matrice</text>
+          <rect class="chip" x="200" y="56" width="86" height="24" rx="2"></rect><text class="chip-lbl" x="243" y="72" text-anchor="middle">fil d'activité</text>
+          <rect class="chip" x="294" y="56" width="74" height="24" rx="2"></rect><text class="chip-lbl" x="331" y="72" text-anchor="middle">consensus</text>
+          <rect class="chip" x="376" y="56" width="112" height="24" rx="2"></rect><text class="chip-lbl" x="432" y="72" text-anchor="middle">recommandations</text>
+          <rect class="chip" x="496" y="56" width="36" height="24" rx="2"></rect><text class="chip-lbl" x="514" y="72" text-anchor="middle">…</text>
+        </g>
+
+        <rect class="band" x="20" y="118" width="560" height="72" rx="3"></rect>
+        <text class="band-lbl" x="36" y="140">NOYAU — PARTAGÉ, STABLE</text>
+        <g>
+          <rect class="chip" x="36" y="156" width="126" height="24" rx="2"></rect><text class="chip-lbl" x="99" y="172" text-anchor="middle">modèle &amp; fusion</text>
+          <rect class="chip" x="170" y="156" width="82" height="24" rx="2"></rect><text class="chip-lbl" x="211" y="172" text-anchor="middle">sélecteurs</text>
+          <rect class="chip" x="260" y="156" width="108" height="24" rx="2"></rect><text class="chip-lbl" x="314" y="172" text-anchor="middle">design system</text>
+          <rect class="chip" x="376" y="156" width="86" height="24" rx="2"></rect><text class="chip-lbl" x="419" y="172" text-anchor="middle">surfaces</text>
+        </g>
+
+        <rect class="band" x="20" y="202" width="560" height="66" rx="3"></rect>
+        <text class="band-lbl" x="36" y="224">PLATEFORME — DERRIÈRE UNE INTERFACE</text>
+        <g>
+          <rect class="chip" x="36" y="236" width="118" height="24" rx="2"></rect><text class="chip-lbl" x="95" y="252" text-anchor="middle">stockage GitHub</text>
+          <rect class="chip" x="162" y="236" width="80" height="24" rx="2"></rect><text class="chip-lbl" x="202" y="252" text-anchor="middle">trousseau</text>
+          <rect class="chip" x="250" y="236" width="62" height="24" rx="2"></rect><text class="chip-lbl" x="281" y="252" text-anchor="middle">cache</text>
+          <rect class="chip" x="320" y="236" width="62" height="24" rx="2"></rect><text class="chip-lbl" x="351" y="252" text-anchor="middle">HTTP</text>
+        </g>
+
+        <line class="dep" x1="618" y1="26" x2="618" y2="258" marker-end="url(#ah2)"></line>
+        <text class="dep-lbl" x="644" y="142" text-anchor="middle" transform="rotate(-90 644 142)">DÉPENDANCES</text>
+      </svg>
+    </div>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-n">R1</div>
+        <div><b>Les dépendances vont dans un seul sens</b><span>Fonctions → Noyau → Plateforme. Jamais l'inverse, et jamais entre deux fonctions. Ce n'est pas une convention qu'on oublie : une règle de lint la fait échouer à la compilation.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">R2</div>
+        <div><b>Un seul modèle de données, un sélecteur par fonction</b><span>C'est la règle qui répond à la crainte de réécriture. Si chaque bloc avait sa propre forme de données, en ajouter un obligerait à re-transformer les données partout. Ici toutes lisent le même magasin fusionné : une nouvelle fonction, c'est un sélecteur et une vue. Les autres ne bougent pas d'une ligne.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">R3</div>
+        <div><b>Un registre de vues</b><span>Chaque bloc se déclare — identifiant, libellé, icône, composant, <strong>et comment il dégrade en étroit</strong>. La coque construit la navigation à partir du registre. Ajouter une vue, c'est un dossier et une ligne ; la supprimer, c'est effacer le dossier.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">R4</div>
+        <div><b>La règle de promotion</b><span>Un bloc garde ses composants propres chez lui. Dès qu'un <em>deuxième</em> bloc en a besoin, il monte dans le noyau. Pas avant — on ne généralise jamais sur un seul cas — mais jamais deux fois non plus. C'est ce qui évite à la fois le copier-coller et l'abstraction prématurée.</span></div>
+      </div>
+    </div>
+
+    <h3>Anatomie d'un bloc</h3>
+    <div class="tree">
+<b>src/</b>
+├── <b>features/</b>               <i>les blocs</i>
+│   └── <b>matrice/</b>
+│       ├── index.ts          <i>déclaration au registre — seul point de contact</i>
+│       ├── MatriceView.tsx
+│       ├── selectors.ts      <i>ce qu'elle tire du noyau</i>
+│       └── components/       <i>ses composants propres, non partagés</i>
+├── <b>core/</b>                   <i>le noyau</i>
+│   ├── model/                <i>schéma, fusion, migrations</i>
+│   ├── selectors/            <i>sélecteurs partagés</i>
+│   └── ui/                   <i>design system, primitives, surfaces</i>
+├── <b>platform/</b>               <i>adaptateurs, derrière une interface</i>
+│   ├── storage.ts            <i>GitHub — ou faux en mémoire, pour la V0</i>
+│   ├── secrets.ts            <i>trousseau du système</i>
+│   └── cache.ts
+└── <b>shell/</b>                  <i>navigation construite depuis le registre</i>
+
+<b>src-tauri/</b>                  <i>la part Rust : HTTP, trousseau, fichiers</i>
+    </div>
+
+    <h3>Les surfaces, et les « fenêtres intérieures »</h3>
+    <p>Panneaux, superpositions, tiroirs, et les petits effets visuels qui les accompagnent&nbsp;: tout ça vit dans le noyau, comme un vocabulaire partagé. Sans cette règle, chaque bloc réinventerait ses propres panneaux, et l'interface se mettrait à diverger — exactement ce que le soin porté à l'UI cherche à éviter.</p>
+    <p><strong>Chaque surface a une forme large et une forme étroite, décidées une fois dans le noyau</strong>&nbsp;: un panneau latéral devient une feuille du bas, une superposition devient un plein écran. Les blocs n'ont rien à savoir de tout ça — ils demandent une surface, pas une disposition. C'est ce qui fait qu'une version Android n'oblige pas à rouvrir chaque vue.</p>
+
+    <h3>La plateforme doit rester portable</h3>
+    <p>La couche du bas est la seule dont le code change entre le bureau et Android. Deux adaptateurs sur quatre y sont sensibles&nbsp;: le stockage du secret, et la mise à jour. <strong>Les deux se règlent en choisissant maintenant</strong> — une implémentation de secret portable plutôt qu'une bibliothèque de trousseau de bureau, et un bandeau de nouvelle version en complément de l'updater. Les deux autres, HTTP et cache fichier, fonctionnent tels quels.</p>
+
+    <div class="callout">
+      <span class="lbl">Ce que ça garantit pour la suite</span>
+      <p><span class="rev">révisé v16</span> La ligne annonçait un cahier des charges UX/UI qui atterrirait dans la couche du haut. <strong>Il n'arrivera pas</strong>, et la démonstration a eu lieu sans lui&nbsp;: trois jours de décisions d'interface — Loge, Quêtes, lignée, Greffe, entrée dans le groupe — n'ont touché <strong>ni le noyau, ni la plateforme</strong>. C'est la preuve que la séparation voulue ici fonctionne, et elle vaut mieux qu'une promesse.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§7</div>
+  <div class="body">
+    <h2>Modèle de données</h2>
+    <p class="subhead">Un fichier, deux sections : ce que la personne apporte au catalogue, et ce qu'elle en dit.</p>
+
+<pre><code>{
+  <span class="c-key">"schemaVersion"</span>: <span class="c-num">1</span>,
+  <span class="c-key">"user"</span>: {
+    <span class="c-key">"id"</span>: <span class="c-str">"ncarmichael"</span>,        <span class="c-com">// identifiant GitHub — immuable, donne le nom du fichier</span>
+    <span class="c-key">"firstName"</span>: <span class="c-str">"Nathan"</span>,
+    <span class="c-key">"handle"</span>: <span class="c-str">"Nath"</span>,
+    <span class="c-key">"circle"</span>: <span class="c-str">"mage"</span>,            <span class="c-com">// mage · guerrier · ranger — porte une couleur</span>
+    <span class="c-key">"color"</span>: <span class="c-str">"#8F6114"</span>,
+    <span class="c-key">"discord"</span>: <span class="c-str">"nath"</span>,           <span class="c-com">// optionnel</span>
+    <span class="c-key">"links"</span>: {}                  <span class="c-com">// réservé — Steam, hors V1</span>
+  },
+  <span class="c-key">"updatedAt"</span>: <span class="c-str">"2026-09-06T11:20:00Z"</span>,
+
+  <span class="c-com">// Contribution de Nathan au catalogue commun — toutes natures</span>
+  <span class="c-key">"works"</span>: {
+    <span class="c-str">"igdb:1020"</span>: {
+      <span class="c-key">"mediaType"</span>: <span class="c-str">"game"</span>,     <span class="c-com">// game · film · series · book</span>
+      <span class="c-key">"title"</span>: <span class="c-str">"Hollow Knight"</span>,
+      <span class="c-key">"year"</span>: <span class="c-num">2017</span>,
+      <span class="c-key">"cover"</span>: <span class="c-str">"https://images.igdb.com/…"</span>,
+      <span class="c-key">"genres"</span>: [<span class="c-str">"Metroidvania"</span>, <span class="c-str">"Plateforme"</span>],
+      <span class="c-key">"platforms"</span>: [<span class="c-str">"PC"</span>, <span class="c-str">"Switch"</span>]
+    }
+  },
+
+  <span class="c-com">// Ce que Nathan en dit</span>
+  <span class="c-key">"entries"</span>: {
+    <span class="c-str">"igdb:1020"</span>: {
+      <span class="c-key">"status"</span>: <span class="c-str">"completed"</span>,
+      <span class="c-key">"rating"</span>: <span class="c-num">9</span>,
+      <span class="c-key">"progress"</span>: { <span class="c-key">"unit"</span>: <span class="c-str">"hours"</span>, <span class="c-key">"value"</span>: <span class="c-num">42</span> },
+      <span class="c-key">"platform"</span>: <span class="c-str">"Switch"</span>,
+      <span class="c-key">"startedAt"</span>: <span class="c-str">"2026-01-04"</span>,
+      <span class="c-key">"finishedAt"</span>: <span class="c-str">"2026-02-11"</span>,
+      <span class="c-key">"with"</span>: [<span class="c-str">"tbrunet"</span>, <span class="c-str">"jfaure"</span>],   <span class="c-com">// faite à plusieurs — les chroniques restent individuelles</span>
+      <span class="c-key">"plays"</span>: <span class="c-num">2</span>,                   <span class="c-com">// refaite : un compteur, pas une seconde entrée</span>
+      <span class="c-key">"reflections"</span>: [        <span class="c-com">// les stations : pensées datées, prises en chemin</span>
+        { <span class="c-key">"at"</span>: <span class="c-str">"2026-09-24T…"</span>, <span class="c-key">"text"</span>: <span class="c-str">"Caelid. Je déteste Caelid."</span> }
+      ],
+      <span class="c-key">"review"</span>: {
+        <span class="c-key">"title"</span>: <span class="c-str">"Le silence comme game design"</span>,
+        <span class="c-key">"body"</span>: <span class="c-str">"Hollow Knight ne t'explique rien…"</span>
+      },
+      <span class="c-key">"history"</span>: [
+        { <span class="c-key">"at"</span>: <span class="c-str">"2026-01-04T20:11:00Z"</span>, <span class="c-key">"status"</span>: <span class="c-str">"playing"</span> },
+        { <span class="c-key">"at"</span>: <span class="c-str">"2026-02-11T23:40:00Z"</span>, <span class="c-key">"status"</span>: <span class="c-str">"completed"</span> }
+      ],
+      <span class="c-key">"updatedAt"</span>: <span class="c-str">"2026-02-11T23:40:00Z"</span>
+    }
+  }
+}</code></pre>
+
+    <div class="callout">
+      <span class="lbl">Piège à éviter</span>
+      <p>L'identifiant est <strong>le compte GitHub, jamais le pseudo</strong>, et c'est lui qui nomme le fichier. Un pseudo se change ; si le nom du fichier en dépendait, le renommer orphelinerait tout l'historique de la personne.</p>
+    </div>
+
+    <p><code>history</code> mérite une mention à part : c'est lui qui donne gratuitement le fil d'activité — « Alice a fini Hollow Knight il y a deux jours » — et c'est très probablement ce qui fera revenir les gens, plus qu'une grille de jaquettes.</p>
+
+    <h3>Trois changements de modèle <span class="rev new">nouveau v5</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Avant</th><th>Maintenant</th><th>Pourquoi</th></tr></thead>
+      <tbody>
+        <tr><td><code>class</code></td><td><code>circle</code></td><td>La classe RPG devient un <strong>cercle</strong>, entité navigable de premier plan avec sa couleur&nbsp;: mages bleus, guerriers rouges, rangers verts. Les couleurs sont des jetons du design system, pas des données.</td></tr>
+        <tr><td><code>note</code>, texte court</td><td><code>review: { title, body }</code></td><td>Une critique porte un <strong>titre qui la résume</strong> et s'ouvre pour être lue. Le titre seul circule dans le fil d'activité&nbsp;; c'est lui qui donne envie de cliquer.</td></tr>
+        <tr><td><code>mediaType</code> réservé</td><td><code>mediaType</code> actif</td><td>Films, séries et livres entrent dès maintenant. Le champ attendait depuis la v2&nbsp;: aucune migration à écrire.</td></tr>
+        <tr><td><code>games</code> <span class="rev new">v8</span></td><td><code>works</code></td><td>La section où chacun verse ses fiches d'œuvres s'appelait <code>games</code>, reliquat de l'époque où le projet ne suivait que des jeux. Une jaquette de film rangée là serait un piège pour qui lit le schéma. <strong>Renommé tant qu'aucune donnée n'existe&nbsp;:</strong> gratuit aujourd'hui, une migration demain.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Faire à plusieurs, et refaire <span class="rev new">nouveau v10</span></h3>
+    <p>Deux ajouts au modèle d'entrée, tous deux additifs&nbsp;:</p>
+    <ul class="plain">
+      <li><strong><code>with[]</code> — les compagnons.</strong> Une œuvre achevée à plusieurs porte la liste de ceux avec qui on l'a faite. <strong>Les chroniques restent individuelles&nbsp;:</strong> chacun écrit la sienne, ou n'écrit pas. Partager l'expérience n'est pas partager le jugement, et confondre les deux aurait fait du groupe un auteur collectif, ce qu'il n'est pas.</li>
+      <li><strong><code>plays</code> — le compteur de passages.</strong> Refaire une œuvre n'est pas une seconde entrée&nbsp;: ce serait dupliquer un fait au lieu de le compter, et toutes les statistiques s'en trouveraient faussées. Un bouton discret sur sa propre ligne incrémente, rien de plus.</li>
+    </ul>
+    <p>Les <strong>genres</strong>, eux, appartiennent à l'œuvre et non à l'entrée&nbsp;: ils partent dans <code>works</code>, comme la jaquette, et la fusion retient la première contribution. Un tronc commun à toutes les natures — horreur, romance, action… — complété par ce qui n'a de sens que pour l'une d'elles&nbsp;: FPS, roguelite, shoot'em&nbsp;up pour les jeux, essai ou roman graphique pour les livres.</p>
+
+    <h3>Distinguer&nbsp;: les favoris et le magnum opus <span class="rev new">nouveau v11</span></h3>
+    <p>Une section de plus dans le fragment&nbsp;: <code>favorites[]</code>, une liste <strong>ordonnée</strong> d'identifiants d'œuvres, plafonnée à douze.</p>
+    <ul class="plain">
+      <li><strong>Un favori n'est pas une note.</strong> C'est une déclaration d'attachement, pas un jugement&nbsp;: on peut distinguer une œuvre qu'on n'a pas finie, ou en défendre une qu'on a jugée moyenne. La dériver d'un classement de notes reviendrait à n'avoir rien ajouté au modèle. On ne distingue en revanche pas ce qu'on convoite sans l'avoir fréquenté.</li>
+      <li><strong>L'ordre porte du sens.</strong> Le premier rang est le <em>magnum opus</em> de la personne. Le plafond de douze n'est pas une limite technique&nbsp;: au-delà, une liste de favoris redevient un second registre et cesse de choisir.</li>
+      <li><strong>L'Ordre en tire un étendard.</strong> L'onglet <em>Magnum opus</em> d'une chambre somme les distinctions de ses membres&nbsp;: ce qui réunit le plus de voix passe devant, à égalité le rang que ses tenants lui donnent tranche. C'est <strong>le seul accord de l'application qui se déclare au lieu d'être calculé</strong> — tout le reste se déduit des notes. Quand aucune œuvre ne réunit deux voix, l'écran le dit plutôt que de feindre l'unanimité.</li>
+    </ul>
+
+    <h3>La lignée&nbsp;: un lien qui traverse les Ordres <span class="rev new">nouveau v15</span></h3>
+    <p>Une section de plus&nbsp;: <code>kin[]</code>, où chacun déclare ce que les autres sont pour lui — <code>{ id, rel }</code>, <code>rel</code> parmi père, mère, parent, fils, fille, enfant, frère, sœur, fratrie.</p>
+    <ul class="plain">
+      <li><strong>Un lien n'existe que déclaré des deux côtés</strong>, et les deux déclarations doivent s'accorder en sens&nbsp;: «&nbsp;mon fils&nbsp;» appelle «&nbsp;mon père&nbsp;», «&nbsp;ma sœur&nbsp;» appelle «&nbsp;mon frère&nbsp;». C'est ce qui interdit de s'inventer une famille, et ça ne demande aucun mécanisme d'invitation&nbsp;: l'invariant premier suffit.</li>
+      <li><strong>La maisonnée n'est pas un objet qu'on possède&nbsp;:</strong> c'est la <em>composante connexe</em> des liens confirmés. Personne ne la crée, personne ne la détient, elle apparaît — et elle se recalcule comme tout le reste.</li>
+      <li><strong>Le mot est toujours celui de l'autre.</strong> C'est l'enfant qui dit «&nbsp;mon père&nbsp;», donc l'écran écrit «&nbsp;père de&nbsp;». Personne ne se nomme soi-même dans une famille, et ça évite d'inventer un champ de genre dont on n'a pas besoin.</li>
+      <li><strong>C'est le premier lien de l'application qui traverse les Ordres.</strong> On choisit son Ordre&nbsp;; on ne choisit pas sa maisonnée. Conséquence d'interface&nbsp;: le point d'entrée doit être <strong>neutre</strong>, sans quoi il faudrait choisir la teinte d'un membre contre celle des autres.</li>
+    </ul>
+    <p>C'est le <strong>quatrième fait collectif</strong> du modèle, et il a la forme des trois autres&nbsp;: rien n'est déclaré en commun, tout est <em>sommé à la lecture</em>. À ce stade ce n'est plus une coïncidence — c'est la grammaire qu'impose «&nbsp;un seul écrivain par fichier&nbsp;», et toute fonction collective à venir la prendra aussi.</p>
+
+    <h3>Les quêtes&nbsp;: des paliers, pas des trophées <span class="rev new">nouveau v13</span></h3>
+    <p>Une section de plus&nbsp;: <code>quests[]</code>. Une quête porte un nom, une ligne, et des <strong>épreuves</strong> — chacune un <em>palier</em> à atteindre sur un groupe d'œuvres. «&nbsp;Avoir achevé le Silmarillion, la trilogie et le Hobbit&nbsp;» est une épreuve&nbsp;; «&nbsp;avoir entrepris Silent Hill 1 à 4&nbsp;» en est une autre.</p>
+    <ul class="plain">
+      <li><strong>Nul ne valide une quête&nbsp;: elle s'accomplit d'elle-même.</strong> Qui l'a accomplie se <strong>recalcule à chaque lecture</strong>, comme tout agrégat — rien n'est jamais écrit. C'est ce qui la sépare d'un trophée décerné&nbsp;: il n'y a personne à convaincre, donc rien à administrer.</li>
+      <li><strong>Les paliers sont monotones, et c'est ce qui fonde tout le reste&nbsp;:</strong> <code>convoiter &lt; entreprendre &lt; achever</code>. Avoir renoncé ou accompli, c'est avoir entrepris&nbsp;; <strong>accompli vaut achevé</strong>. Une fois atteint, un palier ne se reperd pas.</li>
+      <li><strong>Ce qui en découle, et qu'il faut refuser&nbsp;:</strong> «&nbsp;suspendu&nbsp;» ne peut pas être un palier, puisqu'on en sort. Une quête qui se <em>désaccomplirait</em> parce que quelqu'un a changé un statut serait cruelle, et elle rendrait l'onglet d'un Ordre instable. Si un palier non monotone est demandé un jour, c'est là qu'il faut s'arrêter et en parler.</li>
+      <li><strong>Une quête vit dans le fragment de qui l'ouvre.</strong> Elle est donc visible de tous, et <strong>seul son auteur peut l'arracher</strong> — même règle que la Loge, même invariant.</li>
+    </ul>
+    <p>Elles paraissent à trois endroits&nbsp;: une section propre, un volet sur la feuille de chacun (ce qu'il a accompli), et un volet dans la chambre d'un Ordre — <strong>avec le décompte de ceux des siens qui l'ont menée au bout</strong>. C'est le troisième fait collectif du modèle, et il a la même forme que les deux autres&nbsp;: rien n'est déclaré en commun, tout est <em>sommé à la lecture</em>.</p>
+
+    <h3>La Grande Loge&nbsp;: un fil fermé par Ordre <span class="rev">révisé v12</span></h3>
+    <p>Deux sections&nbsp;: <code>loge[]</code>, les messages de la personne — <code>order</code>, <code>at</code>, <code>body</code>, et au besoin <code>ref</code> (une œuvre citée) et <code>replyTo</code> (sans arborescence) — et <code>marks[]</code>, les identifiants des messages qu'elle a surlignés. La fusion rassemble les deux&nbsp;; la chambre d'un Ordre affiche le fil <strong>dans le sens du temps</strong>, dense, avec son propre défilement, ouvert sur son présent.</p>
+    <ul class="plain">
+      <li><strong>On n'entre dans une Loge que si on est de l'Ordre.</strong> Les autres trouvent porte close&nbsp;: «&nbsp;Vous ne faites pas partie de la grande loge. Ses secrets vous sont interdits.&nbsp;» — le seul vouvoiement de l'application, parce que la porte ne vous connaît pas. <strong>⚠️ C'est une règle d'usage, pas une clôture&nbsp;:</strong> tout le monde lit le même dépôt privé, donc l'application fait respecter la convention et <em>ne garantit pas le secret</em>. Ne jamais laisser croire le contraire. Une vraie clôture demanderait un dépôt par Ordre avec des équipes GitHub, ce qui briserait «&nbsp;un fichier par personne&nbsp;» — le prix est trop élevé pour ce qu'on y gagne.</li>
+      <li><strong>Surligner est une marque personnelle rangée chez soi.</strong> Un message est surligné dès qu'une personne l'a marqué&nbsp;; le compte dit combien&nbsp;; on ne retire que la sienne. <strong>Replié, le fil ne garde que les surlignés</strong> — un index construit à la main par ceux qui lisent — et rouvrir un passage ramène à l'endroit exact d'où il vient.</li>
+      <li><strong>Les faits collectifs de l'application sont tous de la même forme&nbsp;:</strong> le magnum opus d'un Ordre, les surlignages d'un fil, le décompte d'une quête, la maisonnée — des <em>déclarations rangées chez soi et sommées à la lecture</em>. C'est la forme qu'impose «&nbsp;un seul écrivain par fichier&nbsp;», et tout fait collectif à venir la prendra aussi.</li>
+    </ul>
+    <p><strong>Cela révise le hors-périmètre de §11</strong>, qui excluait «&nbsp;commentaires et fils de discussion&nbsp;». Ce qui les excluait réellement, c'était le conflit d'écriture et la modération. Or&nbsp;:</p>
+    <ul class="plain">
+      <li><strong>Le conflit d'écriture n'existe pas</strong>&nbsp;: chacun n'écrit que dans son propre fragment. L'invariant premier tient sans une ligne de code en plus.</li>
+      <li><strong>La modération n'est pas une fonction refusée, elle est non représentable</strong>&nbsp;: on n'a pas accès en écriture au fichier d'un autre, donc nul n'efface le message d'autrui. Chacun retire les siens.</li>
+      <li><strong>Un message reste dans l'Ordre où il a été dit</strong>, même si son auteur en change&nbsp;: d'où le champ <code>order</code>, qui n'est pas une redite de la classe de la personne.</li>
+      <li><strong>Écrire se groupe.</strong> Un fil bavard ne produit pas un commit par message&nbsp;: le client accumule et écrit après quelques secondes d'inactivité. L'historique du dépôt est ce qui rend les données réparables — le noyer sous des commits d'une ligne, c'est perdre la propriété qui a fait choisir Git.</li>
+    </ul>
+    <p>Le prix se paie dans l'interface, pas dans le modèle&nbsp;: sans serveur, <strong>aucun message n'est poussé</strong>. Il paraît chez les autres à leur synchronisation suivante et personne n'est averti. L'écran l'écrit en toutes lettres — même honnêteté que l'écran d'attente d'adhésion. Ce qui reste hors périmètre&nbsp;: les fils arborescents, et les commentaires attachés à une œuvre — la chronique est le seul écrit qu'une œuvre porte.</p>
+
+    <h3>Les checkpoints, et pourquoi ce n'est pas une chronique <span class="rev">révisé v9</span></h3>
+    <p>Un <strong>checkpoint</strong> est une pensée datée, prise pendant qu'on avance, qui ne prétend à aucun verdict. Le contenu signature de l'application porte son nom&nbsp;: un point de sauvegarde sur le trajet. Une <strong>chronique</strong> est un jugement rédigé après coup, avec un titre qui le résume. Les confondre serait une erreur de modèle autant que de ton&nbsp;: l'une se consigne à la volée depuis la feuille de personnage, l'autre se compose.</p>
+    <div class="tw"><table>
+      <thead><tr><th></th><th>Checkpoint</th><th>Chronique</th></tr></thead>
+      <tbody>
+        <tr><td>Champ</td><td><code>reflections[]</code></td><td><code>review&nbsp;{ title, body }</code></td></tr>
+        <tr><td>Quand</td><td>En chemin, plusieurs fois</td><td>À la fin, une fois</td></tr>
+        <tr><td>Où on la pose</td><td>Depuis le bloc «&nbsp;En cours&nbsp;», en une ligne</td><td>Depuis la fiche d'inscription</td></tr>
+        <tr><td>Où elle se lit</td><td>Fiche de l'œuvre, et dernier checkpoint visible sur la feuille</td><td>Fiche de l'œuvre, et la une du Registre</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Suspendu n'est pas Renoncé.</strong> Le volet «&nbsp;En cours&nbsp;» d'une feuille ne montre que <code>playing</code>&nbsp;; mettre une œuvre de côté la fait descendre au registre sans verdict, et ce geste doit rester à un seul clic — c'est le plus fréquent de tous.</p>
+
+    <h3>Titre original, titre français <span class="rev">révisé v7</span></h3>
+    <p>Une même œuvre circule sous plusieurs noms, et chacun connaît le sien. Le problème est moins grave qu'il n'y paraît, parce qu'il est <strong>déjà résolu à moitié par l'identité</strong>&nbsp;: deux personnes qui portent «&nbsp;Past Lives&nbsp;» et «&nbsp;Nos vies d'avant&nbsp;» depuis la source tombent sur le même <code>tmdb:</code>, donc sur la même fiche. Le titre n'a jamais été l'identité.</p>
+    <p>Reste l'affichage, qui se règle en trois points&nbsp;:</p>
+    <ul class="plain">
+      <li><strong>L'œuvre porte les deux titres</strong> — <code>title</code> pour la version originale, <code>titleFr</code> quand elle diffère. Tous deux viennent de la source.</li>
+      <li><strong>Le choix est une préférence de personne</strong>, rangée dans son propre fragment (<code>user.prefs.titles</code>), donc transportée d'une machine à l'autre. Ce n'est pas un réglage de vue&nbsp;: c'est un fait sur quelqu'un.</li>
+      <li><strong>La recherche interroge toujours les deux</strong>, quelle que soit la préférence. C'est le point qui compte le plus — sans lui, on ne retrouve jamais une œuvre sous le nom qu'on lui connaît. La fiche affiche l'autre titre sous le principal, pour que personne ne reste perdu.</li>
+    </ul>
+    <p>Le cas qui reste ouvert est celui de la <strong>saisie manuelle</strong>&nbsp;: deux personnes décrivant la même œuvre à la main produisent deux identifiants <code>local:</code> distincts, donc un vrai doublon. C'est précisément pourquoi la recherche dans le fonds est le chemin par défaut et la description manuelle l'exception — et pourquoi l'onglet d'administration de la V2 sait fusionner.</p>
+
+    <h3>Les jaquettes, et pourquoi Git ne pardonne pas <span class="rev">révisé v6</span></h3>
+    <p>Une jaquette peut être importée à la main quand aucune source ne la fournit. Le redimensionner avant écriture est nécessaire, mais <strong>ce n'est pas la vraie contrainte</strong>&nbsp;: dans un dépôt Git, un fichier remplacé n'est jamais effacé. Chaque version d'une image reste dans l'historique, pour toujours, et chaque personne du groupe la retélécharge à chaque clone. Un dépôt de données qui accueille des binaires grossit sans jamais pouvoir maigrir.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Cas</th><th>Traitement</th></tr></thead>
+      <tbody>
+        <tr><td>Jaquette issue d'une base externe</td><td><strong>On stocke l'URL, jamais les octets.</strong> C'est le cas par défaut, et il ne coûte rien au dépôt.</td></tr>
+        <tr><td>Aucune jaquette disponible</td><td>Le cadre porte le titre de l'œuvre, composé. Aucune image, aucun poids.</td></tr>
+        <tr><td>Jaquette importée à la main</td><td>Redimensionnement côté natif avant écriture — plafond à fixer, de l'ordre de 400&nbsp;×&nbsp;600 et 60&nbsp;ko en WebP. <strong>Et un garde-fou&nbsp;:</strong> refuser l'import au-delà du plafond plutôt que de le contourner.</td></tr>
+      </tbody>
+    </table></div>
+    <p>À trancher dans le cahier des charges&nbsp;: si les imports manuels deviennent fréquents, les images doivent quitter le dépôt de données pour un dépôt séparé, qu'on peut réinitialiser sans perdre les faits.</p>
+
+    <h3>Vocabulaire des états</h3>
+    <p>Quatre états demandés, six retenus. <code>playing</code> est le statut le plus consulté au quotidien ; sans <code>paused</code>, tout le monde met <code>dropped</code> par défaut et le taux d'abandon ne veut plus rien dire.</p>
+
+    <div class="fsm-wrap">
+      <svg class="fsm" viewBox="0 0 720 200" role="img" aria-label="Machine à états : Envie mène à En cours, qui mène à Fini puis Platiné. En cours et En pause s'échangent. En cours et En pause mènent à Abandonné. Fini peut revenir à En cours.">
+        <defs>
+          <marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path class="ah" d="M0,0 L8,4 L0,8 z"></path>
+          </marker>
+        </defs>
+
+        <path class="edge-dash" d="M465,70 C465,26 255,26 255,70" marker-end="url(#ah)"></path>
+        <text class="lbl" x="360" y="20" text-anchor="middle">rejouer</text>
+
+        <line class="edge" x1="150" y1="90" x2="184" y2="90" marker-end="url(#ah)"></line>
+        <line class="edge" x1="320" y1="90" x2="394" y2="90" marker-end="url(#ah)"></line>
+        <line class="edge" x1="530" y1="90" x2="564" y2="90" marker-end="url(#ah)"></line>
+        <line class="edge" x1="246" y1="110" x2="246" y2="139" marker-end="url(#ah)"></line>
+        <line class="edge" x1="264" y1="145" x2="264" y2="116" marker-end="url(#ah)"></line>
+        <line class="edge" x1="320" y1="165" x2="394" y2="165" marker-end="url(#ah)"></line>
+        <path class="edge" d="M320,102 C362,102 368,158 394,160" marker-end="url(#ah)"></path>
+
+        <g class="n-wish"><rect x="20" y="70" width="130" height="40" rx="3"></rect><text x="85" y="95" text-anchor="middle">Envie</text></g>
+        <g class="n-play"><rect x="190" y="70" width="130" height="40" rx="3"></rect><text x="255" y="95" text-anchor="middle">En cours</text></g>
+        <g class="n-done"><rect x="400" y="70" width="130" height="40" rx="3"></rect><text x="465" y="95" text-anchor="middle">Fini</text></g>
+        <g class="n-master"><rect x="570" y="70" width="130" height="40" rx="3"></rect><text x="635" y="95" text-anchor="middle">Platiné</text></g>
+        <g class="n-pause"><rect x="190" y="145" width="130" height="40" rx="3"></rect><text x="255" y="170" text-anchor="middle">En pause</text></g>
+        <g class="n-drop"><rect x="400" y="145" width="130" height="40" rx="3"></rect><text x="465" y="170" text-anchor="middle">Abandonné</text></g>
+      </svg>
+    </div>
+
+    <div class="statuses">
+      <div class="st"><span class="pill p-wish">wishlist</span><span>Envie d'y jouer, jamais lancé.</span></div>
+      <div class="st"><span class="pill p-play">playing</span><span>En cours, aujourd'hui.</span></div>
+      <div class="st"><span class="pill p-pause">paused</span><span>Mis de côté, sans rancune.</span></div>
+      <div class="st"><span class="pill p-done">completed</span><span>Terminé, histoire principale bouclée.</span></div>
+      <div class="st"><span class="pill p-master">mastered</span><span>Platiné, 100 %, tout vu.</span></div>
+      <div class="st"><span class="pill p-drop">dropped</span><span>Abandonné pour de bon.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§8</div>
+  <div class="body">
+    <h2>Entrer dans le groupe <span class="rev">révisé v3</span></h2>
+    <p class="subhead">Le parcours détaillé vit dans le document de parcours. Ici, seulement ce qui a des conséquences techniques.</p>
+
+    <p>L'application se distribue librement&nbsp;: quelqu'un peut l'installer sans connaître personne. Il faut donc un chemin d'entrée pour un inconnu, et un humain qui décide au bout. Quatre étapes.</p>
+
+    <ol class="steps">
+      <li><strong>Compte GitHub</strong><span>Se connecter, ou en créer un. Le <em>device flow</em> affiche un code court&nbsp;; la personne l'autorise sur github.com et revient. Le jeton part directement dans le trousseau du système. Aucun jeton à copier-coller.</span></li>
+      <li><strong>Demande d'adhésion</strong><span>L'application ouvre une <em>issue</em> sur le dépôt de code public, avec un corps structuré. N'importe quel compte GitHub peut le faire — c'est ce qui rend le parcours possible pour un inconnu.</span></li>
+      <li><strong>Validation par un administrateur</strong><span>Un administrateur voit la demande dans l'application et l'accepte&nbsp;: appel à l'API d'adhésion à l'organisation, puis fermeture de l'issue. Est administrateur qui possède ce rôle dans l'organisation GitHub — pas de liste maison.</span></li>
+      <li><strong>Profil</strong><span>Prénom, pseudo, classe, couleur, Discord en optionnel. Création de <code>data/&lt;compte-github&gt;.json</code>. L'application est utilisable.</span></li>
+    </ol>
+
+    <div class="callout">
+      <span class="lbl">Entre l'étape 2 et l'étape 3, il ne se passe rien</span>
+      <p>Et c'est le seul vrai risque du parcours. Sans serveur, <strong>aucune notification n'est possible</strong>&nbsp;: ni pour prévenir l'administrateur qu'une demande arrive, ni pour prévenir le demandeur qu'elle est acceptée. L'écran d'attente doit le dire franchement, vérifier à chaque ouverture, et proposer une relance par Discord. C'est la raison d'être du champ Discord, et non un ornement.</p>
+    </div>
+
+    <div class="callout">
+      <span class="lbl">Confirmé par le spike — 11 octobre 2026 <span class="rev">révisé v16</span></span>
+      <p>Les deux points en suspens sont tranchés, et mesurés contre la vraie API. <strong>Le device flow passe depuis la coque</strong>&nbsp;: jeton obtenu sans copier-coller. <strong>Il n'expire pas</strong> — la case <em>Expire user authorization tokens</em> a été laissée décochée sur la GitHub App, donc il n'y a aucun renouvellement à écrire. <strong>Une issue s'ouvre bien sur le dépôt public</strong>&nbsp;: c'est le seul geste d'un extérieur, et il suffit. Et <strong>l'API d'adhésion répond</strong> (<em>rôle «&nbsp;admin&nbsp;», état «&nbsp;active&nbsp;»</em>), ce qui fonde le guichet du Greffe (D26). Les replis restent écrits mais ne servent plus&nbsp;: issue pré-remplie dans le navigateur, jeton fine-grained collé à la main. Un <code>401</code> rejoue <em>l'étape de connexion seule</em>, jamais le parcours entier.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§9</div>
+  <div class="body">
+    <h2>Les vues <span class="rev">révisé v16</span></h2>
+    <p class="subhead">La liste des fonctions est stable ; leur forme ne l'est pas.</p>
+
+    <p>Ce qui suit énumère les blocs prévus, pas leur mise en scène. <strong>Leur forme est arrêtée dans le prototype cliquable</strong>, qui fait foi depuis le 11 octobre&nbsp;; elle peut encore changer sans toucher au reste, par construction (§6).</p>
+
+    <div class="views">
+      <p class="grp">Socle</p>
+      <div class="view"><b>Bibliothèque</b><span>Grille de jaquettes, filtrable par statut, genre, plateforme, personne.</span></div>
+      <div class="view"><b>Fiche jeu</b><span>Qui y a joué, qui l'a lâché, quelles notes — et lesquelles divergent.</span></div>
+
+      <p class="grp">Collectif</p>
+      <div class="view"><b>Matrice amis × jeux</b><span>La vue signature. D'un coup d'œil : qui a fini quoi, et surtout les trous.</span></div>
+      <div class="view"><b>Fil d'activité</b><span>La page d'accueil naturelle. Tombe gratuitement de <code>history</code>.</span></div>
+      <div class="view"><b>Consensus &amp; désaccord</b><span>« Le jeu sur lequel on est le moins d'accord » est plus intéressant que « le mieux noté ».</span></div>
+      <div class="view"><b>Recommandations croisées</b><span>Ce que tu as adoré et qu'un ami a en liste d'envies. Zéro algorithme, une intersection, directement actionnable.</span></div>
+      <div class="view"><b>Le mur de la honte</b><span>Backlog qui gonfle, taux d'abandon, délai entre l'ajout et le premier lancement. C'est drôle, donc c'est consulté.</span></div>
+
+      <p class="grp">Personnel</p>
+      <div class="view"><b>Année en revue</b><span>Timeline des jeux finis, répartition par genre et plateforme, ratio fini / abandonné.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§10</div>
+  <div class="body">
+    <h2>Trajectoire <span class="rev">révisé v3</span></h2>
+    <p class="subhead">Un point de passage obligé, puis quatre paliers.</p>
+
+    <div class="callout">
+      <span class="lbl">Avant toute interface</span>
+      <p>Une coque Tauri nue qui prouve quatre choses, dans l'ordre&nbsp;: le <strong>device flow</strong> aboutit à un jeton exploitable&nbsp;; la <strong>lecture</strong> de <code>data/*.json</code> dans un dépôt privé fonctionne&nbsp;; l'<strong>écriture</strong> rend un SHA&nbsp;; et une réécriture avec un SHA périmé rend bien un <code>409</code>. Ce dernier point est l'hypothèse sur laquelle repose toute la détection de conflit — <strong>c'est le seul endroit du projet qui peut le tuer.</strong> Tant qu'il n'est pas validé, aucune interface.</p>
+    </div>
+
+    <div class="phases">
+      <div class="ph"><div class="ph-v">V0</div><div><p class="ph-t">Le socle, sur données fictives</p><p class="ph-d">Les trois couches en place, le registre de vues, la règle de lint, un faux stockage en mémoire. Bibliothèque et fiche jeu. Valider l'ossature et l'ergonomie pendant que ça ne coûte encore rien de tout jeter.</p></div></div>
+      <div class="ph"><div class="ph-v">V1</div><div><p class="ph-t">Le groupe existe et vit</p><p class="ph-d">Détail ci-dessous. Critère d'arrêt&nbsp;: <strong>une personne extérieure au projet peut installer l'application, entrer dans le groupe et suivre ses jeux sans qu'on lui explique quoi que ce soit.</strong></p></div></div>
+      <div class="ph"><div class="ph-v">V2</div><div><p class="ph-t">Le collectif et l'administration</p><p class="ph-d">Matrice, fil d'activité, consensus, recommandations croisées. Et l'onglet d'administration&nbsp;: fusionner les doublons du catalogue, retirer une entrée déplacée, gérer les membres. C'est ici que ça devient un projet entre amis plutôt qu'un tableur amélioré.</p></div></div>
+      <div class="ph"><div class="ph-v">V3</div><div><p class="ph-t">Confort et ouvertures</p><p class="ph-d">Thème, mode hors ligne complet, export, le mur de la honte, l'année en revue. Puis les ouvertures que le modèle attend déjà&nbsp;: les films, les groupes appuyés sur les classes, et beaucoup plus tard le lien Steam.</p></div></div>
+      <div class="ph"><div class="ph-v">APK</div><div><p class="ph-t">Android, quand l'envie prend</p><p class="ph-d">Sans place fixe dans la trajectoire&nbsp;: c'est une production secondaire, pas un palier. Compte deux jours de plomberie — chaîne de compilation Android, adaptateur de secret, signature, intégration continue — <strong>à condition que D8 ait été tenu.</strong> Sinon, compte une réécriture de chaque vue.</p></div></div>
+    </div>
+
+    <h3>Ce qui fait la V1, précisément</h3>
+    <p>Tout ce qui suit est nécessaire&nbsp;; rien d'autre ne l'est. Une fonction absente de cette liste attend la V2, même si elle est facile.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Domaine</th><th>Dans la V1</th><th>Repoussé</th></tr></thead>
+      <tbody>
+        <tr><td>Entrée</td><td>Device flow, demande d'adhésion, validation par un administrateur, création du profil</td><td>Invitation par lien, rôles multiples</td></tr>
+        <tr><td>Profil</td><td>Prénom, pseudo, classe, couleur, Discord optionnel</td><td>Lien Steam, succès, groupes</td></tr>
+        <tr><td>Catalogue</td><td>Recherche externe, ajout, jaquette, saisie manuelle en repli</td><td>Fusion des doublons, modération</td></tr>
+        <tr><td>Suivi</td><td>Les six états, note, progression, plateforme, commentaire, dates</td><td>Étiquettes libres, listes personnalisées</td></tr>
+        <tr><td>Vues</td><td>Bibliothèque, fiche jeu, fil d'activité</td><td>Matrice, consensus, recommandations, mur de la honte</td></tr>
+        <tr><td>Technique</td><td>Stockage GitHub réel, cache par SHA, gestion du <code>409</code>, mise à jour automatique</td><td>Hors ligne complet, export</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout">
+      <span class="lbl">Pourquoi le fil d'activité est en V1 et pas en V2</span>
+      <p>À vingt personnes, l'usage est épisodique&nbsp;: on rouvre l'application après trois semaines. S'il n'y a rien qui dise <em>ce qui a changé depuis</em>, il n'y a aucune raison de revenir. Le fil est ce qui transforme un tableur en lieu — c'est du socle, pas du confort.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§11</div>
+  <div class="body">
+    <h2>Hors périmètre <span class="rev">révisé v11</span></h2>
+    <p class="subhead">Écrit noir sur blanc maintenant, c'est ce qui gardera le projet élégant dans six mois.</p>
+    <ul class="plain no">
+      <li>Temps réel et présence — exige un serveur.</li>
+      <li><del>Commentaires et fils de discussion — le groupe a déjà une conversation ailleurs.</del> <strong>Révisé en v11&nbsp;:</strong> la <strong>Grande Loge</strong> — un message board par Ordre — entre au périmètre, parce que ce qui l'excluait (conflit d'écriture, modération) ne s'applique pas à un modèle où chacun n'écrit que chez lui. Voir §7. Restent exclus&nbsp;: <strong>les fils arborescents</strong>, et <strong>les commentaires attachés à une œuvre</strong> — la chronique est le seul écrit qu'une œuvre porte.</li>
+      <li>Notifications push — exige un serveur. Conséquence assumée&nbsp;: voir §8.</li>
+      <li>Comptes et mots de passe maison — c'est exactement ce que GitHub nous évite.</li>
+      <li>Import Steam automatique et succès — exige un serveur pour tenir les jetons dans la durée. Reporté sans date.</li>
+      <li>Administration lourde — un onglet en V2 pour fusionner des doublons et gérer les membres, pas un back-office. À vingt personnes, ça suffit largement.</li>
+      <li>Version mobile — reportée, pas exclue&nbsp;: Tauri 2 la rendra possible sans changer de projet.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§12</div>
+  <div class="body">
+    <h2>Points ouverts <span class="rev">révisé v16</span></h2>
+    <p class="subhead">Le spike est fini. Ce qui reste ne bloque plus rien.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Sujet</th><th>Question</th><th>Quand trancher</th></tr></thead>
+      <tbody>
+        <tr><td>Organisation</td><td><strong>Tranché.</strong> <code>checkpoint-circlecodex</code>, créée le 11 octobre&nbsp;; <code>tracker-data</code> privé, <code>checkpoint</code> public à issues, GitHub App installée sur les deux.</td><td>✅ 11 oct.</td></tr>
+        <tr><td>Device flow</td><td><strong>Tranché, mesuré.</strong> Jeton obtenu sans copier-coller, <strong>sans expiration</strong>, issue ouvrable par un extérieur, adhésion lisible. Les replis restent écrits et ne servent plus.</td><td>✅ 11 oct.</td></tr>
+        <tr><td>UX / UI</td><td><strong>Le cahier n'arrivera pas</strong> (11 octobre). Le prototype cliquable fait foi&nbsp;; §5, §6 et §7 n'en dépendaient pas, et trois jours de décisions d'interface ne les ont pas touchés.</td><td>✅ 11 oct.</td></tr>
+        <tr><td>Issues publiques</td><td>Le dépôt de code étant public, n'importe qui peut y ouvrir une issue. Sans conséquence à cette échelle&nbsp;; un modèle d'issue suffira à cadrer.</td><td>V1</td></tr>
+        <tr><td>Classes</td><td>Tank, Guerrier, Mage — décoratives en V1. Ouvrir la liste, ou la figer&nbsp;?</td><td>V2</td></tr>
+        <tr><td>Android</td><td>Aucune décision à prendre&nbsp;: D8 garde la porte ouverte, on décide le jour où l'envie vient.</td><td>Sur un coup de tête</td></tr>
+        <tr><td>Catalogue</td><td>IGDB dès la V0, ou saisie manuelle pour commencer&nbsp;?</td><td>V0</td></tr>
+        <tr><td>Signature</td><td>Compte développeur Apple à 99&nbsp;$/an&nbsp;? Devient plus difficile à éviter dès qu'on distribue à des inconnus.</td><td>Avant la V1</td></tr>
+        <tr><td>Nom</td><td>«&nbsp;Checkpoint&nbsp;» est un nom de travail.</td><td>Sans urgence</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<footer>
+  <span>Checkpoint — document de conception v16</span>
+  <span>11 octobre 2026</span>
+  <span><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience →</a></span>
+</footer>
+
+</div>

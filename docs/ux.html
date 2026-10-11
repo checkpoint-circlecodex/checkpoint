@@ -1,0 +1,776 @@
+<title>Parcours de Checkpoint</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --paper:#F3F5F8;
+  --surface:#FFFFFF;
+  --surface-alt:#EDEFF4;
+  --ink:#191D24;
+  --ink-soft:#3A414E;
+  --muted:#5C6473;
+  --line:#DBE0E8;
+  --line-soft:#E7EAF0;
+  --brass:#8F6114;
+  --brass-soft:#F0E5CE;
+  --s-wish:#65758F;
+  --s-play:#2A6BBC;
+  --s-pause:#7D7362;
+  --s-done:#27754F;
+  --s-master:#8F6114;
+  --s-drop:#9E4A38;
+  --font-ui:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#13161B;
+    --surface:#1A1E25;
+    --surface-alt:#20252E;
+    --ink:#E7EAF0;
+    --ink-soft:#C3C9D4;
+    --muted:#959EAE;
+    --line:#2B313B;
+    --line-soft:#242A33;
+    --brass:#D8A54D;
+    --brass-soft:#332913;
+    --s-wish:#8797B0;
+    --s-play:#6FA7E6;
+    --s-pause:#A79B85;
+    --s-done:#57B387;
+    --s-master:#D8A54D;
+    --s-drop:#D07C69;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#13161B;
+  --surface:#1A1E25;
+  --surface-alt:#20252E;
+  --ink:#E7EAF0;
+  --ink-soft:#C3C9D4;
+  --muted:#959EAE;
+  --line:#2B313B;
+  --line-soft:#242A33;
+  --brass:#D8A54D;
+  --brass-soft:#332913;
+  --s-wish:#8797B0;
+  --s-play:#6FA7E6;
+  --s-pause:#A79B85;
+  --s-done:#57B387;
+  --s-master:#D8A54D;
+  --s-drop:#D07C69;
+}
+
+*{box-sizing:border-box;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:1000px;margin:0 auto;padding:0 28px 120px;}
+
+/* ---------- header ---------- */
+.masthead{padding:64px 0 34px;border-bottom:2px solid var(--ink);}
+.eyebrow{
+  font-family:var(--font-ui);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--brass);
+  margin:0 0 20px;
+}
+.masthead h1{
+  font-family:var(--font-ui);font-weight:700;
+  font-size:clamp(44px,7.5vw,76px);line-height:.98;letter-spacing:-.035em;
+  margin:0;text-wrap:balance;
+}
+.deck{
+  font-size:19px;line-height:1.55;color:var(--ink-soft);
+  max-width:60ch;margin:20px 0 0;
+}
+.factbar{
+  display:flex;flex-wrap:wrap;gap:0;
+  margin:34px 0 0;border-top:1px solid var(--line);
+}
+.fact{
+  flex:1 1 190px;padding:16px 20px 4px 0;
+  display:flex;flex-direction:column;gap:5px;
+}
+.fact dt{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+}
+.fact dd{margin:0;font-family:var(--font-ui);font-size:14.5px;font-weight:500;color:var(--ink);}
+
+/* ---------- sections ---------- */
+.sec{
+  display:grid;grid-template-columns:3.4rem 1fr;column-gap:2rem;
+  padding:52px 0 0;
+}
+.sec + .sec{border-top:1px solid var(--line-soft);margin-top:52px;}
+.num{
+  font-family:var(--font-mono);font-size:13px;color:var(--brass);
+  padding-top:.55rem;font-variant-numeric:tabular-nums;
+}
+.body{min-width:0;}
+h2{
+  font-family:var(--font-ui);font-weight:600;font-size:29px;
+  letter-spacing:-.022em;line-height:1.15;margin:0 0 6px;text-wrap:balance;
+}
+.subhead{font-family:var(--font-ui);font-size:14px;color:var(--muted);margin:0 0 26px;}
+h3{
+  font-family:var(--font-ui);font-weight:600;font-size:15px;
+  letter-spacing:.005em;margin:34px 0 10px;color:var(--ink);
+}
+p{margin:0 0 15px;max-width:66ch;}
+p.wide{max-width:none;}
+strong{font-weight:600;color:var(--ink);}
+em{font-style:italic;}
+a{color:var(--brass);text-decoration:none;border-bottom:1px solid var(--brass-soft);}
+a:hover{border-bottom-color:var(--brass);}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
+
+ul.plain{margin:0 0 15px;padding:0;list-style:none;max-width:66ch;}
+ul.plain li{position:relative;padding-left:1.15rem;margin-bottom:8px;}
+ul.plain li::before{
+  content:"";position:absolute;left:1px;top:.72em;
+  width:5px;height:5px;background:var(--brass);
+}
+ul.no li::before{
+  content:"×";background:none;left:0;top:0;
+  font-family:var(--font-ui);font-size:14px;color:var(--s-drop);width:auto;height:auto;
+}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:0 0 18px;}
+table{border-collapse:collapse;width:100%;min-width:520px;font-family:var(--font-ui);font-size:14px;}
+th{
+  text-align:left;font-weight:600;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 16px 9px 0;border-bottom:1px solid var(--ink);
+}
+td{
+  padding:12px 16px 12px 0;border-bottom:1px solid var(--line-soft);
+  vertical-align:top;color:var(--ink-soft);line-height:1.45;
+}
+td:first-child{color:var(--ink);font-weight:500;white-space:nowrap;}
+td code{font-size:12.5px;}
+.tag{
+  font-family:var(--font-mono);font-size:11.5px;color:var(--brass);
+  white-space:nowrap;
+}
+
+/* ---------- callout ---------- */
+.callout{
+  background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--brass);
+  padding:20px 24px;margin:24px 0;
+}
+.callout .lbl{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--brass);
+  display:block;margin-bottom:8px;
+}
+.callout p:last-child{margin-bottom:0;}
+
+/* ---------- decisions ---------- */
+.adr{display:flex;flex-direction:column;gap:0;margin:0 0 4px;}
+.adr-row{
+  display:grid;grid-template-columns:2.6rem 1fr;column-gap:1.1rem;
+  padding:20px 0;border-top:1px solid var(--line-soft);
+}
+.adr-row:first-child{border-top:1px solid var(--ink);}
+.adr-id{
+  font-family:var(--font-mono);font-size:12px;color:var(--brass);
+  padding-top:2px;
+}
+.adr-body h4{
+  font-family:var(--font-ui);font-weight:600;font-size:16px;
+  margin:0 0 8px;letter-spacing:-.01em;
+}
+.adr-body dl{margin:0;display:grid;grid-template-columns:auto 1fr;column-gap:.85rem;row-gap:5px;}
+.adr-body dt{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);padding-top:.32em;
+}
+.adr-body dd{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-soft);}
+
+/* ---------- code ---------- */
+pre{
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.72;
+  background:var(--surface-alt);border:1px solid var(--line-soft);
+  padding:18px 20px;overflow-x:auto;margin:0 0 18px;color:var(--ink-soft);
+}
+code{font-family:var(--font-mono);font-size:.88em;color:var(--ink);}
+pre code{font-size:inherit;color:inherit;}
+.c-key{color:var(--ink);font-weight:500;}
+.c-str{color:var(--s-done);}
+.c-num{color:var(--s-play);}
+.c-com{color:var(--muted);font-style:italic;}
+
+/* ---------- status vocabulary ---------- */
+.statuses{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+  gap:0 34px;margin:0 0 8px;
+}
+.st{
+  display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;
+  align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line-soft);
+}
+.pill{
+  font-family:var(--font-ui);font-size:11px;font-weight:600;
+  letter-spacing:.045em;padding:3px 9px;border:1px solid;border-radius:11px;
+  white-space:nowrap;
+}
+.st span:last-child{font-size:14.5px;color:var(--muted);line-height:1.4;}
+.p-wish{color:var(--s-wish);border-color:var(--s-wish);}
+.p-play{color:var(--s-play);border-color:var(--s-play);}
+.p-pause{color:var(--s-pause);border-color:var(--s-pause);}
+.p-done{color:var(--s-done);border-color:var(--s-done);}
+.p-master{color:var(--s-master);border-color:var(--s-master);box-shadow:0 0 0 2px var(--brass-soft);}
+.p-drop{color:var(--s-drop);border-color:var(--s-drop);border-style:dashed;}
+
+/* ---------- fsm diagram ---------- */
+.fsm-wrap{overflow-x:auto;margin:22px 0 10px;}
+.fsm{display:block;min-width:620px;width:100%;height:auto;}
+.fsm rect{fill:var(--surface);stroke-width:1.5;}
+.fsm text{font-family:var(--font-ui);font-size:13px;font-weight:500;}
+.fsm .edge{stroke:var(--muted);stroke-width:1.3;fill:none;}
+.fsm .edge-dash{stroke:var(--muted);stroke-width:1.2;fill:none;stroke-dasharray:4 4;}
+.fsm .ah{fill:var(--muted);stroke:none;}
+.fsm .lbl{font-family:var(--font-ui);font-size:11px;font-weight:500;fill:var(--muted);}
+.n-wish rect{stroke:var(--s-wish);}   .n-wish text{fill:var(--s-wish);}
+.n-play rect{stroke:var(--s-play);}   .n-play text{fill:var(--s-play);}
+.n-pause rect{stroke:var(--s-pause);} .n-pause text{fill:var(--s-pause);}
+.n-done rect{stroke:var(--s-done);}   .n-done text{fill:var(--s-done);}
+.n-master rect{stroke:var(--s-master);stroke-width:2.5;} .n-master text{fill:var(--s-master);}
+.n-drop rect{stroke:var(--s-drop);stroke-dasharray:4 3;} .n-drop text{fill:var(--s-drop);}
+
+/* ---------- steps ---------- */
+.steps{margin:0;padding:0;counter-reset:st;list-style:none;}
+.steps li{
+  counter-increment:st;position:relative;padding:16px 0 16px 3.1rem;
+  border-bottom:1px solid var(--line-soft);
+}
+.steps li:first-child{border-top:1px solid var(--ink);}
+.steps li::before{
+  content:counter(st,decimal-leading-zero);
+  position:absolute;left:0;top:17px;
+  font-family:var(--font-mono);font-size:12px;color:var(--brass);
+}
+.steps strong{display:block;font-family:var(--font-ui);font-size:15px;margin-bottom:3px;}
+.steps span{font-size:15px;color:var(--muted);line-height:1.5;}
+
+/* ---------- phases ---------- */
+.phases{display:flex;flex-direction:column;}
+.ph{
+  display:grid;grid-template-columns:5.4rem 1fr;column-gap:1.4rem;
+  padding:17px 0;border-top:1px solid var(--line-soft);align-items:start;
+}
+.ph:first-child{border-top:1px solid var(--ink);}
+.ph-v{
+  font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--brass);
+  padding-top:1px;
+}
+.ph-t{font-family:var(--font-ui);font-weight:600;font-size:15.5px;margin:0 0 3px;}
+.ph-d{margin:0;font-size:15px;color:var(--muted);line-height:1.5;max-width:62ch;}
+
+/* ---------- views ---------- */
+.views{border-top:1px solid var(--ink);}
+.view{
+  display:grid;grid-template-columns:1fr 1.55fr;column-gap:2rem;
+  padding:15px 0;border-bottom:1px solid var(--line-soft);align-items:baseline;
+}
+.view b{font-family:var(--font-ui);font-weight:600;font-size:15px;letter-spacing:-.005em;}
+.view span{font-size:15px;color:var(--muted);line-height:1.5;}
+.grp{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--brass);margin:30px 0 10px;
+}
+.grp:first-of-type{margin-top:0;}
+
+/* ---------- tree ---------- */
+.tree{
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.85;
+  color:var(--muted);background:var(--surface-alt);
+  border:1px solid var(--line-soft);padding:18px 20px;margin:0 0 18px;
+  overflow-x:auto;
+}
+.tree b{color:var(--ink);font-weight:500;}
+.tree i{color:var(--brass);font-style:normal;}
+
+footer{
+  margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);
+  font-family:var(--font-ui);font-size:13px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:10px 26px;
+}
+
+@media (max-width:720px){
+  .page{padding:0 20px 80px;}
+  .sec{grid-template-columns:1fr;column-gap:0;}
+  .num{padding:0 0 6px;}
+  .view{grid-template-columns:1fr;row-gap:3px;}
+  .ph{grid-template-columns:1fr;row-gap:4px;}
+  .adr-row{grid-template-columns:1fr;row-gap:6px;}
+  .adr-body dl{grid-template-columns:1fr;row-gap:2px;}
+  .adr-body dt{padding-top:8px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+
+/* ---------- v2 additions ---------- */
+.status-note{
+  margin:26px 0 0;padding:14px 18px;
+  border:1px solid var(--line);border-left:3px solid var(--s-play);
+  background:var(--surface);font-size:15px;line-height:1.5;color:var(--ink-soft);
+  max-width:70ch;
+}
+h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
+.rev{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:400;
+  letter-spacing:.06em;color:var(--muted);
+  border:1px solid var(--line);padding:2px 7px;white-space:nowrap;
+}
+.rev.new{color:var(--brass);border-color:var(--brass);}
+.layers-wrap{overflow-x:auto;margin:24px 0 12px;}
+.layers{display:block;min-width:600px;width:100%;height:auto;}
+.layers rect.band{fill:var(--surface-alt);stroke:var(--line);stroke-width:1;}
+.layers rect.band-top{fill:var(--surface-alt);stroke:var(--brass);stroke-width:1.4;stroke-dasharray:5 4;}
+.layers rect.chip{fill:var(--surface);stroke:var(--line);stroke-width:1;}
+.layers text.band-lbl{
+  font-family:var(--font-ui);font-size:10px;font-weight:600;
+  letter-spacing:.14em;fill:var(--muted);
+}
+.layers text.chip-lbl{font-family:var(--font-ui);font-size:11px;font-weight:400;fill:var(--ink-soft);}
+.layers .dep{stroke:var(--brass);stroke-width:1.3;fill:none;}
+.layers .ah2{fill:var(--brass);stroke:none;}
+.layers text.dep-lbl{
+  font-family:var(--font-ui);font-size:10px;font-weight:600;
+  letter-spacing:.12em;fill:var(--brass);
+}
+.rules{margin:22px 0 4px;border-top:1px solid var(--ink);}
+.rule{
+  display:grid;grid-template-columns:2.2rem 1fr;column-gap:1.1rem;
+  padding:16px 0;border-bottom:1px solid var(--line-soft);
+}
+.rule-n{font-family:var(--font-mono);font-size:12px;color:var(--brass);padding-top:2px;}
+.rule b{display:block;font-family:var(--font-ui);font-weight:600;font-size:15px;margin-bottom:4px;letter-spacing:-.005em;}
+.rule span{font-size:15px;color:var(--muted);line-height:1.52;display:block;max-width:64ch;}
+.dead{text-decoration:line-through;text-decoration-color:var(--muted);opacity:.6;}
+.pending{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--s-play);
+}
+@media (max-width:720px){
+  .rule{grid-template-columns:1fr;row-gap:4px;}
+}
+
+/* ---------- parcours : couloirs ---------- */
+.lanes-wrap{overflow-x:auto;margin:24px 0 12px;}
+.lanes{display:block;min-width:640px;width:100%;height:auto;}
+.lanes rect.lane{fill:var(--surface-alt);stroke:var(--line);stroke-width:1;}
+.lanes rect.lane-b{fill:var(--surface-alt);stroke:var(--muted);stroke-width:1;stroke-dasharray:5 4;}
+.lanes rect.box{fill:var(--surface);stroke:var(--line);stroke-width:1;}
+.lanes rect.box-key{fill:var(--surface);stroke:var(--brass);stroke-width:1.6;}
+.lanes text.lane-lbl{font-family:var(--font-ui);font-size:10px;font-weight:600;letter-spacing:.14em;fill:var(--muted);}
+.lanes text.box-lbl{font-family:var(--font-ui);font-size:11px;font-weight:500;fill:var(--ink-soft);}
+.lanes .edge{stroke:var(--muted);stroke-width:1.3;fill:none;}
+.lanes .edge-key{stroke:var(--brass);stroke-width:1.5;fill:none;}
+.lanes .ah{fill:var(--muted);stroke:none;}
+.lanes .ahk{fill:var(--brass);stroke:none;}
+
+/* ---------- états ---------- */
+.states{border-top:1px solid var(--ink);}
+.state{padding:20px 0;border-bottom:1px solid var(--line-soft);}
+.state h4{
+  font-family:var(--font-ui);font-weight:600;font-size:16px;
+  margin:0 0 10px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;
+}
+.risk{
+  font-family:var(--font-ui);font-size:10px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;padding:2px 8px;border:1px solid;white-space:nowrap;
+}
+.r-hi{color:var(--s-drop);border-color:var(--s-drop);}
+.r-mid{color:var(--s-pause);border-color:var(--s-pause);}
+.r-lo{color:var(--s-wish);border-color:var(--s-wish);}
+.state dl{margin:0;display:grid;grid-template-columns:9.5rem 1fr;column-gap:1.2rem;row-gap:8px;}
+.state dt{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);padding-top:.35em;
+}
+.state dd{margin:0;font-size:15.5px;line-height:1.52;color:var(--ink-soft);}
+
+/* ---------- flow & frontière V1 ---------- */
+.flow{list-style:none;margin:22px 0 4px;padding:0;border-top:1px solid var(--ink);}
+.flow li{
+  display:grid;grid-template-columns:2.2rem 1fr;column-gap:1.1rem;
+  padding:14px 0;border-bottom:1px solid var(--line-soft);
+}
+.flow .fn{font-family:var(--font-mono);font-size:12px;color:var(--brass);padding-top:2px;}
+.flow b{display:block;font-family:var(--font-ui);font-weight:600;font-size:15px;margin-bottom:2px;}
+.flow span.d{font-size:15px;color:var(--muted);line-height:1.5;display:block;max-width:62ch;}
+.flow li.out{opacity:.55;}
+.flow li.out .fn{color:var(--muted);}
+.flow li.edge-v1{
+  display:block;padding:0;border:none;
+  margin:6px 0;position:relative;text-align:center;
+}
+.flow li.edge-v1 span{
+  font-family:var(--font-ui);font-size:10.5px;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--brass);background:var(--paper);
+  padding:0 14px;position:relative;z-index:1;
+}
+.flow li.edge-v1::before{
+  content:"";position:absolute;left:0;right:0;top:50%;
+  border-top:1.5px solid var(--brass);
+}
+
+/* ---------- profil ---------- */
+.opt{font-family:var(--font-ui);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Document de parcours · v3 · 11 octobre 2026</p>
+  <h1>Parcours de Checkpoint</h1>
+  <p class="deck">Ce que l'expérience donne, du moment où quelqu'un reçoit l'application jusqu'à l'ouverture de routine du mardi soir. Le compagnon du <a href="https://claude.ai/code/artifact/4777987a-d464-4692-8f92-2d2f2b3d338b">document de conception</a> : celui-ci décrit ce que les gens vivent, l'autre ce que la machine fait.</p>
+  <p class="status-note"><strong>Ce document précède le cahier des charges UX/UI, il ne le remplace pas.</strong> Il fixe le parcours, les états et les principes — pas les maquettes, ni la disposition, ni le style. Il sera révisé et complété à réception du cahier des charges.</p>
+  <dl class="factbar">
+    <div class="fact"><dt>Groupe visé</dt><dd>~20 personnes</dd></div>
+    <div class="fact"><dt>Usage attendu</dt><dd>Épisodique</dd></div>
+    <div class="fact"><dt>Écrans d'entrée</dt><dd>4</dd></div>
+    <div class="fact"><dt>Document lié</dt><dd><a href="https://claude.ai/code/artifact/4777987a-d464-4692-8f92-2d2f2b3d338b">Conception technique</a></dd></div>
+  </dl>
+</header>
+
+<section class="sec">
+  <div class="num">§1</div>
+  <div class="body">
+    <h2>Qui, et dans quel contexte</h2>
+    <p class="subhead">Un fait détermine tout le reste : personne n'ouvrira ça tous les jours.</p>
+
+    <p>Une vingtaine de personnes — des amis, et des amis d'amis, puisque l'application se transmet. Pas une équipe, pas une communauté. Personne n'a de compte à rendre, personne n'est modéré, et personne ne viendra par obligation.</p>
+
+    <p><strong>L'usage sera épisodique.</strong> On finit un jeu, on pense à le noter, on ouvre l'application. Trois semaines plus tard, on recommence. C'est le fait le plus déterminant de tout ce document, et il a une conséquence directe :</p>
+
+    <div class="callout">
+      <span class="lbl">La conséquence</span>
+      <p>Si l'ouverture ne dit pas <strong>ce qui a changé depuis la dernière fois</strong>, il n'y a aucune raison de revenir. Une bibliothèque, si belle soit-elle, est la même qu'il y a trois semaines. Le fil d'activité est donc la page d'accueil — pas une vue parmi d'autres, et pas du confort à repousser en V2.</p>
+    </div>
+
+    <h3>Trois manières d'utiliser ça</h3>
+    <p>Aucune n'est plus légitime que les autres, et l'interface doit accueillir les trois sans en punir aucune.</p>
+    <ul class="plain">
+      <li><strong>Celui qui tient sa liste à jour.</strong> Il note tout, met des heures, des dates, des commentaires. Il a besoin que la saisie soit rapide et qu'elle ne redemande jamais deux fois la même chose.</li>
+      <li><strong>Celui qui regarde.</strong> Il ajoute trois jeux par an mais lit tout ce que les autres font. Il a besoin que la lecture soit gratuite — aucune vue ne doit exiger d'avoir alimenté quoi que ce soit.</li>
+      <li><strong>Celui qui revient après trois mois.</strong> Il ne se souvient plus de ce qu'il avait noté. Il a besoin qu'on lui raconte l'entre-temps en dix secondes, sans avoir à chercher.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§2</div>
+  <div class="body">
+    <h2>Entrer dans le groupe <span class="rev">révisé v3</span></h2>
+    <p class="subhead">Six écrans, et une main tendue par quelqu'un d'autre au milieu.</p>
+
+    <div class="callout">
+      <span class="lbl">Ce qui fixe l'ordre n'est pas le goût</span>
+      <p><strong>Le profil ne peut pas s'écrire avant l'admission</strong>&nbsp;: tant qu'on n'est pas membre, on n'a aucun droit d'écriture sur le dépôt de données. Toute séquence qui ferait composer son portrait juste après la connexion se heurterait au mur au moment d'enregistrer. D'où l'ordre ci-dessous, et d'où le rôle pivot de l'attente.</p>
+    </div>
+
+    <div class="tw"><table>
+      <thead><tr><th>Écran</th><th>Ce qui s'y passe</th></tr></thead>
+      <tbody>
+        <tr><td>Ouverture</td><td>Le nom paraît seul, puis recule&nbsp;; la tuile arrive. Deux secondes, une seule fois dans la vie de l'installation.</td></tr>
+        <tr><td>I · Le seuil</td><td>Ce qu'est Checkpoint en trois lignes, et la connexion GitHub. <strong>Rien d'autre n'est demandé</strong>&nbsp;: ni mot de passe, ni compte maison.</td></tr>
+        <tr><td>II · La demande</td><td>Une issue sur le dépôt public, avec un mot facultatif. C'est le seul geste qu'un inconnu puisse faire, et il suffit.</td></tr>
+        <tr><td>III · L'attente</td><td><strong>Le pivot.</strong> «&nbsp;Personne ne sera averti&nbsp;» — dit en toutes lettres. Le champ Discord s'y demande, parce que c'est le seul canal de relance qui existe. <strong>Et c'est là que vit le défilé des principes</strong>&nbsp;: six cartes qui défilent latéralement. Un temps mort qu'on remplit vaut mieux qu'un péage qu'on impose avant l'entrée.</td></tr>
+        <tr><td>IV · Le portrait</td><td>Un fond pris dans une palette fermée, un emblème, un prénom, un Discord. <strong>Plus d'avatar GitHub.</strong> Composé pendant l'attente, écrit à l'admission.</td></tr>
+        <tr><td>V · L'Ordre</td><td>Cinq chambres. Il ne limite rien&nbsp;: il décide avec qui on sera comparé, et de quelle couleur sera sa chambre.</td></tr>
+        <tr><td>VI · L'entrée</td><td>Le récapitulatif, et la seule phrase qui compte&nbsp;: <strong>le corpus est déjà plein.</strong> On n'arrive pas devant une bibliothèque vide, on arrive au milieu d'une conversation.</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>L'application se transmet librement — on l'envoie à quelqu'un, il l'installe. Les données, elles, sont fermées. Entre les deux, il y a une demande et un humain qui l'accepte. Ce passage de relais est la partie fragile du parcours, parce qu'il fait intervenir <strong>deux personnes qui ne sont pas devant leur écran en même temps</strong>.</p>
+
+    <div class="lanes-wrap">
+      <svg class="lanes" viewBox="0 0 760 250" role="img" aria-label="Deux couloirs. Celui qui arrive : installation, compte GitHub, demande d'accès, écran d'attente, profil, suivre ses jeux. Un administrateur, dans le couloir du bas, valide la demande, ce qui débloque le passage de l'écran d'attente au profil.">
+        <defs>
+          <marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path class="ah" d="M0,0 L8,4 L0,8 z"></path>
+          </marker>
+          <marker id="ahk" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path class="ahk" d="M0,0 L8,4 L0,8 z"></path>
+          </marker>
+        </defs>
+
+        <rect class="lane" x="20" y="28" width="720" height="90" rx="3"></rect>
+        <text class="lane-lbl" x="34" y="46">CELUI QUI ARRIVE</text>
+        <rect class="lane-b" x="20" y="140" width="720" height="90" rx="3"></rect>
+        <text class="lane-lbl" x="34" y="158">UN ADMINISTRATEUR, PLUS TARD</text>
+
+        <line class="edge" x1="134" y1="82" x2="146" y2="82" marker-end="url(#ah)"></line>
+        <line class="edge" x1="262" y1="82" x2="274" y2="82" marker-end="url(#ah)"></line>
+        <line class="edge" x1="396" y1="82" x2="408" y2="82" marker-end="url(#ah)"></line>
+        <line class="edge" x1="618" y1="82" x2="630" y2="82" marker-end="url(#ah)"></line>
+        <line class="edge-key" x1="468" y1="102" x2="468" y2="170" marker-end="url(#ahk)"></line>
+        <path class="edge-key" d="M524,194 C562,194 579,152 579,106" marker-end="url(#ahk)"></path>
+
+        <rect class="box" x="34" y="62" width="100" height="40" rx="2"></rect>
+        <text class="box-lbl" x="84" y="87" text-anchor="middle">Installation</text>
+        <rect class="box" x="150" y="62" width="112" height="40" rx="2"></rect>
+        <text class="box-lbl" x="206" y="87" text-anchor="middle">Compte GitHub</text>
+        <rect class="box" x="278" y="62" width="118" height="40" rx="2"></rect>
+        <text class="box-lbl" x="337" y="87" text-anchor="middle">Demande d'accès</text>
+        <rect class="box-key" x="412" y="62" width="112" height="40" rx="2"></rect>
+        <text class="box-lbl" x="468" y="87" text-anchor="middle">Écran d'attente</text>
+        <rect class="box" x="540" y="62" width="78" height="40" rx="2"></rect>
+        <text class="box-lbl" x="579" y="87" text-anchor="middle">Profil</text>
+        <rect class="box" x="634" y="62" width="100" height="40" rx="2"></rect>
+        <text class="box-lbl" x="684" y="87" text-anchor="middle">Ses jeux</text>
+
+        <rect class="box-key" x="412" y="174" width="112" height="40" rx="2"></rect>
+        <text class="box-lbl" x="468" y="199" text-anchor="middle">Valide la demande</text>
+      </svg>
+    </div>
+
+    <ol class="steps">
+      <li><strong>Installation</strong><span>On lui a envoyé un fichier. Il l'ouvre. Sur Mac et Windows, un avertissement système apparaîtra tant que l'application n'est pas signée — <em>l'écran d'accueil doit le dire avant qu'il n'arrive</em>, avec la manœuvre exacte. Une personne prévenue clique&nbsp;; une personne surprise désinstalle.</span></li>
+      <li><strong>Compte GitHub</strong><span>L'application explique en une phrase pourquoi GitHub, sans jargon&nbsp;: c'est là que vivent les données, et c'est ce qui évite d'inventer des mots de passe. Deux boutons&nbsp;: se connecter, ou créer un compte. Ensuite un code court à recopier sur github.com, et l'application détecte toute seule quand c'est fait.</span></li>
+      <li><strong>Demande d'accès</strong><span>Un champ&nbsp;: «&nbsp;qui es-tu, et qui te connaît dans le groupe&nbsp;?&nbsp;» — la réponse est ce que l'administrateur lira pour décider. Un bouton. C'est tout.</span></li>
+      <li><strong>Profil</strong><span>Une fois accepté&nbsp;: prénom, pseudo, classe, couleur. Le Discord en optionnel, avec sa raison d'être affichée. Quatre champs, pas douze.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§3</div>
+  <div class="body">
+    <h2>Le profil</h2>
+    <p class="subhead">Chaque champ doit justifier sa présence, sinon il dégage.</p>
+
+    <div class="tw"><table>
+      <thead><tr><th>Champ</th><th>Statut</th><th>Pourquoi il existe</th></tr></thead>
+      <tbody>
+        <tr><td>Compte GitHub</td><td class="opt">Automatique</td><td>L'identité durable. C'est lui qui nomme le fichier de données, jamais le pseudo — un pseudo se change, et si le fichier suivait, tout l'historique deviendrait orphelin.</td></tr>
+        <tr><td>Prénom</td><td class="opt">Requis</td><td>Dans un groupe d'amis, on se connaît par prénom. C'est ce qui empêche la liste des membres de ressembler à un salon de jeu en ligne.</td></tr>
+        <tr><td>Pseudo</td><td class="opt">Requis</td><td>Ce qui s'affiche partout ailleurs. Modifiable à volonté, sans conséquence.</td></tr>
+        <tr><td>Ordre <span class="rev">révisé v3</span></td><td class="opt">Requis</td><td>Mages, Guerriers, Rangers, Soigneurs, Bardes. Plus décoratif du tout depuis&nbsp;: l'Ordre donne une chambre, une trame animée, un Magnum opus, une Grande Loge et un décompte de quêtes. C'est l'unité de comparaison du groupe.</td></tr>
+        <tr><td>Fond et emblème <span class="rev new">v3</span></td><td class="opt">Choisis</td><td><strong>Le portrait ne vient plus de GitHub.</strong> Un fond pris dans une palette fermée et un emblème&nbsp;: c'est le seul visage que le groupe verra. La palette <strong>évite les cinq teintes d'Ordre</strong> — un visage est personnel, une teinte d'Ordre est collective, et les confondre créerait un faux signal. Au passage, une dépendance au CDN de GitHub en moins.</td></tr>
+        <tr><td>Discord</td><td class="opt">Optionnel</td><td><strong>Le seul canal de relance qui existe.</strong> L'application ne peut envoyer aucune notification&nbsp;; sans Discord, une demande en attente peut rester lettre morte. Sa raison d'être doit être affichée à côté du champ, pas cachée.</td></tr>
+        <tr><td>Steam</td><td class="opt">Hors V1</td><td>Réservé dans le modèle, pas dans l'interface. Les succès viendront beaucoup plus tard, s'ils viennent.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§4</div>
+  <div class="body">
+    <h2>Les états à ne pas rater</h2>
+    <p class="subhead">C'est ici que ce genre de projet se perd — jamais dans l'écran principal, toujours dans les marges.</p>
+
+    <div class="states">
+      <div class="state">
+        <h4>En attente de validation <span class="risk r-hi">risque élevé</span></h4>
+        <dl>
+          <dt>Ce qui se passe</dt><dd>La demande est partie. Personne n'est prévenu, ni l'administrateur, ni le demandeur quand c'est accepté. L'application ne peut rien y faire.</dd>
+          <dt>Le piège</dt><dd>Un écran qui tourne, ou pire, un message vague. La personne ferme, et ne rouvre jamais.</dd>
+          <dt>Ce que l'écran fait</dt><dd>Il dit la vérité&nbsp;: la demande est enregistrée, un humain doit la voir, il n'y aura pas de notification. Il vérifie à chaque ouverture. Il nomme les administrateurs et propose de les relancer sur Discord. Et il laisse regarder — voir §4, «&nbsp;première ouverture&nbsp;».</dd>
+        </dl>
+      </div>
+
+      <div class="state">
+        <h4>Refusée, ou restée sans réponse <span class="risk r-mid">risque moyen</span></h4>
+        <dl>
+          <dt>Le piège</dt><dd>Une impasse muette. La personne ne sait pas si elle a été refusée ou oubliée.</dd>
+          <dt>Ce que l'écran fait</dt><dd>Un refus est explicite et daté, avec le motif si l'administrateur en a laissé un. Au-delà d'une semaine sans réponse, l'écran le reconnaît de lui-même et propose de relancer.</dd>
+        </dl>
+      </div>
+
+      <div class="state">
+        <h4>Première ouverture <span class="risk r-hi">risque élevé</span></h4>
+        <dl>
+          <dt>Le piège</dt><dd>Une bibliothèque vide avec «&nbsp;Ajoutez votre premier jeu&nbsp;». C'est le degré zéro, et c'est faux ici&nbsp;: le groupe suit déjà des centaines de jeux.</dd>
+          <dt>Ce que l'écran fait</dt><dd><strong>Il montre le catalogue du groupe dès la première seconde.</strong> On arrive dans un monde peuplé, pas devant une page blanche, et on constitue sa liste en piochant dedans plutôt qu'en tapant des titres. C'est aussi ce qui donne envie de rester.</dd>
+        </dl>
+      </div>
+
+      <div class="state">
+        <h4>Le premier jeu ajouté <span class="risk r-mid">risque moyen</span></h4>
+        <dl>
+          <dt>Ce qui se passe</dt><dd>C'est le seul moment où la personne apparaît devant les autres.</dd>
+          <dt>Ce que l'écran fait</dt><dd>Il le dit&nbsp;: ce que tu viens d'écrire va apparaître dans le fil du groupe. Pas une célébration, une information — pour qu'on sache dans quoi on écrit.</dd>
+        </dl>
+      </div>
+
+      <div class="state">
+        <h4>Hors ligne <span class="risk r-lo">risque faible</span></h4>
+        <dl>
+          <dt>Ce que l'écran fait</dt><dd>Tout reste lisible depuis le cache, avec la date de dernière synchronisation affichée sans dramatiser. Les modifications sont mises en attente et repartent à la reconnexion — jamais perdues en silence.</dd>
+        </dl>
+      </div>
+
+      <div class="state">
+        <h4>Connexion expirée <span class="risk r-mid">risque moyen</span></h4>
+        <dl>
+          <dt>Le piège</dt><dd>Renvoyer la personne au tout début du parcours. Elle croira avoir perdu son compte.</dd>
+          <dt>Ce que l'écran fait</dt><dd>Il rejoue <em>la connexion seule</em>, en place, sans quitter ce qu'on était en train de regarder. Le profil et les données ne bougent pas.</dd>
+        </dl>
+      </div>
+
+      <div class="state">
+        <h4>Modifié depuis un autre ordinateur <span class="risk r-lo">risque faible</span></h4>
+        <dl>
+          <dt>Ce qui se passe</dt><dd>Rare — un seul écrivain par fichier — mais réel si quelqu'un utilise deux machines.</dd>
+          <dt>Ce que l'écran fait</dt><dd>Il recharge et le signale. Il ne perd jamais la saisie en cours&nbsp;: elle est réappliquée par-dessus la version fraîche, et la personne voit ce qui a été fusionné.</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§5</div>
+  <div class="body">
+    <h2>Où s'arrête la V1</h2>
+    <p class="subhead">La ligne est tracée dans le parcours, pas dans une liste de fonctions.</p>
+
+    <p>Critère unique&nbsp;: <strong>une personne extérieure au projet peut installer l'application, entrer dans le groupe et suivre ses jeux sans qu'on lui explique quoi que ce soit.</strong> Tout ce qui est nécessaire à ça est dans la V1. Rien d'autre ne l'est, même les fonctions faciles.</p>
+
+    <ol class="flow">
+      <li><span class="fn">1</span><div><b>Installation et avertissement système</b><span class="d">Y compris la manœuvre pour passer Gatekeeper, annoncée avant de la subir.</span></div></li>
+      <li><span class="fn">2</span><div><b>Connexion GitHub</b><span class="d">Device flow, code court, détection automatique.</span></div></li>
+      <li><span class="fn">3</span><div><b>Demande d'accès et écran d'attente</b><span class="d">Avec la vérification à chaque ouverture et la relance Discord.</span></div></li>
+      <li><span class="fn">4</span><div><b>Validation par un administrateur</b><span class="d">Depuis l'application. C'est le minimum vital&nbsp;: sans ça, personne n'entre.</span></div></li>
+      <li><span class="fn">5</span><div><b>Création du profil</b><span class="d">Prénom, pseudo, classe, couleur, Discord optionnel.</span></div></li>
+      <li><span class="fn">6</span><div><b>Bibliothèque du groupe et ajout de jeux</b><span class="d">Recherche externe, jaquette, les six états, note, progression, commentaire.</span></div></li>
+      <li><span class="fn">7</span><div><b>Fil d'activité</b><span class="d">La page d'accueil. Sans lui, personne ne revient — voir §1.</span></div></li>
+      <li class="edge-v1"><span>Fin de la V1</span></li>
+      <li class="out"><span class="fn">8</span><div><b>Vues collectives</b><span class="d">Matrice, consensus, recommandations croisées, mur de la honte.</span></div></li>
+      <li class="out"><span class="fn">9</span><div><b>Onglet d'administration</b><span class="d">Fusionner les doublons du catalogue, gérer les membres. Un onglet, pas un back-office.</span></div></li>
+      <li class="out"><span class="fn">10</span><div><b>Confort et ouvertures</b><span class="d">Thème, hors ligne complet, export, année en revue. Puis les films, les groupes appuyés sur les classes, et un jour peut-être Steam.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§6</div>
+  <div class="body">
+    <h2>Principes d'interface</h2>
+    <p class="subhead">Six règles pour arbitrer, quand le cahier des charges ne tranchera pas.</p>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-n">P1</div>
+        <div><b>Chaque ouverture raconte l'entre-temps</b><span>C'est la conséquence de l'usage épisodique. La question à laquelle l'application répond en premier n'est pas «&nbsp;que veux-tu faire&nbsp;?&nbsp;» mais «&nbsp;voilà ce qui s'est passé sans toi&nbsp;».</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">P2</div>
+        <div><b>Le collectif est visible avant d'avoir contribué</b><span>Aucune vue n'exige d'avoir alimenté quoi que ce soit. Celui qui regarde est un usage légitime, pas un état transitoire à corriger.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">P3</div>
+        <div><b>Rien ne se saisit deux fois</b><span>Ajouter un jeu, c'est chercher, choisir, et c'est fini — le titre, l'année, le genre et la jaquette arrivent avec. La saisie manuelle existe en repli, jamais par défaut.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">P4</div>
+        <div><b>Un échec dit toujours la sortie</b><span>Jamais «&nbsp;une erreur est survenue&nbsp;». Ce qui a échoué, pourquoi, et le geste exact qui répare. C'est le seul endroit où l'application a le droit d'être bavarde.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">P5</div>
+        <div><b>Ce qui est écrit devant les autres se sait</b><span>Une note, un commentaire, un abandon apparaissent dans le fil du groupe. L'interface ne le cache pas et ne s'en excuse pas — elle le rend évident au moment où on écrit.</span></div>
+      </div>
+      <div class="rule">
+        <div class="rule-n">P6</div>
+        <div><b>Rien d'important ne dépend du survol</b><span>Une action révélée uniquement au passage de la souris n'existe pas sur un écran tactile. Le survol peut confirmer, jamais découvrir. C'est la règle la plus facile à enfreindre sans s'en apercevoir, et la plus coûteuse à réparer après coup — voir §7.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§7</div>
+  <div class="body">
+    <h2>Une seule interface, deux mains <span class="rev new">nouveau v2</span></h2>
+    <p class="subhead">Pas une version mobile : la même interface, qui tient à 390 px comme à 1600.</p>
+
+    <p>Une version Android doit rester une <strong>production secondaire</strong> — décidée sur un coup de tête, livrée en quelques jours. Techniquement, la plomberie est bon marché. Ce qui coûterait cher, c'est de découvrir que chaque vue a été pensée pour une souris et un grand écran. D'où une contrainte posée maintenant, alors qu'elle ne coûte presque rien.</p>
+
+    <h3>Ce que ça interdit</h3>
+    <ul class="plain">
+      <li><strong>Toute action révélée par le seul survol.</strong> La règle la plus facile à enfreindre sans s'en rendre compte, et la seule dont la réparation impose de rouvrir chaque vue.</li>
+      <li><strong>Les cibles minuscules.</strong> 44&nbsp;px au minimum pour tout ce qui se clique, y compris sur bureau. Personne ne s'en plaint jamais dans l'autre sens.</li>
+      <li><strong>Les largeurs fixes et les dispositions à trois panneaux comme seule mise en page.</strong> Une colonne est la base&nbsp;; les colonnes supplémentaires sont un bonus quand la place existe.</li>
+      <li><strong>Les composants qui interrogent la taille de la fenêtre.</strong> Ils interrogent la taille de <em>leur conteneur</em>. Une carte dans un panneau latéral sur bureau est dans la même situation qu'une carte pleine largeur sur téléphone — un seul comportement à écrire, valable partout.</li>
+    </ul>
+
+    <h3>Les surfaces ont deux formes</h3>
+    <p>Décidées une fois dans le noyau, jamais dans les blocs. Un bloc demande une surface&nbsp;; il n'a pas à savoir de quel côté de l'écran elle sortira.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Surface</th><th>En large</th><th>En étroit</th></tr></thead>
+      <tbody>
+        <tr><td>Détail</td><td>Panneau latéral</td><td>Feuille remontant du bas</td></tr>
+        <tr><td>Édition</td><td>Superposition centrée</td><td>Plein écran, avec retour explicite</td></tr>
+        <tr><td>Filtres</td><td>Barre persistante</td><td>Feuille, ouverte par un bouton compteur</td></tr>
+        <tr><td>Navigation</td><td>Rail latéral</td><td>Barre basse, quatre entrées maximum</td></tr>
+        <tr><td>Complément d'information</td><td>Infobulle au survol</td><td>Visible d'emblée, ou supprimée — jamais un appui long</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Comment chaque vue dégrade</h3>
+    <p>Déclaré dans le registre, au même endroit que le nom et l'icône du bloc. Une vue qui ne sait pas répondre à cette question n'est pas finie.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Vue</th><th>En étroit</th></tr></thead>
+      <tbody>
+        <tr><td>Fil d'activité</td><td>Inchangé — c'est déjà une liste. C'est aussi ce qui en fait la bonne page d'accueil sur téléphone.</td></tr>
+        <tr><td>Bibliothèque</td><td>Deux colonnes de jaquettes, filtres en feuille du bas.</td></tr>
+        <tr><td>Fiche jeu</td><td>Plein écran, sections empilées, avis du groupe en dessous.</td></tr>
+        <tr><td>Matrice amis × jeux</td><td>Défilement horizontal, colonne des noms figée. La seule vue franchement à l'étroit — et c'est acceptable, elle est faite pour être large.</td></tr>
+        <tr><td>Consensus</td><td>Liste triée par écart plutôt que nuage de points.</td></tr>
+        <tr><td>Recommandations</td><td>Inchangé — une liste de cartes.</td></tr>
+        <tr><td>Mur de la honte</td><td>Chiffres empilés, un par ligne.</td></tr>
+        <tr><td>Année en revue</td><td>Graphiques empilés, un par écran, défilement vertical.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout">
+      <span class="lbl">Le coût, sans le maquiller</span>
+      <p>Ce n'est pas gratuit&nbsp;: compte 10 à 15&nbsp;% d'effort de conception en plus par vue, et l'abandon de quelques dispositions luxueuses qui ne tiendraient qu'en large. En échange, l'APK devient <strong>deux jours de plomberie</strong> au lieu d'une réécriture de toutes les vues. C'est le seul moment où ce choix est bon marché.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="num">§8</div>
+  <div class="body">
+    <h2>En attente du cahier des charges <span class="pending">ouvert</span></h2>
+    <p class="subhead">Ce que ce document ne tranche volontairement pas.</p>
+
+    <p>Le parcours, les états et les principes ci-dessus sont assez stables pour construire dessus. Ce qui suit relève du cahier des charges, et n'a pas à être décidé maintenant&nbsp;:</p>
+    <ul class="plain">
+      <li><strong>La disposition générale.</strong> Navigation latérale, onglets, palette de commandes — et où atterrit le fil d'activité.</li>
+      <li><strong>La densité.</strong> Une grille de jaquettes généreuse, ou une liste compacte&nbsp;? Les deux, avec un basculement&nbsp;?</li>
+      <li><strong>Le ton visuel.</strong> Sobre et documentaire, ou marqué et ludique&nbsp;? Les classes RPG tirent vers le second, le reste est neutre.</li>
+      <li><strong>Les fenêtres intérieures.</strong> Panneaux, tiroirs, superpositions, et les effets qui les accompagnent. Elles formeront un vocabulaire partagé dans le noyau — reste à décider lequel.</li>
+      <li><strong>Le mouvement.</strong> Ce qui s'anime, et surtout ce qui ne s'anime pas.</li>
+      <li><strong>La barre basse en étroit.</strong> Quatre entrées maximum&nbsp;: lesquelles&nbsp;?</li>
+    </ul>
+
+    <div class="callout">
+      <span class="lbl">Ce que l'architecture garantit</span>
+      <p>Ces questions atterrissent dans la couche des fonctions et dans le design system. <strong>Le modèle de données, la fusion et la plateforme n'en sauront rien</strong> — voir §6 du document de conception. C'est précisément ce qui permet de commencer à construire avant que le cahier des charges n'arrive.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Checkpoint — document de parcours v2</span>
+  <span>6 septembre 2026</span>
+  <span><a href="https://claude.ai/code/artifact/4777987a-d464-4692-8f92-2d2f2b3d338b">← Conception technique</a></span>
+</footer>
+
+</div>

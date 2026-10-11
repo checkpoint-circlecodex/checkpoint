@@ -1,0 +1,1083 @@
+# État d'avancement
+
+> Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
+
+**Dernière mise à jour :** 11 octobre 2026 (23e passe — le Greffe)
+**Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
+
+---
+
+## Prochaine action
+
+**Porter le prototype en Svelte.**
+
+Le spike est **fini** : les six questions ont leur réponse, toutes mesurées
+(journal du 11 octobre). L'architecture tient, l'organisation existe, le
+device flow passe, le 409 se déclenche, une adhésion se lit et une issue
+d'inconnu suffit comme porte. ⚠️ **`spike/` est maintenant jetable** — il a
+servi, il ne doit pas devenir du code de production.
+
+Le portage : squelette Vite + Svelte + TypeScript, les trois couches, le
+registre de vues, le script de vérification des dépendances. `crossfade` et
+`flip` remplacent le code de bascule écrit à la main ; le module de pixel art
+se transpose tel quel. **Et les deux bancs d'essai disparaissent** : l'onglet
+Onboarding et la section « banc d'essai » du Greffe.
+
+*(Nathan a demandé le 11 octobre de continuer d'abord à itérer sur le
+prototype — le portage attend son signal.)*
+
+---
+
+## Pour ensuite — idées déposées, pas encore conçues
+
+### ~~Les genres, refondus sur les vraies taxonomies~~ — ✅ faite le 11 octobre
+
+Les listes sont posées : **44 catégories pour un jeu** (23 genres IGDB vérifiés
+en « Forme », 21 thèmes en « Thème »), **19 pour un film** et **18 pour une
+série** (vocabulaires TMDb, qui diffèrent entre les deux), **24 pour un livre**
+en deux axes. Le sélecteur affiche les familles en entier, et les valeurs déjà
+consignées hors liste paraissent sous « Déjà consigné » pour ne pas être
+effacées à la première édition. ⚠️ *Les thèmes IGDB restent à confirmer sur
+igdb.com/themes — ils ont été écrits de mémoire, la recherche ayant été coupée.*
+
+<details><summary>Le détail de la recherche, conservé</summary>
+
+Le sélecteur de genres **existe déjà** dans l'inscription d'une œuvre
+(`GENRES`, `genresFor`, le bloc « Genres » de `openInscribe`). Ce qui manque,
+c'est la **fidélité aux vocabulaires sources** : les listes actuelles sont de
+mon invention et très courtes côté films (4 entrées) et livres (5).
+
+**Le principe à tenir :** l'identité d'une œuvre viendra d'IGDB et de TMDb — les
+genres doivent donc *mirroiter leur vocabulaire*, pour qu'au branchement réel
+ils arrivent déjà mappés, sans table de correspondance à maintenir.
+
+**Jeux — les 23 genres IGDB** (vérifiés sur igdb.com/genres) :
+Point-and-click · Combat *(Fighting)* · Tir *(Shooter)* · Musique · Plateforme ·
+Réflexion *(Puzzle)* · Course · Stratégie temps réel · Jeu de rôle · Simulation ·
+Sport · Stratégie · Stratégie au tour par tour · Tactique ·
+Hack'n'slash *(Hack and slash/Beat 'em up)* · Quiz · Flipper · Aventure ·
+Indépendant · Arcade · Visual novel · Cartes et plateau · MOBA
+
+**Jeux — les thèmes IGDB**, axe distinct du genre (⚠️ *de mémoire, non vérifié :
+la recherche a été coupée. À confirmer sur igdb.com/themes avant d'écrire*) :
+Action · Fantasy · Science-fiction · Horreur · Thriller · Survie · Historique ·
+Infiltration · Comédie · Gestion · Drame · Documentaire · Bac à sable ·
+Éducatif · Enfants · Monde ouvert · Guerre · Entre amis · 4X · Mystère · Romance
+— *Érotique existe chez IGDB et est volontairement écarté ici.*
+
+**Films — les 19 genres TMDb** : Action · Aventure · Animation · Comédie ·
+Crime · Documentaire · Drame · Familial · Fantastique · Histoire · Horreur ·
+Musique · Mystère · Romance · Science-fiction · Téléfilm · Thriller · Guerre ·
+Western
+
+**Séries — les genres TMDb TV**, qui ne sont pas ceux des films (TMDb en
+regroupe certains) : Action & aventure · Animation · Comédie · Crime ·
+Documentaire · Drame · Familial · Enfants · Mystère · Actualités · Téléréalité ·
+Science-fiction & fantastique · Feuilleton · Talk-show · Guerre & politique ·
+Western — plus une **forme** propre : Mini-série, Anthologie.
+
+**Livres — aucune autorité unique** (BISAC est commercial et énorme). Liste à
+assumer comme nôtre, en deux axes :
+*Genre* — Roman · Science-fiction · Fantasy · Horreur · Policier · Thriller ·
+Romance · Historique · Aventure · Littérature générale · Satire · Conte ·
+*Forme* — Essai · Récit · Biographie · Autobiographie · Poésie · Nouvelles ·
+Théâtre · Roman graphique · Bande dessinée · Manga · Correspondance
+
+**Ce qu'il reste à écrire :**
+1. `GENRES` passe de listes plates à des **groupes** `{ g, l }` par nature
+   d'œuvre ; `genresFor` reste plat (validation), `genreGroups` sert l'interface.
+2. Le sélecteur affiche les familles, comme la grille d'emblèmes de l'entrée.
+3. ⚠️ **Préserver les valeurs déjà consignées** : le corpus de démonstration
+   porte « Action-RPG », « Enquête », « Procès », absents des nouvelles listes.
+   Les afficher dans un groupe « Déjà consigné », sinon une simple édition les
+   efface.
+
+</details>
+
+
+
+### ~~Les liens de parenté~~ — ✅ faite le 10 octobre
+
+Déposée et construite le même jour. Le cahier des charges de Nathan a été tenu
+à la lettre : **pas d'onglet de plus**, un **point discret** dans la ligne
+d'identité, une **section indépendante** au clic. Voir D23, et le journal.
+
+Ce qui reste à trancher si on y revient : le vocabulaire au-delà de
+père/mère/fils/fille/frère/sœur, ce qu'un enfant mineur peut voir ou écrire,
+et si la maisonnée mérite un nom à elle.
+
+---
+
+## Avancement
+
+### Conception — terminée pour ce tour
+- [x] Contraintes posées et induites (spec §3)
+- [x] Architecture des données, un fichier par personne (spec §5)
+- [x] Architecture logicielle en trois couches, quatre règles (spec §6)
+- [x] Modèle de données, six états, champs de profil (spec §7)
+- [x] Parcours d'entrée à deux couloirs (parcours §2)
+- [x] Les sept états critiques de l'expérience (parcours §4)
+- [x] Frontière de la V1 tracée dans le parcours (parcours §5, spec §10)
+- [x] Cinq principes d'interface (parcours §6)
+- [x] Hors périmètre écrit noir sur blanc (spec §11)
+- [x] Deux documents publiés comme Artifacts
+
+### V0 — en cours
+- [x] Prototype cliquable des quatre vues, publié
+- [x] Jeu de données fictives réaliste (6 personnes, 25 média, 11 critiques)
+- [x] Fusion des fragments et catalogue dérivé (dans le prototype)
+- [x] Vocabulaire d'état par type de média, et les verbes du fil d'activité
+- [x] Pastilles façon LiveArea, barre latérale rétractable, barre basse en étroit
+- [x] 2e passe : direction visuelle claire, pastilles rondes, suivi de souris,
+      accueil réorganisé, cercles en orbes, sous-menus dépliables
+- [x] 3e passe : identité propre — ⚠️ *registre porcelaine, depuis écarté*
+- [x] 4e passe : **refonte complète** — plat, noir et blanc, grain, profondeur de champ
+- [x] Pages approfondies : une « depuis ta dernière visite », corpus triable avec
+      ta position, forme du désaccord, caractère des Ordres, tempérament
+- [x] Jaquettes (vue grille + sur la fiche, agrandissement), Le Sort, Livres
+- [x] Inscription d'une œuvre et gestion de sa fiche, titres VO/FR
+- [x] Checkpoints, bloc « En cours » pilotable, dépôt et recadrage de jaquette
+- [x] Feuille en volets à glissement latéral, profil relationnel « Toi et X »
+- [x] Pixel art : cité en tête du Registre, carte du Royaume derrière le flou
+- [x] Genres, compagnons `with[]`, compteur `plays`, dé à douze faces
+- [x] **Favoris et Magnum opus** — distinctions déclarées, indépendantes des notes
+- [x] **La Grande Loge** — un fil fermé par Ordre, écrit dans son propre fragment,
+      surlignages personnels et fil repliable sur ses passages retenus
+- [x] **Les Quêtes** — paliers monotones sur des groupes d'œuvres, pancartes,
+      volets sur la feuille et dans la chambre, barre latérale réorganisée
+- [x] **La trame des Guerriers** refaite — une forêt de lances qui défile
+- [x] **La lignée** — parentés déclarées des deux côtés, point discret, maisonnée
+- [x] **La ligne du guetteur** sur l'accueil, à la couleur de son Ordre
+- [x] **Banc d'essai de l'entrée dans le groupe** — quatre tuiles ⚠️ *temporaire*
+- [x] **Le Greffe** — admissions, doublons fondus par alias, journal, passation ;
+      la porte n'existe que pour qui tient la charge ⚠️ *banc d'essai temporaire*
+- [ ] **Validation du look par Nathan** — en cours, itération par itération
+- [x] Installer Node et Rust
+- [ ] Porter en **Svelte** + TypeScript, les trois couches, le registre
+- [ ] Script de vérification des dépendances entre couches
+
+### Mise en place
+- [x] **Chaîne d'outils installée** — node, npm, rustup + stable, gh *(10 oct.)*
+- [x] **Spike écrit** (`spike/`), **quatre vérifications sur six passées** *(10 oct.)*
+- [x] **Organisation GitHub `checkpoint-circlecodex`** *(11 oct.)*
+- [x] **`tracker-data`** en privé dans l'organisation *(11 oct.)*
+- [x] **`checkpoint`** public, issues activées *(11 oct.)*
+- [x] `gh` authentifié, `spike/spike.config.json` écrit *(11 oct.)*
+- [x] **GitHub App « Checkpoint circlecodex »**, device flow activé *(11 oct.)*
+- [x] **Spike terminé — six questions sur six** *(11 oct.)* ⚠️ `spike/` est jetable
+
+### V1 — le groupe existe et vit
+- [ ] Device flow et trousseau du système
+- [ ] Demande d'adhésion, écran d'attente, validation par un administrateur
+- [ ] Création du profil : prénom, pseudo, classe, couleur, Discord optionnel
+- [ ] Stockage GitHub réel, cache par SHA, gestion du `409`
+- [ ] Recherche externe, jaquettes, saisie manuelle en repli
+- [ ] Édition d'une entrée : statut, note, progression, plateforme, commentaire
+- [ ] Fil d'activité
+- [ ] Mise à jour automatique de l'application
+- [ ] Les sept états de parcours §4
+
+### V2 — le collectif et l'administration
+- [ ] Matrice amis × jeux
+- [ ] Consensus et désaccord
+- [ ] Recommandations croisées
+- [ ] Le mur de la honte
+- [ ] Onglet d'administration : doublons du catalogue, membres
+
+### Android — sans date, sur un coup de tête
+- [ ] Chaîne de compilation Android + signature du keystore
+- [ ] Adaptateur `secrets` portable (à choisir dès la V1, pas au moment de l'APK)
+- [ ] Bandeau « nouvelle version » en remplacement de l'updater
+- [ ] Barre basse de navigation, quatre entrées
+
+### V3 — confort et ouvertures
+- [ ] Thème, hors ligne complet, export, année en revue
+- [ ] Films (`mediaType` les attend déjà)
+- [ ] Groupes appuyés sur les classes
+- [ ] Lien Steam et succès — sans date
+
+---
+
+## Décisions actées
+
+Détail et justification dans la spec, §4.
+
+| | Décision |
+|---|---|
+| **D1** | Données dans un dépôt GitHub privé — pour l'historique et le rollback |
+| **D2** | Le dépôt appartient à une organisation, pas à un compte personnel |
+| **D3** | Jeux vidéo, modèle extensible aux films (`mediaType`, `progress{unit,value}`) |
+| **D4** | Données privées : une authentification est requise même pour lire |
+| **D5** | Application de bureau en Tauri — *interface : voir D11, qui remplace React par Svelte* |
+| **D6** | Trois couches, dépendances à sens unique, vérifiées par lint |
+| **D7** | Adhésion sur demande depuis l'application ; admin = rôle GitHub, pas une liste maison |
+| **D8** | Responsive dès l'origine — garde Android à ~2 jours de plomberie au lieu d'une réécriture |
+| **D9** | Pile : Tauri + TypeScript + Vite, Zod, Zustand. Pas de Tailwind, pas de routeur, pas de bibliothèque de composants |
+| **D10** | Identité : **plat, noir et blanc sur blanc cassé**, grain fin, **profondeur de champ** pour toute profondeur. Un seul thème clair, ton cérémonieux. ⚠️ *Remplace le registre « porcelaine émaillée » d'une version antérieure de cette ligne : Nathan l'a explicitement écarté. Ni biseau, ni ombre portée, ni reflet spéculaire.* |
+| **D11** | **Svelte plutôt que React** — la bascule de mise au point anime `filter: blur()` et `transform` sur des couches entières et veut un contrôle direct du DOM qu'aucune réconciliation n'interrompe |
+| **D12** | **Quatre exceptions au noir et blanc, pas une de plus** : les visages (avatars GitHub), les chambres d'Ordre, les jaquettes au survol, les feuilles de personnage (trame de leur Ordre, à présence réduite) |
+| **D13** | **Pixel art engendré par code**, graine fixe, quatre gris clairs, deux pixels par point : la cité en tête du Registre et la carte du Royaume. Jamais dessiné à la main, jamais importé |
+| **D14** | **Checkpoint ≠ chronique** : `reflections[]` (pensée datée, prise en chemin) contre `review{title,body}` (jugement rédigé). Deux champs, deux gestes, deux lectures |
+| **D15** | **Titres VO + FR**, préférence rangée dans le fragment de la personne ; **la recherche interroge toujours les deux** |
+| **D16** | La section d'œuvres d'un fragment s'appelle **`works`**, jamais `games` |
+| **D17** | **Un favori n'est pas une note.** `favorites[]` déclarée, ordonnée, plafonnée à douze, dans le fragment de la personne. Jamais dérivée d'un classement : le premier rang est son magnum opus, et l'onglet Magnum opus d'un Ordre somme celles de ses membres |
+| **D24** | **L'entrée se joue en ~~six~~ quatre tuiles**, et c'est une contrainte technique qui fixe l'ordre : le profil ne peut pas s'écrire avant l'admission. ⚠️ *Révisé le 11 octobre — frapper, attendre et se composer un visage sont un seul geste.* D'où **Ouverture · Seuil · Atelier · Ordre · Entrée**, le défilé des principes logé **dans l'atelier** plutôt qu'en péage |
+| **D26** | **Le Greffe.** Ce qui demande une **autorité** (admettre, écarter, fondre un doublon, passer la charge) se range dans une troisième zone de la barre — ni agir ni parcourir : **tenir** — et **la porte n'existe que pour qui a le rôle** dans l'organisation ; elle n'est pas grisée. Ce qui demande seulement de la **discrétion** (resynchroniser, lire son fragment, régler les titres) vit au pied de sa propre feuille. *Une autorité n'est pas une discrétion.* Aucune modération : elle est **non représentable**, on n'écrit pas dans le fichier d'un autre |
+| **D27** | **Un doublon se fond par un alias déclaré, appliqué à la lecture** — `{from,to}` dans le fragment du greffier, repli dans `merge()`. Rien n'est réécrit, rien n'est supprimé, **l'alias se retire**. Si une même personne tenait les deux entrées, elle n'en garde que la plus récente |
+| **D25** | **Le portrait ne vient plus de GitHub** : fond pris dans une palette fermée + emblème + prénom. Les tons proposés évitent les cinq teintes d'Ordre — un visage est personnel, une teinte d'Ordre est collective. GitHub n'identifie plus que le compte |
+| **D23** | **La lignée.** `kin[]` dans le fragment de chacun ; un lien n'existe que **déclaré des deux côtés**, et les deux déclarations doivent s'accorder en sens. La **maisonnée** est la composante connexe des liens confirmés — ni propriétaire, ni objet. Entrée par un **point neutre**, jamais par un onglet : les membres ne sont pas du même Ordre, une marque colorée ferait une cinquième exception |
+| **D21** | **Les Quêtes.** Un nom et des **épreuves** — un palier atteint sur un groupe d'œuvres. Rangées dans le fragment de qui les ouvre ; **l'accomplissement se recalcule, jamais ne se stocke**. Paliers **monotones** : `convoiter < entreprendre < achever`, renoncer ou accomplir valent entrepris, accompli vaut achevé. ⚠️ *« Suspendu » n'est pas un palier — on en sort, et une quête qui se désaccomplit serait cruelle* |
+| **D22** | **Une porte par pièce.** « Ma Feuille » quitte la barre latérale : le visage en bas y mène déjà. La barre sépare **agir** (inscrire, en cours, ouvrir une quête) de **parcourir** (Ordres, Œuvres, Quêtes). En étroit le visage passe dans l'en-tête, la barre basse reste à quatre entrées |
+| **D19** | **La Loge est un fil fermé.** On n'y entre que si on est de l'Ordre ; les autres trouvent porte close. ⚠️ *Règle d'usage, pas clôture : tout le monde lit le même dépôt. Une vraie clôture demanderait un dépôt par Ordre, ce qui briserait « un fichier par personne ».* Surligner est une marque personnelle (`marks[]`) ; replié, le fil ne garde que les surlignés |
+| **D20** | **Git reste la plateforme**, la Loge ne la remet pas en cause. Deux règles de client suffisent : **grouper les écritures** (jamais un commit par message) et **relire par requêtes conditionnelles**. ⚠️ *Corrigé le 10 octobre par la mesure : un `304` **décompte** du quota. L'argument porte sur le budget — 180 appels/h sur 5 000, soit 3,6 % — et non sur une gratuité.* Le seul coût réel est la latence — quinze à trente secondes, plancher indépassable. Si le direct devenait nécessaire : un canal de réveil qui ne stocke rien, jamais une base temps réel hébergée |
+| **D18** | **La Grande Loge entre au périmètre** — un message board par Ordre, `loge[]` dans le fragment de l'auteur. ⚠️ *Révise la ligne « commentaires et fils de discussion » du hors-périmètre : ce qui les excluait était le conflit d'écriture et la modération, or un seul écrivain par fichier règle le premier et rend la seconde non représentable. Restent exclus les fils arborescents, les commentaires attachés à une œuvre, et toute notification* |
+
+## Questions ouvertes
+
+Aucune ne bloque le spike.
+
+| Sujet | Question | Quand trancher |
+|---|---|---|
+| Organisation | Qui la crée, qui la possède, qui sont les premiers admins ? | **Avant le spike** |
+| Device flow | Issue ouvrable par un extérieur ? Expiration désactivable ? | Pendant le spike |
+| UX / UI | Cahier des charges attendu de Nathan. | Avant la V0 |
+| Catalogue | IGDB dès la V0, ou saisie manuelle pour commencer ? | V0 |
+| Classes | Tank / Guerrier / Mage — liste ouverte ou figée ? | V2 |
+| Signature | Compte développeur Apple à 99 $/an ? Plus difficile à éviter dès qu'on distribue à des inconnus. | Avant la V1 |
+| Jaquettes importées | Plafond de taille et de poids, et faut-il un dépôt séparé pour les images ? Git n'efface jamais un binaire remplacé. | ⚠️ *Était « cahier des charges » — à trancher dans une passe, il n'y aura pas de cahier* |
+| Barre basse | Quatre entrées maximum en étroit — lesquelles ? **Tranché par l'usage :** Registre, Ordres, Œuvres, Quêtes ; le visage passe dans l'en-tête, et le Greffe aussi | ✅ 11 oct. |
+| Nom | « Checkpoint » est un nom de travail. | Sans urgence |
+
+---
+
+## Journal
+
+> ⚠️ **Ce fichier est écrit par plusieurs sessions.** Le 10 octobre, une session
+> a réécrit le journal et effacé les entrées d'une autre ; des correctifs
+> ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
+> la section visée, et n'employer que des remplacements qui échouent bruyamment
+> si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — le spike est fini, six sur six
+
+- **Les trois vérifications qui demandaient un jeton sont passées.** Device
+  flow : jeton obtenu sans copier-coller, et **il n'expire pas** — rien à
+  rafraîchir, puisque la case *Expire user authorization tokens* a été laissée
+  décochée. Écriture acceptée, puis **409 Conflict sur un SHA périmé** : le
+  signal de relire, fusionner et réessayer existe bel et bien — et comme un
+  seul écrivain touche chaque fichier, il ne devrait jamais se déclencher.
+  Adhésion lisible (*rôle « admin », état « active »*) : **un administrateur
+  pourra valider depuis l'application**, ce qui fonde le guichet du Greffe.
+  Issue ouverte sur le dépôt public : **le seul geste d'un extérieur, et il
+  suffit.**
+- **L'infrastructure existe** : organisation `checkpoint-circlecodex`,
+  `tracker-data` privé, `checkpoint` public à issues, application GitHub
+  installée sur les deux dépôts.
+- **Nettoyé derrière** : `data/_spike.json` retiré du dépôt de données, issue
+  de test refermée. Le jeton reste dans `spike/.token` en 600 — à effacer au
+  portage, l'application réelle le rangera dans le trousseau système
+  (invariant 15).
+- **Ce que ça clôt :** D5 (la coque native est nécessaire, pas confortable),
+  D4, D7, et l'invariant 27 dans sa version corrigée. **Plus aucune question
+  d'architecture n'est ouverte.** `spike/` a servi — il ne doit pas devenir du
+  code de production.
+- **Et le cahier des charges UX n'arrivera pas** (décidé le 11 octobre). La
+  note mère disait de ne rien figer avant de l'avoir reçu, pendant qu'on
+  figeait à chaque passe : la règle était morte avant d'être réécrite.
+  **Le prototype fait foi.** Révision marquée, pas supprimée. Une question
+  ouverte s'est refermée au passage — la barre basse en étroit, tranchée par
+  l'usage.
+
+### 11 octobre 2026 — le Greffe
+
+- **Deux problèmes qu'on prenait pour un.** « Des fonctions qui ne doivent pas
+  apparaître au premier plan » recouvre **ce qui demande une autorité** et
+  **ce qui demande seulement de la discrétion**. *Une autorité n'est pas une
+  discrétion* : les réunir donnerait un panneau où une préférence d'affichage
+  côtoie une exclusion. L'autorité va au Greffe, la discrétion au pied de sa
+  propre feuille.
+- **La porte n'est pas cachée, elle est absente.** `only:() => isSteward(ME)`
+  retire l'entrée de la barre au lieu de la griser. Un geste secret aurait été
+  pire : moins découvrable qu'un survol, que l'invariant 19 interdit déjà.
+  Qui tape l'adresse sans la charge lit *« ce n'est pas une pièce fermée,
+  c'est une charge »* — et le banc d'essai permet de rendre la charge pour
+  **voir l'absence** sous ses yeux, la section « Tenir » disparaissant de la
+  barre sans rechargement.
+- **Fondre un doublon ne peut pas être une réécriture**, et c'est l'invariant 1
+  qui l'impose : le fragment d'un autre est hors d'atteinte. D'où l'alias
+  déclaré chez soi et replié **dans `merge()`** — la même grammaire que les
+  favoris, les surlignages et les quêtes. **Vérifié à la lecture et non sur
+  parole** : l'alias semé `b-nomrose → b-rose` laisse `b-nomrose` à zéro
+  inscription, et Inès paraît parmi les lecteurs du *Nom de la rose*, dont elle
+  n'avait jamais tenu l'identifiant.
+- **Le cas limite valait d'être écrit** : si une même personne tenait les deux
+  entrées d'un doublon, le repli lui en créait deux. `merge()` n'en garde que
+  la plus récente.
+- **Les doublons se suggèrent, ils ne se déclarent pas.** L'application
+  rapproche les titres normalisés ; le greffier tranche — *un livre et son film
+  portent le même nom, et seule une personne le sait.* Le survivant est
+  l'entrée qui n'a pas été inscrite à la main : elle porte un identifiant de
+  source, et l'identité d'une œuvre est son identifiant (invariant 9).
+- **Le parrain du vasistas est un nom tapé, pas un identifiant** — donc il peut
+  ne désigner personne. Trois cas à l'écran et pas un de moins : il se résout,
+  il ne se résout pas (*« aucun membre de ce nom »*), ou la case était vide.
+  **C'est exactement là qu'un greffier sert à quelque chose** ; sans ces trois
+  cas, le guichet n'aurait été qu'un bouton.
+- **Et puisque personne n'est averti de rien**, une demande qui attend paraît
+  dans l'encart du guetteur — pour qui tient la charge seulement. C'est le seul
+  moment où quelqu'un regarde quelque chose. Vérifié : la ligne existe pour le
+  greffier, disparaît pour le membre, et ne compte que les coups frappés depuis
+  la dernière visite.
+- **Une cible de 30 px attrapée par la mesure.** La porte étroite, dans
+  l'en-tête, faisait 30 px parce que j'avais dessiné un cadre autour du glyphe.
+  Invariant 20 : 44 px comme le visage voisin. **Le cadre d'un pictogramme ne
+  doit pas rétrécir la zone qu'on vise.**
+
+### 11 octobre 2026 — l'atelier
+
+- **Trois tuiles fondues en une.** Frapper à la porte, attendre et se composer
+  un visage ne sont pas trois étapes : c'est un seul geste — on demande à
+  entrer, et on se présente pendant qu'on attend. Les séparer faisait trois
+  clics pour une seule idée. Six tuiles deviennent **quatre**.
+- **Ce qui fait une création de personnage, c'est le résultat sous les yeux.**
+  Le portrait reste collé en haut à gauche pendant qu'on remplit à droite, et
+  il se met à jour à chaque geste. Sans ça, c'est un formulaire avec des
+  pastilles de couleur.
+- **Les repeintes ne perdent rien** : chaque champ est rangé dans le brouillon
+  à la frappe, donc cliquer un fond ou un signe redessine sans effacer ce qui
+  est écrit. Vérifié sur les quatre champs.
+- **Le mot d'accueil est porté par l'onde, pas par un écran.** « BIENVENUE DANS
+  LE CODEX » naît avec elle et meurt avec elle — l'onde est passée de 1,36 s à
+  1,9 s pour lui laisser le temps d'être lu. *Un dernier écran de plus aurait
+  ajouté un clic ; un mot dans la transition n'en ajoute aucun.*
+- **Il nommait la personne, il ne la nomme plus** (demande de Nathan, « c'est
+  cringe »). Le signe avant-coureur était dans le code : il fallait un repli
+  quand le prénom manquait, et ce repli était « âme nouvelle ». **Quand une
+  adresse a besoin d'une tournure de secours, c'est qu'elle n'avait pas lieu
+  d'être.** Reste une inscription en capitales, centrée — avec un
+  `text-indent` égal à l'interlettrage pour rattraper la gouttière finale, le
+  même défaut que l'invariant 30 : mesuré à 0,00 px d'écart, sur une ligne à
+  1 024 px comme à 375 px.
+- **Une erreur de portée attrapée par la console** : le mot lisait `d.firstName`
+  alors que `d` n'existe que dans le rendu de la tuile — dans le gestionnaire,
+  c'est `onbDraft`. L'exception avalait aussi la navigation qui suivait.
+
+### 11 octobre 2026 — les deux régimes de l'accueil
+
+- **Toute la page traitait l'information de la même façon.** Or il y a deux
+  choses : au-dessus, ce qu'on vous apporte — une chronique, un hasard, ce qui
+  a bougé ; en dessous, l'instrument qu'on vient consulter. Séparées par **une
+  feuille posée sur le bureau** : un ton plus claire, fermée par un filet
+  d'encre pleine largeur, la cité s'y estompant par le bas.
+- **J'ai écarté la trame animée et floutée que Nathan envisageait**, et la
+  raison était déjà écrite : *le flou est un événement, jamais un état* — un
+  fond flou permanent en ferait un décor. Et une ambiance en mouvement hors
+  d'une chambre diluerait la seule chose que le mouvement y signifie. *Quand une
+  idée séduisante se heurte à une règle qu'on a posée soi-même, c'est la règle
+  qui a raison — sinon elle ne servait à rien.*
+- **Un seul ton d'écart suffit, parce que la frontière est nette.** Pris
+  isolément, un ton contre l'autre ne se voit presque pas ; au passage de l'un
+  à l'autre, sous un filet d'encre, il se voit parfaitement. *On sépare comme le
+  ferait du papier, pas comme le ferait un écran.*
+- **Puis la feuille s'est mise à respirer**, à la demande de Nathan : trois
+  halos très larges qui dérivent dessous sur vingt-six secondes. **Ce n'est pas
+  une trame**, et c'est ce qui l'autorise là où j'avais refusé une animation de
+  fond : rien n'y a de forme, rien ne la traverse, c'est le papier qui prend la
+  lumière. *La distinction n'est pas « animé ou non », elle est « y a-t-il une
+  figure à lire ».*
+- **L'amplitude s'est réglée par le calcul, pas à l'œil** : le premier essai
+  faisait onduler de deux ou trois unités, invisible. En abaissant le fond et
+  en élargissant la course d'opacité (0,40 → 1), la MOYENNE reste plus claire
+  qu'avant tout en rendant le souffle perceptible.
+
+### 11 octobre 2026 — les catégories, au bon endroit cette fois
+
+- **Je m'étais trompé d'écran, et Nathan a dû le montrer en capture.** Le
+  sélecteur de catégories était dans l'inscription — la deuxième étape — alors
+  qu'on décrit une œuvre dans la première. J'avais vérifié le mauvais
+  formulaire et conclu que tout allait bien. *Quand quelqu'un dit qu'une chose
+  n'existe pas, il regarde un écran précis : il faut aller voir CET écran.*
+- **Les catégories suivent la nature choisie**, et changer de nature les vide :
+  un genre de jeu ne veut rien dire pour un livre, et le garder en silence
+  serait pire que le perdre. Le sélecteur est promu en fonction partagée —
+  deuxième usage, comme le veut la règle.
+- **Huit jaquettes engendrées** pour que la teinte du haut de fiche ait des
+  pages où se montrer : Elden Ring, Outer Wilds, Dune, Nos vies d'avant,
+  Severance, Arcane, La Horde du Contrevent, Piranèse. ⚠️ *Échafaudage de
+  prototype — rien n'est jamais engendré dans l'application.* Effet secondaire
+  utile : la grille de jaquettes montre enfin l'exception de couleur.
+- **Citer une œuvre dans la Loge se cherche**, au lieu d'une liste déroulante
+  de tout le corpus de l'Ordre. Et le choix ne met à jour **que ses résultats** :
+  le message en cours d'écriture reste intact — vérifié.
+- **Le menu de mention débordait en étroit** ; il y prend toute la largeur.
+
+### 11 octobre 2026 — les catégories, et la couleur d'une jaquette
+
+- **Le sélecteur de catégories existait, mais il était invisible.** Enfermé dans
+  une boîte de 132 px à défilement interne, sans libellés, au milieu d'un
+  formulaire long : Nathan a conclu qu'on ne pouvait pas les renseigner, et il
+  avait raison de le conclure. *Un choix qu'on ne voit pas n'existe pas.*
+- **Les listes reprennent désormais le vocabulaire des sources** — IGDB pour les
+  jeux, TMDb pour les films et les séries. L'argument n'est pas l'exhaustivité
+  mais le **mappage** : c'est de là que viendra l'identité des œuvres, donc les
+  genres arriveront traduits d'avance. Les livres n'ont aucune autorité unique ;
+  leur liste est la nôtre, et c'est écrit comme tel.
+- **IGDB sépare la forme du sujet, et cette distinction était exactement celle
+  de Nathan** — « FPS, simulateur » d'un côté, « romance, horreur » de l'autre.
+  Reprise telle quelle pour les jeux.
+- **Et les séries n'ont pas les genres des films** : TMDb y regroupe « Action &
+  aventure » et « Science-fiction & fantastique ». Les copier d'un média à
+  l'autre aurait produit des catégories qui n'existent pas chez la source.
+- **Une jaquette donne sa couleur au haut de sa fiche**, floutée et très diluée,
+  et **s'éteint avant les chiffres**. Premier réglage trop généreux : la teinte
+  tenait jusqu'aux statistiques et les étiquettes décrochaient. Au-delà du titre,
+  la page est un instrument — un instrument ne se colore pas.
+
+### 11 octobre 2026 — la feuille au premier coup d'œil
+
+- **« En cours » prenait cinq lignes par œuvre, il en prend deux.** Titre et
+  commandes sur la même ligne, dernier checkpoint tronqué sur l'autre. Le bloc
+  passe de ~500 px à 213 px pour trois œuvres. *C'est un tableau de bord, pas
+  une lecture : on vient y agir.*
+- **Une feuille doit dire QUI on lit.** Sous le nom, une ligne engendrée des
+  faits — et le premier jet les récitait dans le même ordre pour tout le monde
+  (« Surtout jeux, juge comme l'ensemble… » huit fois de suite). Chaque trait
+  porte maintenant une **saillance**, son écart à la norme, et seuls les plus
+  marquants sortent : huit personnes, huit lignes différentes. *Un portrait
+  engendré ne vaut que s'il distingue.*
+- **Pas de pronom dans cette ligne** : on ne connaît pas le genre, et on n'a
+  aucune raison de le demander. Les tournures télégraphiques s'en passent.
+- **Le magnum opus monte dans l'en-tête**, en jaquette, à droite du nom. C'est
+  la chose la plus personnelle qu'on puisse montrer d'emblée.
+- **Reprendre ce qu'on a mis de côté était impossible sans détour.** Le panneau
+  d'accès rapide montre désormais les deux listes — ce qu'on mène, et ce qu'on
+  a suspendu avec de quoi le relancer. *Une action facile à faire doit être
+  aussi facile à défaire.*
+- ⚠️ **Troisième bug masqué par l'enveloppe des Artifacts.** Après le charset
+  et le viewport : `[hidden]{display:none !important}`. Sans lui, `hidden` ne
+  tient pas face à `.lv-form{display:flex}` et **tous les formulaires de
+  checkpoint s'affichaient ouverts**. Servir le fichier hors Artifact fait
+  désormais partie des contrôles.
+- **Le « + » du checkpoint n'était pas centré dans son carré**, et pour deux
+  raisons cumulées : l'interlettrage hérité de la règle de groupe posait une
+  gouttière *après* le glyphe, et le `＋` pleine chasse porte ses propres
+  approches. Centrage explicite, interlettrage à zéro, chasse normale —
+  **vérifié par la mesure** (écart entre le centre du bouton et celui de son
+  contenu : 0,00 px dans les deux axes, aux deux largeurs). *Un alignement se
+  mesure, il ne se regarde pas.* Invariant 30.
+- **Et une grille qui dessinait ses cases vides** : `gap:1px` sur fond gris
+  trace aussi les cellules absentes — six traits sur quatre colonnes laissaient
+  un bloc gris orphelin. Les filets passent sur les cases, le conteneur reste
+  papier.
+
+### 11 octobre 2026 — l'encart du guetteur, replacé
+
+- **Trois nouvelles sur une seule ligne, on n'en lit aucune.** Une annonce par
+  ligne, séparées d'un filet, avec un **petit fanion en guise de tiret** — il
+  signale l'annonce sans peser, et il porte la couleur de l'Ordre comme le
+  reste de l'encart.
+- **Sa place n'est pas en tête de page.** On n'ouvre pas l'application pour des
+  annonces : il descend **entre Le Sort et Les inscriptions**, juste avant le
+  fil, là où le regard va de toute façon. Plus dense aussi — trois lignes en
+  115 px au lieu d'un bloc qui ouvrait la page.
+
+### 11 octobre 2026 — la passe de texte
+
+- **Les six principes étaient écrits de l'intérieur.** Fragment, palier,
+  synchronisation, planche, registre : aucun de ces mots ne veut dire quoi que
+  ce soit avant d'avoir servi. Nathan : *« c'est du gibberish la plupart du
+  temps »*. Réécrits en français de tout le monde, avec des exemples plutôt que
+  des définitions — « finir ces sept livres, commencer ces quatre jeux » dit en
+  une ligne ce que « un palier atteint sur un groupe d'œuvres » n'expliquait
+  pas. **Un texte d'accueil se juge sur quelqu'un qui n'a jamais ouvert
+  l'application, jamais sur celui qui l'a écrite.**
+- **Et il y en a cinq, plus six.** Le sixième — « rien n'est poussé » — disait
+  déjà ce que l'écran d'attente dit en toutes lettres. Rien de perdu.
+- **Une contradiction en haut de la première page** : « aucun compte à créer »,
+  puis « il faut un compte GitHub ». Corrigé en distinguant *chez nous* et
+  *chez eux* : aucun compte à créer **ici**, l'entrée se fait avec un compte
+  GitHub.
+- **La porte a trouvé son ton** : « Vous frappez à la porte », et *par le
+  vasistas, deux yeux vous fixent et vous demandent* — qui vous connaît, et à
+  quel titre (ami, père, enfant). La parenté entre donc dans l'application
+  **dès la demande d'entrée**, avant même d'avoir un profil.
+- **Le pseudo devient une particule de maison.** `handle` existait déjà dans le
+  modèle ; on ne change pas le champ, on change ce qu'on en demande — non plus
+  un nom de joueur, mais de quoi distinguer trois Thomas sans exiger de
+  patronyme. *Le meilleur changement de modèle est celui qu'on n'a pas à faire.*
+- **Le Discord ne se demande qu'une fois**, à l'attente, là où il sert.
+
+### 11 octobre 2026 — l'ouverture et le lavis
+
+- **Un nom qui se fond ne dit rien.** Celui-ci tombe **lettre à lettre**, avec
+  un léger dépassement à l'arrivée, puis le mot recule et un trait se tire
+  dessous. Dix lettres, soixante-deux millisecondes d'écart : c'est la cascade
+  qui fait l'effet, pas la durée.
+- **Des étoiles filantes, à l'encre.** Pas la trame d'un Ordre — on n'en a pas
+  encore quand on ouvre l'application pour la première fois. Poussières fixes
+  qui respirent, filantes en diagonale, le tout masqué vers le bas pour ne pas
+  concurrencer la tuile.
+- **L'entrée finit sur une onde de la couleur de son Ordre** — exactement celle
+  des pastilles, en plus ample (×23 au lieu de ×13) et plus lente (1,36 s au
+  lieu de 0,64). C'est le seul écran de la séquence qui porte une couleur, et
+  c'est ce qui en fait un aboutissement plutôt qu'un dernier formulaire.
+- **Un volet de couleur opaque avait été essayé d'abord, et écarté.** Il
+  couvrait l'écran au lieu de le traverser. *Couvrir, c'est fermer une porte ;
+  traverser, c'est en ouvrir une.* L'onde reste translucide d'un bout à l'autre
+  et l'on voit l'accueil se former au travers — plus doux, et plus juste.
+- **L'onde ne bloque jamais rien** : la fermeture et la navigation sont sur
+  minuterie, pas sur la fin de l'animation. Dans un onglet qui ne compose pas,
+  l'animation gèle et l'entrée se fait quand même — la dégradation était prévue
+  cette fois, pas découverte.
+
+### 11 octobre 2026 — le défilé des principes
+
+- **Un moment à part ne peut pas tenir dans la tuile.** Le défilé en est sorti :
+  plus large qu'elle, avec son en-tête, ses flèches et sa règle de progression.
+  C'est à la largeur qu'on voit que c'est un moment et non un paragraphe de plus.
+- **Six vignettes dessinées dans la langue de l'application** — plates, au
+  trait, monochromes, sauf les cinq disques d'Ordre qui sont l'exception déjà
+  consentie. Un principe illustré se retient ; un principe écrit se saute.
+- **Les pastilles d'Ordre de l'entrée sont exactement celles de la racine** :
+  pleine couleur, halo, dérive. On les verra tous les jours — autant les
+  reconnaître dès le premier soir. Choisir déclenche la même rafale de couleur
+  qu'à l'entrée d'une chambre, sans la navigation qui va avec.
+- **Quatre-vingt-deux emblèmes, en quatre familles**, et seize fonds. Assez pour
+  que personne ne tombe sur celui du voisin.
+- **La cité du Registre passe en contrebas de l'onboarding** : on entre dans un
+  endroit, pas dans un formulaire.
+- **Changer d'étape glisse latéralement** — la grammaire de l'application :
+  même profondeur, donc pas de zoom.
+- ⚠️ **Deux pièges d'exécution, et le second est une faute de méthode.**
+  *(1)* La scène est une colonne flex à hauteur contrainte : dès que le défilé
+  est arrivé, **la tuile s'est fait écraser à 65 px**, contenu intact mais
+  rogné. Un élément de colonne flex rétrécit par défaut ; il faut le lui
+  interdire. *(2)* Une découpe entre deux index a rendu un fragment plus gros
+  que prévu — **et j'ai élargi la borne au lieu de me demander pourquoi**. Le
+  fragment débordait sur deux sections voisines. La garde suivante l'a attrapé,
+  mais la note mère le disait déjà : *vérifier la taille retirée ET recompter
+  les symboles.* Élargir une borne qui proteste, c'est désarmer le garde-fou.
+
+### 11 octobre 2026 — le guetteur, et l'entrée dans le groupe
+
+- **Une ligne, et surtout pas une notification.** L'accueil dit ce que la
+  synchronisation vient de révéler : paroles nouvelles dans sa Loge, quête
+  scellée, planche à soi accomplie par un autre. Elle porte la couleur de son
+  Ordre — la seule de l'accueil. Elle ne se ferme pas et ne se compte pas :
+  *elle ne décrit que l'écart avec la visite précédente, donc elle disparaît
+  d'elle-même.*
+- **Dater ce qui n'a pas de date.** Une quête n'a pas d'instant
+  d'accomplissement, elle se recalcule. On la date donc par **la dernière
+  inscription qui l'a scellée** — ce qui suffit à savoir si elle est tombée
+  depuis la dernière visite. Même ruse pour « un autre a accompli ta planche ».
+- **L'ordre des écrans d'entrée n'est pas une affaire de goût.** Le plan de
+  départ plaçait le profil juste après la connexion. Or **le profil ne peut pas
+  s'écrire avant l'admission** : on n'a pas les droits sur le dépôt de données.
+  L'attente n'est donc pas un accident à masquer, c'est un écran à part entière
+  — et c'est là que le défilé des principes trouve sa place. *Un temps mort
+  qu'on remplit vaut mieux qu'un péage qu'on impose.*
+- **Le portrait quitte GitHub.** Fond dans une palette fermée, emblème, prénom.
+  La palette évite les cinq teintes d'Ordre, parce qu'un visage est personnel
+  et qu'une teinte d'Ordre est collective : les confondre créerait un faux
+  signal. GitHub n'identifie plus que le compte — ce qui, au passage, supprime
+  une dépendance à son CDN.
+- **Le dernier écran est le meilleur argument du projet** : le corpus est déjà
+  plein. On n'arrive pas devant une bibliothèque vide, on arrive au milieu
+  d'une conversation.
+- ⚠️ **L'onglet « Onboarding » est un banc d'essai, pas une destination.** Il
+  est exclu de la barre basse (qui reste à quatre entrées) par un drapeau
+  `bench` sur son entrée de registre, et doit disparaître au portage.
+
+### 10 octobre 2026 — la troupe, et la lignée
+
+- **Trois trames écartées pour les Guerriers, et jamais pour le mécanisme.**
+  Les braises ne disaient que « feu ». Les gerbes d'étincelles — rouges,
+  projetées, rapides — **se lisaient comme du sang**, et Nathan a mis un moment
+  à comprendre ce qu'il regardait avant de constater que la page en devenait
+  illisible. *Dans une couleur chaude, tout ce qui est projeté devient une
+  éclaboussure.* La leçon dépasse le cas : **avant d'animer une forme, se
+  demander ce qu'elle dira une fois teintée.**
+- **Une trame est un fond : si elle se remarque, elle a échoué.** La version
+  retenue — une forêt de lances qui dérive, le pied hors champ — met **une
+  minute à traverser** et tient sous 1 % d'encre. Premier jet à 2,5 %, soit le
+  niveau du barde : mesuré, corrigé. *On ne juge pas une trame au code, on la
+  mesure et on la regarde.*
+- **Enfoncer la troupe sous le bord change tout.** Avec le pied visible, chaque
+  hampe était un bâton flottant ; avec le pied hors champ, c'est une colonne
+  qui passe en contrebas. La même géométrie, décalée de quelques pour cent.
+- **La lignée, et une forme qui revient pour la quatrième fois.** Une parenté
+  se déclare **des deux côtés** — chacun n'écrit que chez lui, donc le lien
+  n'existe que si les deux l'ont posé. Après les favoris, les surlignages et
+  les quêtes, c'est la quatrième fois que « un seul écrivain par fichier »
+  impose la même solution : *déclaré chez soi, sommé à la lecture.* Ce n'est
+  plus une coïncidence, c'est la grammaire du modèle.
+- **La maisonnée n'est pas un objet.** C'est la composante connexe des liens
+  confirmés : personne ne la crée, personne ne la détient, elle apparaît. Rien
+  à administrer, donc rien à casser.
+- **Le mot est toujours celui de l'autre.** C'est l'enfant qui dit « mon
+  père » ; l'écran écrit donc « père de ». Personne ne se nomme soi-même dans
+  une famille — et ça évite d'inventer un champ de genre qu'on n'a pas.
+- **C'est le premier lien qui traverse les Ordres**, et c'est ce qui rend
+  l'idée bonne : on choisit son Ordre, on ne choisit pas sa maisonnée. D'où un
+  point d'entrée **neutre** — une teinte unique aurait trahi deux des trois.
+  **Mais sur la page elle-même, chacun porte le halo de son Ordre** : là,
+  chacun a le sien, donc rien n'est choisi contre personne. Le même raisonnement
+  interdit la couleur d'un côté et l'autorise de l'autre.
+- **Une page qui parle de gens doit en avoir le ton.** Quatre cases de
+  statistiques faisaient un tableau de bord ; une phrase fait une maison.
+  Visages flottants comme les disques de la racine, halos qui respirent, noms
+  en serif, parentés en italique, et des **courbes au lieu d'une équerre** —
+  une maisonnée n'est pas un organigramme.
+- **Un foyer se lit pareil par toutes ses portes.** Ouvert depuis Nina, il
+  s'appelait « Nina, Jules et Éliot » ; depuis Jules, autrement. Corrigé :
+  l'aîné d'abord, puis l'ordre des noms. *Un objet collectif ne doit pas
+  dépendre de qui le regarde.*
+- **Un garde-fou qui a servi deux fois dans la même heure.** La découpe par
+  index a refusé d'écrire parce qu'un fragment ne faisait pas la taille
+  attendue (les compteurs avaient changé depuis), puis parce qu'une assertion
+  trop large confondait le `burst` de la trame avec celui des pastilles.
+  **Deux fonctions homonymes dans deux portées différentes** : ça marche, et
+  c'est un piège. Le fichier n'a pas été écrit une seule fois en erreur.
+
+### 10 octobre 2026 — le spike, et une erreur que j'avais propagée
+
+Quatre questions sur six ont une réponse mesurée. Les deux dernières attendent
+une organisation GitHub, que je ne peux pas créer à sa place.
+
+- **Le device flow est bien hors de portée d'une page web.** Aucun
+  `Access-Control-Allow-Origin` sur `/login/device/code`, **préflight compris**
+  — un navigateur refuserait avant même d'émettre la requête. **D5 tient**, et
+  pour la bonne raison : la coque native est la condition, pas un confort.
+- **L'arbre Git rend 319 entrées en un appel, 218 ms.** Non tronqué. À vingt
+  fichiers, un seul appel suffira toujours — I7 confirmé.
+- **Une ouverture à froid coûte 395 ms** pour vingt fichiers en parallèle.
+  Très loin d'être un problème.
+- ⚠️ **J'avais tort, et je l'avais écrit partout.** J'ai affirmé — à Nathan,
+  dans la spec v12 et dans l'invariant 27 — qu'un `304 Not Modified` ne compte
+  pas dans le quota. **Mesuré : cinq relectures conditionnelles, cinq
+  décomptes** (`34 → 29`). C'est une doctrine répandue et fausse. *La
+  conclusion survit — 180 appels/h sur 5 000, soit 3,6 % du budget — mais elle
+  reposait sur une gratuité imaginaire.* Corrigé dans les trois endroits.
+  **Leçon : un chiffre qu'on n'a pas mesuré n'est pas un chiffre, c'est un
+  souvenir.** Et il se propage vite — trois documents en deux heures.
+- **Un 404 n'est pas une preuve.** Premier jet du test CORS : POST sans corps,
+  404, « pas d'en-tête CORS, donc c'est prouvé ». Faux — je n'avais pas atteint
+  le gestionnaire. Il a fallu une requête complète et un vrai préflight pour
+  que la réponse vaille quelque chose.
+- **La chaîne d'outils est posée** : node, npm, rustup + toolchain stable, gh.
+  `rustup` est keg-only chez Homebrew et n'est pas dans le `PATH` ; rien n'a été
+  ajouté au `~/.zshrc`.
+
+### 10 octobre 2026 — les Quêtes
+
+- **Une quête ne se valide pas, elle s'accomplit.** C'est ce qui la sépare d'un
+  trophée décerné : il n'y a personne à convaincre, donc rien à administrer.
+  L'accomplissement se **recalcule** à chaque lecture — il n'est jamais écrit
+  nulle part, conformément à la règle d'or.
+- **Le palier doit être monotone, et cette contrainte vient de Nathan sans
+  qu'il la nomme.** Il a dit : renoncer ou accomplir comptent comme entrepris,
+  et achevé vaut accompli. C'est une **échelle** : `convoiter < entreprendre <
+  achever`. Et elle implique son propre interdit — **« suspendu » ne peut pas
+  être un palier**, parce qu'on en sort et qu'une quête qui se désaccomplit en
+  changeant un statut serait cruelle. *Quand un modèle suggère une règle, il
+  suggère aussi ce qu'il faut lui refuser.*
+- **Une quête est une pancarte, pas une jaquette.** Une œuvre a une image ; une
+  quête n'a qu'un nom et une promesse. D'où la planche clouée sur un piquet,
+  légèrement de travers, qui se redresse quand on s'en approche — et qui
+  **s'inverse** une fois accomplie : encre pleine, texte en papier. Le plus
+  fort contraste disponible sans couleur, et il ne sert qu'à ça.
+- **Deux portes pour la même pièce, c'est une porte de trop.** « Ma Feuille »
+  quitte la barre : le visage en bas y menait déjà. En étroit, où la barre
+  n'existe pas, le visage passe dans l'en-tête — **une suppression dans une
+  disposition oblige à vérifier l'autre**, sans quoi le profil devenait
+  inaccessible sur téléphone.
+- **Agir et parcourir sont deux choses.** La règle qui les sépare subsiste quand
+  la barre est repliée : c'est là qu'on en a le plus besoin. Et deux glyphes
+  identiques dans une barre repliée en font un de trop — planter une quête a
+  pris le fanion, la section garde le losange.
+- **Un formulaire ne se redessine jamais sous les doigts.** Celui des quêtes se
+  repeint à chaque geste structurant — palier, œuvre ajoutée, épreuve — mais la
+  frappe ne met à jour que la liste de résultats. La règle générale : *repeindre
+  ce qui dépend du geste, jamais ce qui contient le curseur.*
+- **« Avoir entreprendre ».** L'infinitif réemployé en participe. Rappel que le
+  ton cérémonieux se tient mot par mot : un libellé réutilisé d'un contexte à
+  l'autre casse la phrase.
+
+### 10 octobre 2026 — le fer frappé
+
+- **Une trame doit nommer son Ordre, pas décrire un élément.** Les Guerriers
+  avaient un flux de braises qui montait : ça évoquait le feu, pas eux. La
+  nouvelle trame est **le fer frappé** — une cadence de coups, chacun jetant une
+  gerbe d'étincelles qui s'évase dans un sens, ralentit et **retombe**. Le
+  guerrier devient le seul geste **discontinu** et le seul **balistique** des
+  cinq.
+- **Les cinq gestes doivent être mutuellement exclusifs**, et c'est une
+  contrainte de conception, pas un constat. D'où un interdit concret découvert
+  en chemin : pas d'onde circulaire à l'impact, elle aurait emprunté au
+  Soigneur. Le premier jet en avait une ; elle est tombée avant d'être écrite.
+- **Sous le contenu, seul le trait long se lit.** Première version : des points
+  et de courtes étincelles — invisible. Les panneaux d'une chambre masquent la
+  plus grande part du canevas ; une trame de points s'y perd, une trame de
+  traits traverse les intervalles. C'est la même raison qui faisait marcher les
+  comètes des Mages. Vitesse ×1,8, longueur ×2,7, durée de vie ×1,5.
+- **Une gerbe qui rayonne dans toutes les directions fait un feu d'artifice.**
+  Un coup part d'un angle : la gerbe s'évase dans un seul sens et l'entaille
+  marque la surface frappée, en travers. Ce seul changement fait passer l'image
+  de « festif » à « frappé ».
+- **Troisième occurrence du même piège, corrigée à la racine.** `mountWeave`
+  montait la trame dans un `requestAnimationFrame` : dans un onglet qui n'est
+  pas rendu, il ne vient jamais — chambre sans trame, cité sans dessin, et rien
+  pour le dire. Après les couches quittées et le fil qui s'ouvrait en haut, la
+  règle est désormais générale : **un rappel d'animation anime, il ne met
+  jamais en place.** `startWeave` réessaie en plus la mesure jusqu'à ce que la
+  couche soit mise en page, au lieu d'abandonner en silence.
+- **Une trame discontinue se mesure sur plusieurs images.** Une seule mesure ne
+  dit rien : la chambre des Guerriers respire entre 0,20 % et 0,67 % de
+  couverture, pour 0,33 % stable chez les Mages. Même poids, comportement
+  inverse — c'est exactement ce qu'on voulait.
+- **Et un piège de mesure, pas de code** : mesurer une cible pendant l'animation
+  d'entrée d'un volet donne 42 px pour un bouton de 44. L'invariant 18 vaut
+  aussi quand on teste.
+
+### 10 octobre 2026 — la Loge devient un fil, et Git reste
+
+- **« Message board » et « fil de chat » ne sont pas le même objet.** J'avais
+  livré des blocs empilés du plus récent au plus ancien ; Nathan voulait un
+  fil — dense, dans le sens du temps, avec son propre défilement, ouvert en
+  bas. Ce qui fait la différence tient à peu de chose : **le groupement des
+  messages consécutifs d'une même personne**, les séparateurs de jour et
+  l'heure à la minute. Sans groupement, n'importe quel fil redevient un forum.
+- **Le surlignage est un index construit à la main par ceux qui lisent.**
+  Replié, le fil ne garde que ce que quelqu'un a voulu pouvoir retrouver, et
+  rouvrir un passage ramène à l'endroit exact d'où il vient — ni en haut, ni
+  en bas. *Un fil long sans moyen d'y revenir est une perte sèche ; c'est ce
+  que cette fonction répare.*
+- **Les deux faits collectifs de l'application ont la même forme.** Magnum opus
+  et surlignages : des **déclarations rangées chez soi, sommées à la lecture**.
+  Ce n'est pas une coïncidence, c'est la seule forme que « un seul écrivain par
+  fichier » autorise. Tout fait collectif à venir la prendra aussi.
+- **Une règle d'usage n'est pas une clôture, et il faut le dire.** La Loge se
+  ferme aux autres Ordres — mais tout le monde lit le même dépôt. L'application
+  fait respecter la convention, elle ne garantit pas le secret. *Le danger
+  n'est pas la fuite, c'est qu'on croie à une confidentialité qui n'existe
+  pas.* Écrit dans la spec et dans les invariants.
+- **Git tient, et la question méritait des chiffres.** Ce qui sauve la lecture
+  fréquente : **une requête conditionnelle qui rend `304` ne compte pas dans le
+  quota** — relire toutes les vingt secondes coûte presque rien. Ce qui sauve
+  l'écriture : **grouper**, jamais un commit par message, sinon on noie
+  l'historique, c'est-à-dire la propriété même qui a fait choisir Git. Reste la
+  latence, quinze à trente secondes, et elle est irréductible. *Si le direct
+  devenait nécessaire un jour, la réponse est un canal de réveil qui ne stocke
+  rien — pas une base temps réel, qui réintroduirait le magasin partagé qu'on a
+  supprimé.*
+- **Et si la Loge n'était qu'un salon, Discord gagnerait.** Sa raison d'être est
+  d'être attachée à l'Ordre et aux œuvres. C'est le critère qui dit si elle
+  mérite d'exister.
+- **Deux pièges d'exécution, de la même famille.** `requestAnimationFrame` ne
+  se déclenche pas dans un onglet qui n'est pas rendu : le fil s'ouvrait en
+  haut sans que rien ne le signale, exactement comme les couches quittées
+  s'empilaient la veille. *Ne jamais confier une correction d'état à un rappel
+  d'animation.* Et `dayKey` découpait la chaîne ISO — donc lisait le jour en
+  UTC — pendant que l'heure s'affichait en heure locale : deux séparateurs
+  « samedi 10 octobre » dans le même fil. *Deux fonctions qui parlent du même
+  instant doivent lire le même fuseau.*
+- **Visible ne veut pas dire découvrable.** Les commandes de chaque message
+  étaient affichées mais si pâles qu'elles valaient un survol — l'invariant
+  était respecté à la lettre et trahi en pratique. Corrigé, et les glyphes sont
+  nommés une fois en tête du fil.
+
+### 10 octobre 2026 — favoris, magnum opus, la Grande Loge
+
+- **Un hors-périmètre se révise par sa raison, pas par son libellé.** « Pas de
+  fils de discussion » excluait la Loge ; en remontant au *pourquoi* — conflit
+  d'écriture et modération — les deux tombent : un seul écrivain par fichier
+  règle le premier, et le second n'est pas une fonction refusée mais une chose
+  **non représentable**, puisqu'on n'a pas accès en écriture au fichier d'un
+  autre. *Une règle dont on a gardé le motif se révise ; une règle dont on n'a
+  gardé que l'énoncé se contourne ou se subit.*
+- **Le prix se paie dans l'interface, pas dans le modèle.** Pas de serveur donc
+  pas de temps réel : un message paraît à la synchronisation suivante et
+  personne n'est averti. L'écran le dit en toutes lettres plutôt que de laisser
+  croire à un salon. Même geste que l'écran d'attente d'adhésion.
+- **Un favori n'est pas une note, et c'est tout l'apport.** Dériver les favoris
+  d'un classement de notes n'aurait rien ajouté. Déclarés, ordonnés, plafonnés
+  à douze : on peut distinguer une œuvre qu'on n'a pas finie — Elden Ring,
+  « entrepris · sans jugement », au deuxième rang — et c'est précisément ce que
+  la note ne peut pas dire. Le plafond fait le choix ; sans lui c'est un second
+  registre.
+- **Le Magnum opus est le seul accord qui se déclare au lieu d'être calculé.**
+  Tout le reste de l'application déduit — sévérité, discorde, affinité. Là, deux
+  personnes mettent la même œuvre dans leur liste et l'Ordre a un étendard.
+  Quand aucune œuvre ne réunit deux voix, on le dit : **feindre l'unanimité
+  aurait vidé le seul endroit qui ne calcule rien.**
+- **Le cadre est cérémonieux, la parole ne l'est pas.** La Loge fournit le
+  meuble et se tait. C'est la première fois que l'application cède la voix.
+- **Au deuxième usage, le mécanisme monte dans le noyau** — la règle de
+  promotion appliquée à la lettre : la chambre d'Ordre voulait des onglets à
+  glissement latéral comme la feuille de personnage, donc `TABSETS` ; un bloc ne
+  déclare plus que sa liste, son hôte et son corps.
+- **Deux bugs trouvés par le détour.** Servir le prototype en HTTP local plutôt
+  qu'en `data:` a révélé qu'il n'avait **ni `<meta charset>` ni `viewport`** :
+  l'enveloppe des Artifacts les fournissait, et le fichier en était dépourvu
+  depuis le premier jour — accents cassés hors Artifact, et aucune mise en page
+  étroite sur un vrai téléphone. Et le retrait d'une couche quittée dépendait de
+  `onfinish` : un onglet en arrière-plan gèle l'animation et les couches
+  s'empilaient en silence. *Changer de contexte d'exécution est une forme de
+  test.*
+
+### 10 octobre 2026 — D12, genres, compagnons, compteur
+
+- **Le D10 était indessinable à cette échelle, le D12 ne l'est pas.** Un losange
+  facetté ne dit rien ; un dodécaèdre vu de face se construit tout seul —
+  pentagone central, cinq pentagones autour, décagone en silhouette, arêtes
+  radiales. *Quand une forme ne passe pas en pixel art, c'est souvent la forme
+  qu'il faut changer, pas la technique.*
+- **Partager l'expérience n'est pas partager le jugement.** `with[]` note avec
+  qui une œuvre a été faite ; les chroniques restent individuelles. Les fondre
+  aurait fait du groupe un auteur collectif, ce qu'il n'est pas.
+- **Refaire est un compteur, pas une seconde entrée.** `plays` s'incrémente
+  depuis sa propre ligne sur la fiche. Dupliquer l'entrée aurait faussé tous
+  les décomptes — achèvements, taux, moyennes.
+- **Les genres appartiennent à l'œuvre, pas à l'entrée** : ils partent dans
+  `works` comme la jaquette. Tronc commun à toutes les natures plus les genres
+  propres à chacune — trente-cinq choix pour un jeu.
+- **« Mes en cours » accessible depuis le volet.** C'est le geste le plus
+  fréquent après la lecture ; il ne doit pas imposer un détour par sa feuille.
+  La même `liveBox` sert sur la feuille et dans la surface, et se rafraîchit
+  sur place quand on suspend une œuvre.
+
+### 10 octobre 2026 — le dé du Sort
+
+- Un **D10 en pixel art** à gauche du Sort, dans la grammaire du header :
+  silhouette en cerf-volant, équateur en zigzag, trois facettes hautes dont
+  celle de face éclairée. Un chiffre romain y est gravé — l'application compte
+  déjà en romain partout.
+- **Il roule en changeant de face, pas en pivotant.** Faire tourner du pixel art
+  le réduit en bouillie : aucune rotation ne tombe sur la grille. Changer le
+  chiffre donne la même lecture — « ça roule » — sans rien casser. *Règle
+  générale : en pixel art, on anime le contenu, pas la géométrie.*
+- Deux primitives ajoutées au module : tracé de segment (Bresenham) et
+  remplissage de polygone par balayage. Elles resserviront.
+
+### 10 octobre 2026 — le volet devient un lanceur
+
+- **La carte était une mauvaise réponse à une bonne intuition.** Nathan voulait
+  que déplier le volet fasse quelque chose ; j'y ai mis un décor. Ce qu'il
+  fallait, c'est **une fonction** : le volet déplié est un lanceur, la zone
+  floutée accueille les résultats de recherche **en jaquettes**, et choisir
+  referme le volet sur la page atteinte. Carte mise en sommeil, code conservé.
+- **Un bug de couche que seul l'usage révèle** : la recherche s'affichait dans
+  la vue principale, donc *sous* le flou. Elle devait vivre dans la couche qui
+  passe au-dessus. Quand on floute une zone, tout ce qui doit rester lisible
+  doit en sortir.
+- **Trois gestes à distinguer dans un même panneau.** Choisir referme ; déplier
+  une section ne referme pas ; cliquer dans le champ de recherche encore moins
+  — c'est le contraire d'un choix, c'est le début d'un. Vérifié un par un.
+
+### 10 octobre 2026 — la carte du Royaume
+
+- **Une géographie qui n'appartient à personne.** Premier jet : cinq territoires
+  calqués sur les cinq Ordres. Nathan a tranché — **c'est un monde, pas un
+  découpage politique de l'application.** Les Ordres y auront peut-être une
+  ville un jour ; les Hautes Dents, la Sylve Ancienne et les Marais d'Avren
+  existent sans eux. La leçon vaut au-delà de la carte : un décor qui illustre
+  l'application se périme avec elle ; un décor qui existe pour lui-même tient.
+- **Fresque, pas semis.** La première carte échouait pour les mêmes raisons que
+  la première cité : aucun parti, aucune hiérarchie. Celle-ci a des **zones
+  texturées distinctes** — hachures obliques pour le plateau, terrasses pour les
+  coteaux, roseaux pour les marais, semis clairsemé pour les landes — une côte
+  découpée par sommes de sinusoïdes, un fleuve qui serpente des cimes à la mer,
+  et des **routes sinueuses, jamais d'équerre**.
+- **De l'originalité dans chaque coin**, comme demandé : rose des vents au
+  large, cartouche de titre, épave au sud-est, cercle de pierres, pont rompu,
+  cairns, îlots, échelle graphique.
+- **Deux échelles d'étiquettes** : noms de territoires en grand serif très
+  espacé et pâle, noms de lieux en petites capitales. C'est la typographie qui
+  fait lire une carte comme une carte.
+- Opacité remontée à 0,74 : la rampe de gris ayant été éclaircie pour la cité,
+  la carte était devenue trop fantomatique sur le flou.
+
+### 10 octobre 2026 — la journée entière, consolidée
+
+Reconstruit après coup : les entrées détaillées de cette session ont été perdues
+dans la collision. Ce qui compte, ce sont les enseignements.
+
+**Identité.** Le registre « porcelaine émaillée » a été **écarté par Nathan** au
+profit du **plat, noir et blanc, grain, profondeur de champ**. Huit questions ont
+fixé la direction. Conséquences : le flou n'est pas un effet mais la seule
+profondeur disponible une fois la matière retirée ; rien n'est flou au repos ;
+le catalogue est typographique ; les seules images sont les visages — plus, par
+exception consentie, les jaquettes.
+
+**Trois gestes, jamais confondus.** Le zoom dit un changement de profondeur ; le
+glissement latéral dit un déplacement à profondeur égale ; l'absence de mouvement
+dit que rien ne s'est déplacé. Un changement d'état ne doit donc rien animer.
+
+**Le profil doit décrire une relation, pas une personne.** Dans un tracker
+collectif, « qu'est-ce qu'on partage et où diverge-t-on » prime sur « qui est-il ».
+D'où le volet « Toi et X ». Et **le désaccord est un contenu, pas un défaut** :
+le nommer vaut mieux que calculer une compatibilité.
+
+**Une page de catégories n'a de valeur que si elle permet de comparer** — vrai
+pour les chambres d'Ordre. Mais **une page d'entrée n'est pas un tableau de
+bord** : sur la racine des Ordres, Nathan voulait du charme, pas des chiffres.
+Demander plutôt que supposer ce que « améliorer » veut dire.
+
+**Pixel art.** Deux pixels et non trois ; rampe claire, jamais de noir ; une
+scène se compose et ne se tire pas au sort ; toute masse tramée a besoin d'un
+bord dessiné ; animer une partie impose d'en garder une empreinte, dimensionnée
+sur la **course du mouvement** et non sur la forme au repos.
+
+**Méthode.** Un chemin non exécuté n'est pas un chemin qui marche — le recadrage
+de jaquette cachait deux bugs invisibles à la lecture. Un contrôle de syntaxe ne
+voit pas les fonctions manquantes. Et une découpe par index peut emporter du code
+écrit entre-temps : vérifier la taille du fragment retiré.
+
+### 10 octobre 2026 — identité propre, et abandon de React
+*(entrée d'une autre session — son registre « porcelaine » a depuis été écarté,
+voir D10 ; le raisonnement sur Svelte, lui, reste valable)*
+Nathan : « pour le moment c'est vraiment moche ». Juste. Les deux premières
+passes étaient une application web standard repeinte. Quatre réponses ont fixé
+la direction (D10), et elles entraînent un changement de pile (D11).
+
+- **Une console en monde clair, c'est rare — donc c'est une identité.** Presque
+  toutes les interfaces à matière et profondeur choisissent le sombre parce que
+  c'est plus facile : les reflets s'y voient sans effort. En clair, il faut le
+  registre de la **porcelaine émaillée** — lèvre lumineuse en haut, assise
+  sombre en bas, ombre portée, reflet spéculaire mobile. Chaque surface devient
+  un objet posé, pas un rectangle.
+- **L'identité ne vient pas de la palette mais du déplacement.** Le zoom
+  sémantique fait que l'élément cliqué *devient* l'écran : un fantôme vole de la
+  position source à la position d'arrivée pendant que la couche quittée grandit
+  et s'efface. C'est ça qui distingue l'application d'un site, pas les couleurs.
+- **React est hostile à ce qu'on construit.** La réconciliation combat les
+  transitions d'élément partagé — il faudrait Framer Motion, soit une grosse
+  dépendance pour contourner le défaut du framework. **Svelte** offre `flip` et
+  `crossfade` en natif, compile vers du DOM direct (meilleur pour la lumière
+  continue sur quarante objets) et scope le CSS sans outil. Les trois couches et
+  le registre se transposent sans changement. Nathan avait raison de douter.
+- **Le ton cérémonieux doit être tenu partout ou nulle part.** « Achevé »,
+  « Renoncement », « Jugement moyen », « Annales de l'Ordre », chiffres romains
+  sur la feuille de personnage. Une seule formulation neutre au milieu et tout
+  l'édifice sonne faux.
+- **Choisir un seul monde libère la matière.** En renonçant au thème sombre, on
+  peut poser des ombres et des reflets physiquement cohérents avec une source de
+  lumière unique en haut à gauche. Un thème double aurait interdit ça.
+
+### 10 octobre 2026 — 2e passe d'interface
+Retours de Nathan sur le prototype v0, avec une capture de référence (tableau de
+bord très clair, radius généreux, ambre pour seule couleur vive).
+
+- **Un bug bête et instructif** : la barre latérale se repliait mais ne se
+  dépliait plus — le bouton de bascule était masqué par la règle de repli. Une
+  commande qui disparaît dans l'état qu'elle sert à quitter est un cul-de-sac.
+  À vérifier systématiquement sur toute bascule.
+- **L'accueil était indigeste parce que les lignes n'avaient pas de hauteur
+  fixe.** Chaque événement portait une pastille, un score, une progression et
+  parfois l'encart d'une critique. Correction : **sortir les critiques du fil**
+  et leur donner leur propre section « À lire ». Le fil redevient uniforme donc
+  scannable, et les critiques gagnent le moment de lecture qu'elles méritent.
+  Règle à retenir : un fil se scanne, il ne se lit pas.
+- **Les couleurs de cercle sont incompatibles avec des panneaux teintés.** Avec
+  « peu de couleur » comme direction, bleu/rouge/vert ne peuvent vivre que sur
+  les pastilles elles-mêmes. Les grands panneaux colorés ont sauté — ce qui
+  rejoignait de toute façon la demande de ne montrer que les pastilles.
+- **Les pastilles suivent la souris** : inclinaison et reflet proportionnels à la
+  proximité, pas un simple survol. Purement décoratif, donc sans conflit avec
+  l'invariant 14 ; désactivé sur tactile et sous `prefers-reduced-motion`.
+- **Un système de mouvement plutôt que des animations au cas par cas** : deux
+  courbes, trois durées, trois gestes (monter, éclore, fondre), et un décalage
+  en cascade de 32 ms. C'est ce qui rend les transitions « cohérentes sans être
+  toujours pareilles ». Il appartient au noyau, comme les surfaces.
+- **Les sous-menus de la barre latérale sont indépendants** : Média et Cercles
+  peuvent être dépliés en même temps, et déplier ne navigue pas. Deux cibles
+  distinctes sur la même ligne — le libellé navigue, le chevron déplie.
+
+### 9 octobre 2026 — la pile, et le premier prototype
+Pile arrêtée (D9) et prototype cliquable des quatre vues publié, à partir de la
+description d'interface de Nathan : Accueil, Média, Cercles, Profil, barre
+latérale rétractable, pastilles façon PS Vita.
+
+- **Rien n'est installé sur la machine** — ni Node, ni Rust. Homebrew et Deno le
+  sont. D'où le choix de prototyper en HTML autonome plutôt que d'installer une
+  chaîne complète avant d'avoir validé quoi que ce soit.
+- **Trois changements de modèle**, consignés en spec §7 : `class` devient
+  `circle` (entité navigable, porteuse d'une couleur) ; `note` devient
+  `review: { title, body }`, parce qu'une critique a un titre qui circule dans le
+  fil ; et `mediaType` passe de réservé à actif — films et séries entrent en V1.
+- **D3 a tenu sa promesse.** Le champ `mediaType` avait été posé en septembre
+  « au cas où ». Les films arrivent un mois plus tard : zéro migration. C'est le
+  meilleur argument qu'on ait pour continuer à réserver des champs bon marché.
+- **Les couleurs de cercle sont des jetons du design system, pas des données.**
+  Un cercle stocke son identifiant ; la couleur est décidée côté interface. Sinon
+  un changement de palette imposerait de réécrire les fichiers de tout le monde.
+- **Le prototype n'est pas jetable à 100 %** : il est écrit avec la fusion, les
+  sélecteurs et le vocabulaire d'état déjà en place. Le portage sera mécanique.
+
+### 6 septembre 2026 — responsive et porte Android
+Ajout de D8, C9, I9, et des invariants d'interface 14 à 18. Question de Nathan :
+peut-on sortir un APK sur un coup de tête sans tout refaire ?
+
+- **Réponse : oui, mais le prix se paie maintenant, pas le jour de l'APK.** La
+  plomberie Tauri coûte environ deux jours. Ce qui coûterait cher, c'est de
+  découvrir que chaque vue suppose une souris et un grand écran.
+- **Un seul choix technique peut rendre l'APK cher** : brancher le stockage du
+  jeton directement sur une bibliothèque de trousseau de bureau. Derrière
+  l'interface `secrets` avec une implémentation portable, le problème disparaît.
+- **L'updater Tauri ne couvre pas Android.** Un bandeau « nouvelle version »
+  le remplace — et comme il marche partout, autant le construire de toute façon.
+- **La règle qui coûte le plus cher à réparer après coup est le survol.** Toutes
+  les autres se rattrapent vue par vue ; celle-là impose de rouvrir chaque vue.
+- **iOS reste hors sujet** : compte Apple et App Store, ce n'est pas un coup de tête.
+
+### 6 septembre 2026 — distribution, adhésion, parcours
+Le projet passe d'un cercle fermé à une **application distribuable pour une
+vingtaine de personnes**, avec adhésion sur demande. Ajout de D7. Création du
+document de parcours (`docs/ux.html`), publié à part.
+
+Ce qui a été appris ou décidé en chemin :
+
+- **Le passage de relais est la partie fragile du parcours.** Le demandeur et
+  l'administrateur ne sont jamais devant leur écran en même temps, et aucune
+  notification n'est possible. C'est ce qui donne sa raison d'être au champ
+  Discord — pas un ornement, le seul canal de relance qui existe.
+- **Les issues GitHub résolvent l'entrée d'un inconnu.** N'importe quel compte
+  GitHub peut ouvrir une issue sur un dépôt public : c'est le seul geste qu'une
+  personne hors de l'organisation puisse faire, et il suffit.
+- **Ne jamais inventer une liste d'administrateurs.** Les rôles de l'organisation
+  GitHub font autorité. Une liste maison finirait par diverger des droits réels.
+- **L'identifiant est le compte GitHub, jamais le pseudo.** Un pseudo se change ;
+  si le nom du fichier en dépendait, le renommer orphelinerait tout l'historique.
+- **La bibliothèque vide n'existe pas ici.** Un nouveau arrive dans un catalogue
+  déjà peuplé par le groupe. C'est le meilleur premier écran possible, et ça
+  supprime le pire écueil des applications de suivi.
+- **Le fil d'activité est du socle, pas du confort.** À usage épisodique, sans
+  récit de l'entre-temps, personne ne revient. Il passe donc en V1.
+
+### 6 septembre 2026 — application de bureau et blocs de fonction
+Bascule d'une page web statique vers **Tauri**. Ajout de D5 et D6.
+
+- **« Pas de HTML » recouvrait deux choses très différentes** : le fichier qu'on
+  double-clique, à rejeter, et le HTML comme couche de rendu dans une coque
+  native, qui est ce que sont VS Code ou Figma. La distinction posée, le choix
+  s'est fait tout seul.
+- **La coque native rouvre le device flow**, inaccessible depuis une page web
+  faute d'en-têtes CORS. Elle supprime du même coup le point le plus fragile de
+  la conception précédente : le jeton copié-collé à la main.
+- **Tauri 2 vise aussi Android.** L'ouverture mobile ne justifiait donc pas de
+  partir sur Flutter.
+- **La tension « ajouter sans casser, sans tout réécrire » ne se règle pas par
+  le cloisonnement** mais par un noyau partagé, un sens de dépendance unique, et
+  une règle de promotion : un composant monte dans le noyau au deuxième usage,
+  jamais au premier.
+
+### 5 septembre 2026 — conception initiale
+Cadrage complet à partir d'une idée de départ. D1 à D4 actées, spec publiée.
+
+- **Le vrai risque n'est pas la sécurité, c'est la corruption de données.** C'est
+  ce constat qui a fait pencher pour GitHub plutôt que Drive : chaque écriture
+  est un commit, donc réparable.
+- **Le conflit d'écriture se règle par le modèle, pas par du code.** Un fichier
+  par personne, et le problème disparaît au lieu d'être géré.
+- **Un jeton fine-grained ne peut cibler qu'un dépôt de soi-même ou d'une
+  organisation.** D'où D2, qui n'était pas dans l'idée initiale.
