@@ -1,0 +1,2084 @@
+[
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "ncarmichael",
+   "firstName": "Nathan",
+   "handle": "Nath",
+   "circle": "mage",
+   "sign": "🦊",
+   "discord": "nath",
+   "prefs": {
+    "titles": "fr"
+   }
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "g-hollow": {
+    "mediaType": "game",
+    "title": "Hollow Knight",
+    "year": 2017,
+    "genres": [
+     "Metroidvania",
+     "Plateforme"
+    ]
+   },
+   "g-elden": {
+    "mediaType": "game",
+    "title": "Elden Ring",
+    "year": 2022,
+    "genres": [
+     "Action-RPG",
+     "Monde ouvert"
+    ]
+   },
+   "g-outer": {
+    "mediaType": "game",
+    "title": "Outer Wilds",
+    "year": 2019,
+    "genres": [
+     "Exploration",
+     "Énigme"
+    ]
+   },
+   "g-disco": {
+    "mediaType": "game",
+    "title": "Disco Elysium",
+    "year": 2019,
+    "genres": [
+     "RPG",
+     "Narration"
+    ]
+   },
+   "g-celeste": {
+    "mediaType": "game",
+    "title": "Celeste",
+    "year": 2018,
+    "genres": [
+     "Plateforme"
+    ]
+   },
+   "g-tunic": {
+    "mediaType": "game",
+    "title": "Tunic",
+    "year": 2022,
+    "genres": [
+     "Aventure",
+     "Énigme"
+    ]
+   },
+   "f-dune": {
+    "mediaType": "film",
+    "title": "Dune",
+    "year": 2021,
+    "genres": [
+     "Science-fiction"
+    ]
+   },
+   "f-anatomie": {
+    "mediaType": "film",
+    "title": "Anatomie d'une chute",
+    "year": 2023,
+    "genres": [
+     "Drame",
+     "Procès"
+    ]
+   },
+   "f-blade": {
+    "mediaType": "film",
+    "title": "Blade Runner 2049",
+    "year": 2017,
+    "genres": [
+     "Science-fiction"
+    ]
+   },
+   "s-sever": {
+    "mediaType": "series",
+    "title": "Severance",
+    "year": 2022,
+    "genres": [
+     "Thriller",
+     "Science-fiction"
+    ]
+   },
+   "b-dune": {
+    "mediaType": "book",
+    "title": "Dune",
+    "year": 1965,
+    "genres": [
+     "Science-fiction"
+    ]
+   },
+   "b-piranesi": {
+    "mediaType": "book",
+    "title": "Piranesi",
+    "year": 2020,
+    "titleFr": "Piranèse",
+    "genres": [
+     "Fantastique"
+    ]
+   }
+  },
+  "entries": {
+   "g-hollow": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 42
+    },
+    "at": "2026-09-28T20:00:00.000Z",
+    "review": {
+     "title": "Le silence comme game design",
+     "body": "Hollow Knight ne t'explique rien et c'est exactement pour ça qu'il fonctionne. Chaque salle est une phrase, chaque boss une ponctuation.\n\nJ'ai mis quarante heures et j'ai passé les dix dernières à retarder la fin."
+    }
+   },
+   "g-outer": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 26
+    },
+    "at": "2026-10-05T20:00:00.000Z",
+    "review": {
+     "title": "On ne peut le découvrir qu'une fois",
+     "body": "Le seul jeu dont je voudrais effacer la mémoire pour le refaire. Tout ce qu'on y gagne, c'est de la compréhension — rien d'autre ne change."
+    }
+   },
+   "g-elden": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 61
+    },
+    "at": "2026-10-08T20:00:00.000Z",
+    "reflections": [
+     {
+      "at": "2026-09-02T20:00:00.000Z",
+      "text": "Vingt heures et je n'ai toujours pas compris ce que le jeu attend de moi. Je crois que c'est le propos."
+     },
+     {
+      "at": "2026-09-24T20:00:00.000Z",
+      "text": "Caelid. Je déteste Caelid. J'y retourne demain."
+     },
+     {
+      "at": "2026-10-08T20:00:00.000Z",
+      "text": "Je repousse la fin depuis trois sessions. Toujours le même signe."
+     }
+    ]
+   },
+   "f-dune": {
+    "status": "completed",
+    "rating": 8,
+    "at": "2026-09-14T20:00:00.000Z"
+   },
+   "s-sever": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "episodes",
+     "value": 5
+    },
+    "at": "2026-10-07T20:00:00.000Z",
+    "reflections": [
+     {
+      "at": "2026-10-07T20:00:00.000Z",
+      "text": "Cinq épisodes et je n'arrive pas à décider si le bureau est une prison ou un refuge."
+     }
+    ]
+   },
+   "g-disco": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-08-30T20:00:00.000Z"
+   },
+   "f-anatomie": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2026-10-02T20:00:00.000Z",
+    "review": {
+     "title": "Un procès qui juge le spectateur",
+     "body": "On passe deux heures à chercher la vérité et on repart avec la certitude qu'on n'y avait pas droit."
+    }
+   },
+   "g-tunic": {
+    "status": "dropped",
+    "rating": 6,
+    "progress": {
+     "unit": "hours",
+     "value": 7
+    },
+    "at": "2026-07-19T20:00:00.000Z"
+   },
+   "g-celeste": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 16
+    },
+    "at": "2025-03-12T20:00:00.000Z"
+   },
+   "b-dune": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "pages",
+     "value": 788
+    },
+    "at": "2026-10-07T20:00:00.000Z",
+    "review": {
+     "title": "Le désert est un personnage",
+     "body": "Herbert passe cent pages à expliquer l'eau avant qu'il n'arrive quoi que ce soit. Et c'est précisément là que le livre se gagne."
+    }
+   },
+   "b-piranesi": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "pages",
+     "value": 140
+    },
+    "at": "2026-10-09T20:00:00.000Z"
+   },
+   "f-blade": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2024-11-02T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "g-outer",
+   "g-elden",
+   "b-piranesi",
+   "f-blade"
+  ],
+  "marks": [
+   "lg-m1",
+   "lg-m2c"
+  ],
+  "loge": [
+   {
+    "order": "mage",
+    "id": "lg-m0b",
+    "at": "2026-09-24T17:05:00.000Z",
+    "body": "Pas encore. Je garde ça pour l'hiver."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m0c",
+    "at": "2026-09-24T17:06:00.000Z",
+    "body": "Par contre j'ai relancé Hollow Knight. Troisième fois."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m2",
+    "at": "2026-10-03T07:31:00.000Z",
+    "replyTo": "lg-m1",
+    "body": "Non, et c'est tout le sujet. On n'en garde que de la compréhension, et la compréhension ne se rejoue pas."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m2c",
+    "at": "2026-10-03T07:58:00.000Z",
+    "body": "Je te dis que tu fais autre chose que la première fois. Ce n'est pas pareil."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m4",
+    "at": "2026-10-09T20:17:00.000Z",
+    "replyTo": "lg-m3",
+    "body": "L'ami en question te remercie de ta discrétion."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m6",
+    "at": "2026-10-10T16:40:00.000Z",
+    "body": "Noté. Je retourne mourir."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-eveils",
+    "at": "2026-08-14T20:00:00.000Z",
+    "title": "Les Trois Éveils",
+    "line": "Avoir mis les mains dans les trois œuvres qui retournent la tête.",
+    "trials": [
+     {
+      "rung": 2,
+      "media": [
+       "g-hollow",
+       "g-outer",
+       "g-disco"
+      ]
+     }
+    ]
+   }
+  ],
+  "seenAt": "2026-10-04T21:00:00.000Z"
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "alemoine",
+   "firstName": "Alice",
+   "handle": "Lym",
+   "circle": "ranger",
+   "sign": "🦉",
+   "discord": "lym"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "g-obra": {
+    "mediaType": "game",
+    "title": "Return of the Obra Dinn",
+    "year": 2018,
+    "genres": [
+     "Enquête",
+     "Énigme"
+    ]
+   },
+   "g-pent": {
+    "mediaType": "game",
+    "title": "Pentiment",
+    "year": 2022,
+    "genres": [
+     "Narration",
+     "Historique"
+    ]
+   },
+   "f-past": {
+    "mediaType": "film",
+    "title": "Past Lives",
+    "year": 2023,
+    "titleFr": "Nos vies d'avant",
+    "genres": [
+     "Drame",
+     "Romance"
+    ]
+   },
+   "f-zone": {
+    "mediaType": "film",
+    "title": "The Zone of Interest",
+    "year": 2023,
+    "titleFr": "La Zone d'intérêt",
+    "genres": [
+     "Drame",
+     "Historique"
+    ]
+   },
+   "s-arcane": {
+    "mediaType": "series",
+    "title": "Arcane",
+    "year": 2021,
+    "genres": [
+     "Animation",
+     "Drame"
+    ]
+   },
+   "s-bear": {
+    "mediaType": "series",
+    "title": "The Bear",
+    "year": 2022,
+    "genres": [
+     "Drame",
+     "Comédie"
+    ]
+   },
+   "s-chern": {
+    "mediaType": "series",
+    "title": "Chernobyl",
+    "year": 2019,
+    "genres": [
+     "Drame",
+     "Historique"
+    ]
+   },
+   "b-horde": {
+    "mediaType": "book",
+    "title": "La Horde du Contrevent",
+    "year": 2004,
+    "genres": [
+     "Science-fiction",
+     "Aventure"
+    ]
+   },
+   "b-corps": {
+    "mediaType": "book",
+    "title": "The Three-Body Problem",
+    "year": 2008,
+    "titleFr": "Le Problème à trois corps",
+    "genres": [
+     "Science-fiction"
+    ]
+   }
+  },
+  "entries": {
+   "g-hollow": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 88
+    },
+    "at": "2026-06-11T20:00:00.000Z",
+    "review": {
+     "title": "112 %, et je recommencerais",
+     "body": "Le Panthéon de Hallownest m'a pris trois semaines. Je n'ai jamais rien joué d'aussi exigeant qui soit resté aussi juste."
+    }
+   },
+   "g-obra": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 11
+    },
+    "at": "2026-09-30T20:00:00.000Z",
+    "review": {
+     "title": "Un carnet, soixante morts",
+     "body": "Le seul jeu d'enquête qui te fait vraiment déduire au lieu de cliquer jusqu'à la bonne réponse."
+    }
+   },
+   "g-outer": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 23
+    },
+    "at": "2026-05-02T20:00:00.000Z"
+   },
+   "s-arcane": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "episodes",
+     "value": 18
+    },
+    "at": "2026-10-06T20:00:00.000Z"
+   },
+   "f-past": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2026-10-04T20:00:00.000Z",
+    "review": {
+     "title": "Tout tient dans ce qui n'est pas dit",
+     "body": "Deux heures de non-dits et une dernière scène qui démolit. Rien de spectaculaire, tout de précis."
+    }
+   },
+   "g-pent": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 14
+    },
+    "at": "2026-10-08T20:00:00.000Z",
+    "reflections": [
+     {
+      "at": "2026-10-08T20:00:00.000Z",
+      "text": "Le jeu change de police d'écriture selon qui parle. Je n'avais jamais vu ça ailleurs."
+     }
+    ]
+   },
+   "g-elden": {
+    "status": "paused",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 34
+    },
+    "at": "2026-08-21T20:00:00.000Z"
+   },
+   "s-bear": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "episodes",
+     "value": 12
+    },
+    "at": "2026-10-03T20:00:00.000Z"
+   },
+   "f-zone": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-09-20T20:00:00.000Z"
+   },
+   "g-disco": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 31
+    },
+    "at": "2025-07-19T20:00:00.000Z"
+   },
+   "b-horde": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "pages",
+     "value": 704
+    },
+    "at": "2026-10-02T20:00:00.000Z",
+    "review": {
+     "title": "Vingt-trois voix, un seul vent",
+     "body": "Chaque personnage a son signe typographique dans la marge. On apprend à les reconnaître sans lire leur nom — je n'avais jamais vu un livre faire ça."
+    }
+   },
+   "b-corps": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "pages",
+     "value": 592
+    },
+    "at": "2026-07-14T20:00:00.000Z"
+   },
+   "s-chern": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 5
+    },
+    "at": "2024-08-30T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "b-horde",
+   "g-pent",
+   "s-chern",
+   "s-arcane"
+  ],
+  "marks": [
+   "lg-r1",
+   "lg-r0b"
+  ],
+  "loge": [
+   {
+    "order": "ranger",
+    "id": "lg-r0b",
+    "at": "2026-09-28T12:19:00.000Z",
+    "body": "Non. Lance-le."
+   },
+   {
+    "order": "ranger",
+    "id": "lg-r1",
+    "at": "2026-10-04T14:47:00.000Z",
+    "ref": "b-horde",
+    "body": "La Horde du Contrevent, troisième lecture. Je crois que je ne lirai plus rien d'autre, et c'est un problème."
+   },
+   {
+    "order": "ranger",
+    "id": "lg-r4",
+    "at": "2026-10-09T07:14:00.000Z",
+    "replyTo": "lg-r3",
+    "ref": "g-pent",
+    "body": "J'y suis depuis dimanche. Je lis les marges."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-tribunal",
+    "at": "2026-06-25T20:00:00.000Z",
+    "title": "Le Tribunal",
+    "line": "Trois procès, trois verdicts. Aucun confortable.",
+    "trials": [
+     {
+      "rung": 3,
+      "media": [
+       "f-anatomie",
+       "s-chern",
+       "b-rose"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "tbrunet",
+   "firstName": "Théo",
+   "handle": "Brun",
+   "circle": "guerrier",
+   "sign": "🐺",
+   "discord": "brun"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "g-hades": {
+    "mediaType": "game",
+    "title": "Hades",
+    "year": 2020,
+    "genres": [
+     "Roguelite",
+     "Action"
+    ]
+   },
+   "g-bg3": {
+    "mediaType": "game",
+    "title": "Baldur's Gate 3",
+    "year": 2023,
+    "genres": [
+     "RPG",
+     "Tactique"
+    ]
+   },
+   "f-ee": {
+    "mediaType": "film",
+    "title": "Everything Everywhere All at Once",
+    "year": 2022,
+    "titleFr": "Everything Everywhere All at Once",
+    "genres": [
+     "Science-fiction",
+     "Comédie"
+    ]
+   },
+   "s-andor": {
+    "mediaType": "series",
+    "title": "Andor",
+    "year": 2022,
+    "genres": [
+     "Science-fiction"
+    ]
+   },
+   "b-station": {
+    "mediaType": "book",
+    "title": "Station Eleven",
+    "year": 2014,
+    "genres": [
+     "Science-fiction",
+     "Drame"
+    ]
+   }
+  },
+  "entries": {
+   "g-elden": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 214
+    },
+    "at": "2026-09-12T20:00:00.000Z",
+    "review": {
+     "title": "Platine obtenu, dignité perdue",
+     "body": "Deux cent quatorze heures. Malenia m'a pris quarante tentatives et je l'ai battue à une heure du matin un mardi.\n\nAucun regret. Enfin, quelques-uns."
+    }
+   },
+   "g-hades": {
+    "status": "mastered",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 97
+    },
+    "at": "2026-07-30T20:00:00.000Z"
+   },
+   "g-hollow": {
+    "status": "dropped",
+    "rating": 5,
+    "progress": {
+     "unit": "hours",
+     "value": 4
+    },
+    "at": "2026-04-08T20:00:00.000Z",
+    "review": {
+     "title": "Trop lent pour moi",
+     "body": "Je reconnais la qualité, je n'ai pas la patience. Quatre heures à me perdre dans les mêmes couloirs et j'ai rendu les armes."
+    }
+   },
+   "f-blade": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2026-08-17T20:00:00.000Z"
+   },
+   "g-celeste": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 19
+    },
+    "at": "2026-10-01T20:00:00.000Z"
+   },
+   "s-andor": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 12
+    },
+    "at": "2026-09-25T20:00:00.000Z"
+   },
+   "g-bg3": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 73
+    },
+    "at": "2026-10-09T20:00:00.000Z",
+    "reflections": [
+     {
+      "at": "2026-09-28T20:00:00.000Z",
+      "text": "J'ai tué un marchand par accident à l'acte I. Tout l'acte II s'en ressent."
+     },
+     {
+      "at": "2026-10-09T20:00:00.000Z",
+      "text": "Soixante-treize heures et je n'ai pas quitté l'acte II. Aucune urgence."
+     }
+    ]
+   },
+   "f-ee": {
+    "status": "dropped",
+    "rating": 4,
+    "at": "2026-06-14T20:00:00.000Z"
+   },
+   "g-tunic": {
+    "status": "dropped",
+    "rating": 5,
+    "progress": {
+     "unit": "hours",
+     "value": 2
+    },
+    "at": "2025-01-22T20:00:00.000Z"
+   },
+   "b-dune": {
+    "status": "dropped",
+    "rating": 4,
+    "progress": {
+     "unit": "pages",
+     "value": 92
+    },
+    "at": "2026-08-19T20:00:00.000Z"
+   },
+   "b-station": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "pages",
+     "value": 480
+    },
+    "at": "2026-09-30T20:00:00.000Z"
+   },
+   "f-dune": {
+    "status": "completed",
+    "rating": 7,
+    "at": "2024-12-14T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "g-elden",
+   "s-andor",
+   "b-station"
+  ],
+  "marks": [
+   "lg-g0",
+   "lg-g5"
+  ],
+  "loge": [
+   {
+    "order": "guerrier",
+    "id": "lg-g0",
+    "at": "2026-09-26T21:51:00.000Z",
+    "body": "Je le mets ici pour que ce soit écrit quelque part : Elden Ring, sans guide, du début à la fin. C'est fait."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g0c",
+    "at": "2026-09-27T06:30:00.000Z",
+    "body": "Ne demande pas."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g1",
+    "at": "2026-09-29T17:22:00.000Z",
+    "ref": "g-bg3",
+    "body": "Proposition : une soirée Baldur's Gate à quatre, samedi. Sam a déjà dit oui sans lire le message."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g4",
+    "at": "2026-10-08T05:55:00.000Z",
+    "replyTo": "lg-g3",
+    "body": "On vient te chercher."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g5",
+    "at": "2026-10-10T15:10:00.000Z",
+    "body": "Samedi, vingt heures. J'apporte les dés."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-cendres",
+    "at": "2026-08-29T20:00:00.000Z",
+    "title": "Les Cendres de l'Entre-terre",
+    "line": "Les avoir entreprises suffit. Y survivre est une autre affaire.",
+    "trials": [
+     {
+      "rung": 2,
+      "media": [
+       "g-elden",
+       "g-hades",
+       "g-bg3"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "mrossi",
+   "firstName": "Marion",
+   "handle": "Mars",
+   "circle": "mage",
+   "sign": "🐙",
+   "discord": "mars"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "g-inscr": {
+    "mediaType": "game",
+    "title": "Inscryption",
+    "year": 2021,
+    "genres": [
+     "Cartes",
+     "Horreur"
+    ]
+   },
+   "f-portrait": {
+    "mediaType": "film",
+    "title": "Portrait de la jeune fille en feu",
+    "year": 2019,
+    "titleFr": "Portrait de la jeune fille en feu",
+    "genres": [
+     "Drame",
+     "Romance"
+    ]
+   },
+   "b-rose": {
+    "mediaType": "book",
+    "title": "Il nome della rosa",
+    "year": 1980,
+    "titleFr": "Le Nom de la rose",
+    "genres": [
+     "Policier",
+     "Historique"
+    ]
+   },
+   "b-anomalie": {
+    "mediaType": "book",
+    "title": "L'Anomalie",
+    "year": 2020,
+    "genres": [
+     "Science-fiction"
+    ]
+   }
+  },
+  "entries": {
+   "g-disco": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 38
+    },
+    "at": "2026-09-18T20:00:00.000Z",
+    "review": {
+     "title": "Le meilleur texte que j'aie lu cette année",
+     "body": "Appeler ça un jeu vidéo est presque réducteur. C'est un roman dont on choisit les erreurs.\n\nMon personnage a fini communiste et alcoolique. Je crois que c'était le bon chemin."
+    }
+   },
+   "g-inscr": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 16
+    },
+    "at": "2026-10-07T20:00:00.000Z"
+   },
+   "s-sever": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 18
+    },
+    "at": "2026-10-08T20:00:00.000Z",
+    "review": {
+     "title": "La meilleure série sur le travail",
+     "body": "Un bureau, des couloirs blancs, et plus d'angoisse que dans n'importe quel film d'horreur de l'année."
+    }
+   },
+   "f-zone": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2026-09-29T20:00:00.000Z"
+   },
+   "g-outer": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 9
+    },
+    "at": "2026-10-06T20:00:00.000Z"
+   },
+   "f-portrait": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2026-07-22T20:00:00.000Z"
+   },
+   "g-pent": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-10-02T20:00:00.000Z"
+   },
+   "s-chern": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "episodes",
+     "value": 5
+    },
+    "at": "2026-05-30T20:00:00.000Z"
+   },
+   "g-hollow": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 35
+    },
+    "at": "2025-05-08T20:00:00.000Z"
+   },
+   "b-rose": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "pages",
+     "value": 640
+    },
+    "at": "2026-10-06T20:00:00.000Z"
+   },
+   "b-anomalie": {
+    "status": "completed",
+    "rating": 7,
+    "progress": {
+     "unit": "pages",
+     "value": 336
+    },
+    "at": "2026-06-25T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "b-rose",
+   "g-outer",
+   "f-portrait",
+   "g-inscr"
+  ],
+  "marks": [
+   "lg-m1",
+   "lg-m0d"
+  ],
+  "loge": [
+   {
+    "order": "mage",
+    "id": "lg-m0",
+    "at": "2026-09-24T16:42:00.000Z",
+    "body": "Quelqu'un a touché à Pentiment ? Je vois Alice dessus et ça m'intrigue."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m0d",
+    "at": "2026-09-27T09:20:00.000Z",
+    "body": "Trois fois. Tu devrais en faire une chronique au lieu d'une rechute."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m1",
+    "at": "2026-10-02T19:14:00.000Z",
+    "ref": "g-outer",
+    "body": "Je relance un vieux débat : est-ce qu'on peut aimer Outer Wilds deux fois ? J'en suis à ma seconde boucle et je ne retrouve rien de la première."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m2b",
+    "at": "2026-10-03T07:44:00.000Z",
+    "body": "Donc tu me dis que je perds mon temps."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m3",
+    "at": "2026-10-06T18:03:00.000Z",
+    "body": "Quelqu'un a fini Elden Ring sans guide ? Je demande pour un ami qui campe à Caelid depuis trois semaines."
+   },
+   {
+    "order": "mage",
+    "id": "lg-m5",
+    "at": "2026-10-09T20:26:00.000Z",
+    "body": "Sérieusement : la zone est faite pour qu'on la déteste. Tiens bon et elle finit par lâcher."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-vide",
+    "at": "2026-10-01T20:00:00.000Z",
+    "title": "Les Énigmes du Vide",
+    "line": "Trois jeux qui ne donnent rien d'autre que de la compréhension.",
+    "trials": [
+     {
+      "rung": 3,
+      "media": [
+       "g-outer",
+       "g-obra",
+       "g-tunic"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "jfaure",
+   "firstName": "Jules",
+   "handle": "Juju",
+   "circle": "ranger",
+   "sign": "🦝",
+   "discord": "juju"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "f-perfect": {
+    "mediaType": "film",
+    "title": "Perfect Days",
+    "year": 2023,
+    "genres": [
+     "Drame"
+    ]
+   }
+  },
+  "entries": {
+   "g-bg3": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 131
+    },
+    "at": "2026-10-05T20:00:00.000Z",
+    "review": {
+     "title": "Trois parties, trois jeux différents",
+     "body": "J'ai relancé deux fois juste pour voir ce que le jeu faisait de mes bêtises. Il faisait toujours quelque chose."
+    }
+   },
+   "g-celeste": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 44
+    },
+    "at": "2026-08-09T20:00:00.000Z"
+   },
+   "g-tunic": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 21
+    },
+    "at": "2026-09-21T20:00:00.000Z"
+   },
+   "s-bear": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "episodes",
+     "value": 28
+    },
+    "at": "2026-09-27T20:00:00.000Z"
+   },
+   "f-perfect": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2026-10-03T20:00:00.000Z",
+    "review": {
+     "title": "Rien ne se passe, tout arrive",
+     "body": "Deux heures sur un homme qui nettoie des toilettes à Tokyo. Je suis sorti de là différent, et je serais incapable de dire pourquoi."
+    }
+   },
+   "g-hades": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 28
+    },
+    "at": "2026-10-09T20:00:00.000Z"
+   },
+   "f-dune": {
+    "status": "completed",
+    "rating": 7,
+    "at": "2026-06-28T20:00:00.000Z"
+   },
+   "g-obra": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-10-01T20:00:00.000Z"
+   },
+   "s-arcane": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "episodes",
+     "value": 9
+    },
+    "at": "2025-02-27T20:00:00.000Z"
+   },
+   "b-piranesi": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "pages",
+     "value": 272
+    },
+    "at": "2026-10-01T20:00:00.000Z",
+    "review": {
+     "title": "Une maison qui contient la mer",
+     "body": "On met soixante pages à comprendre où l'on est, et le reste du livre à souhaiter ne jamais en sortir."
+    }
+   },
+   "b-horde": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-09-28T20:00:00.000Z"
+   },
+   "f-ee": {
+    "status": "completed",
+    "rating": 8,
+    "at": "2024-06-18T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "g-celeste",
+   "b-piranesi",
+   "f-perfect",
+   "s-arcane"
+  ],
+  "marks": [
+   "lg-r1",
+   "lg-r3"
+  ],
+  "loge": [
+   {
+    "order": "ranger",
+    "id": "lg-r0",
+    "at": "2026-09-28T12:08:00.000Z",
+    "body": "Obra Dinn traîne dans mes convoitises depuis un an et j'ai peur de le lancer. Ça se soigne ?"
+   },
+   {
+    "order": "ranger",
+    "id": "lg-r2",
+    "at": "2026-10-05T08:02:00.000Z",
+    "replyTo": "lg-r1",
+    "body": "C'est pour ça qu'il dort encore dans mes convoitises. Je le garde pour l'hiver, j'y tiens."
+   },
+   {
+    "order": "ranger",
+    "id": "lg-r3",
+    "at": "2026-10-08T16:33:00.000Z",
+    "body": "Avis aux âmes patientes : Pentiment demande quarante heures de lecture et aucune dextérité. Alice, c'est écrit pour toi."
+   },
+   {
+    "order": "ranger",
+    "id": "lg-r5",
+    "at": "2026-10-10T11:26:00.000Z",
+    "body": "Les marges, évidemment. Tu ne fais jamais rien comme tout le monde."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-promesse",
+    "at": "2026-09-30T20:00:00.000Z",
+    "title": "Promesse de lecture",
+    "line": "Un livre achevé, un autre porté dans ses convoitises. La patience compte.",
+    "trials": [
+     {
+      "rung": 3,
+      "media": [
+       "b-piranesi"
+      ]
+     },
+     {
+      "rung": 1,
+      "media": [
+       "b-horde"
+      ]
+     }
+    ]
+   }
+  ],
+  "kin": [
+   {
+    "id": "efaure",
+    "rel": "fils"
+   },
+   {
+    "id": "nfaure",
+    "rel": "fille"
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "skaplan",
+   "firstName": "Sam",
+   "handle": "Kap",
+   "circle": "guerrier",
+   "sign": "🐉",
+   "discord": "kap"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "s-succ": {
+    "mediaType": "series",
+    "title": "Succession",
+    "year": 2018,
+    "genres": [
+     "Drame"
+    ]
+   }
+  },
+  "entries": {
+   "g-hades": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 52
+    },
+    "at": "2026-10-04T20:00:00.000Z",
+    "review": {
+     "title": "Mourir n'a jamais été aussi bien écrit",
+     "body": "Chaque échec avance l'histoire. C'est la seule boucle roguelike qui m'ait jamais donné envie de perdre."
+    }
+   },
+   "g-elden": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 19
+    },
+    "at": "2026-10-08T20:00:00.000Z"
+   },
+   "s-succ": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 39
+    },
+    "at": "2026-08-02T20:00:00.000Z"
+   },
+   "f-blade": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2026-09-11T20:00:00.000Z"
+   },
+   "g-inscr": {
+    "status": "dropped",
+    "rating": 6,
+    "progress": {
+     "unit": "hours",
+     "value": 3
+    },
+    "at": "2026-07-05T20:00:00.000Z"
+   },
+   "s-andor": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "episodes",
+     "value": 7
+    },
+    "at": "2026-10-07T20:00:00.000Z"
+   },
+   "g-bg3": {
+    "status": "paused",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 41
+    },
+    "at": "2026-09-03T20:00:00.000Z"
+   },
+   "g-celeste": {
+    "status": "completed",
+    "rating": 7,
+    "progress": {
+     "unit": "hours",
+     "value": 12
+    },
+    "at": "2025-09-04T20:00:00.000Z"
+   },
+   "b-corps": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "pages",
+     "value": 210
+    },
+    "at": "2026-10-08T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "g-hades",
+   "g-elden",
+   "s-succ"
+  ],
+  "marks": [
+   "lg-g0",
+   "lg-g2b"
+  ],
+  "loge": [
+   {
+    "order": "guerrier",
+    "id": "lg-g0b",
+    "at": "2026-09-27T06:12:00.000Z",
+    "body": "Combien d'heures."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g2",
+    "at": "2026-10-01T10:05:00.000Z",
+    "replyTo": "lg-g1",
+    "body": "J'ai lu le message."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g2b",
+    "at": "2026-10-01T10:05:00.000Z",
+    "body": "Et c'est oui."
+   },
+   {
+    "order": "guerrier",
+    "id": "lg-g3",
+    "at": "2026-10-07T19:40:00.000Z",
+    "ref": "g-inscr",
+    "body": "Pour la postérité : j'ai lâché Inscryption au deuxième acte et je ne le regrette pas. Vous pouvez venir me chercher."
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "cmercier",
+   "firstName": "Camille",
+   "handle": "Cam",
+   "circle": "soigneur",
+   "sign": "🕊️",
+   "discord": "cam"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {},
+  "entries": {
+   "g-outer": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 34
+    },
+    "at": "2026-10-06T20:00:00.000Z",
+    "review": {
+     "title": "Il faut accepter de ne pas comprendre",
+     "body": "J'ai passé six heures à tourner sans rien saisir, et la septième a tout renversé. Aucun jeu ne m'a jamais autant récompensé la patience."
+    }
+   },
+   "g-pent": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 27
+    },
+    "at": "2026-09-22T20:00:00.000Z"
+   },
+   "g-celeste": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 58
+    },
+    "at": "2026-08-14T20:00:00.000Z"
+   },
+   "f-perfect": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2026-10-01T20:00:00.000Z"
+   },
+   "s-bear": {
+    "status": "paused",
+    "rating": 7,
+    "progress": {
+     "unit": "episodes",
+     "value": 6
+    },
+    "at": "2026-09-05T20:00:00.000Z"
+   },
+   "g-bg3": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 52
+    },
+    "at": "2026-10-09T20:00:00.000Z"
+   },
+   "f-past": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2025-11-12T20:00:00.000Z"
+   },
+   "g-hollow": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 51
+    },
+    "at": "2025-04-03T20:00:00.000Z"
+   },
+   "b-station": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "pages",
+     "value": 480
+    },
+    "at": "2026-08-07T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "g-outer",
+   "f-past",
+   "g-celeste"
+  ],
+  "marks": [
+   "lg-s1"
+  ],
+  "loge": [
+   {
+    "order": "soigneur",
+    "id": "lg-s0",
+    "at": "2026-09-25T18:31:00.000Z",
+    "body": "On n'est que deux, autant en profiter : je propose qu'on finisse quelque chose ensemble ce mois-ci."
+   },
+   {
+    "order": "soigneur",
+    "id": "lg-s1",
+    "at": "2026-10-03T17:12:00.000Z",
+    "body": "Je tiens le registre des œuvres qu'on abandonne à mi-chemin. Chez nous il est vide. Continuons comme ça."
+   },
+   {
+    "order": "soigneur",
+    "id": "lg-s3",
+    "at": "2026-10-07T06:05:00.000Z",
+    "replyTo": "lg-s2",
+    "body": "Suspendu n'est pas renoncé. Le registre reste vide."
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "nbenali",
+   "firstName": "Nour",
+   "handle": "Nou",
+   "circle": "soigneur",
+   "sign": "🦌",
+   "discord": "nou"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "g-ow": {
+    "mediaType": "game",
+    "title": "Outer Wilds",
+    "year": 2019,
+    "genres": [
+     "Exploration"
+    ],
+    "manual": true
+   }
+  },
+  "entries": {
+   "s-sever": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "episodes",
+     "value": 18
+    },
+    "at": "2026-10-05T20:00:00.000Z"
+   },
+   "g-inscr": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 19
+    },
+    "at": "2026-09-16T20:00:00.000Z"
+   },
+   "f-portrait": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2026-08-28T20:00:00.000Z",
+    "review": {
+     "title": "Le dernier plan dure trois minutes",
+     "body": "On regarde un visage se défaire en temps réel, sans musique, sans coupe. Je n'ai pas respiré."
+    }
+   },
+   "g-obra": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 13
+    },
+    "at": "2026-07-11T20:00:00.000Z"
+   },
+   "s-arcane": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "episodes",
+     "value": 4
+    },
+    "at": "2026-10-08T20:00:00.000Z"
+   },
+   "g-tunic": {
+    "status": "completed",
+    "rating": 8,
+    "progress": {
+     "unit": "hours",
+     "value": 18
+    },
+    "at": "2025-06-20T20:00:00.000Z"
+   },
+   "b-anomalie": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "pages",
+     "value": 336
+    },
+    "at": "2026-09-13T20:00:00.000Z"
+   },
+   "f-zone": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-09-30T20:00:00.000Z"
+   },
+   "g-ow": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 4
+    },
+    "at": "2026-10-08T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "f-portrait",
+   "b-anomalie",
+   "g-obra"
+  ],
+  "marks": [
+   "lg-s1",
+   "lg-s0b"
+  ],
+  "loge": [
+   {
+    "order": "soigneur",
+    "id": "lg-s0b",
+    "at": "2026-09-26T07:47:00.000Z",
+    "body": "D'accord. Mais quelque chose de court."
+   },
+   {
+    "order": "soigneur",
+    "id": "lg-s2",
+    "at": "2026-10-06T20:58:00.000Z",
+    "replyTo": "lg-s1",
+    "ref": "s-arcane",
+    "body": "J'ai suspendu Arcane hier soir. Tu peux ouvrir ton registre."
+   },
+   {
+    "order": "soigneur",
+    "id": "lg-s4",
+    "at": "2026-10-10T17:02:00.000Z",
+    "body": "Je la reprends ce soir. Ne note rien."
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "lgarnier",
+   "firstName": "Léo",
+   "handle": "Lyo",
+   "circle": "barde",
+   "sign": "🦜",
+   "discord": "lyo"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {},
+  "entries": {
+   "g-disco": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 72
+    },
+    "at": "2026-10-07T20:00:00.000Z",
+    "review": {
+     "title": "On y joue un homme qui se souvient mal",
+     "body": "Chaque compétence est une voix dans ta tête, et elles mentent toutes un peu. J'ai relancé trois fois pour entendre les autres.\n\nLa meilleure écriture du médium, sans discussion possible."
+    }
+   },
+   "f-anatomie": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2026-09-19T20:00:00.000Z",
+    "review": {
+     "title": "Personne ne dit la vérité, tout le monde est sincère",
+     "body": "Deux heures trente de parole, et pas une seconde où l'on s'ennuie. Le cinéma n'a pas besoin d'autre chose."
+    }
+   },
+   "s-succ": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "episodes",
+     "value": 39
+    },
+    "at": "2026-08-03T20:00:00.000Z"
+   },
+   "g-pent": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 22
+    },
+    "at": "2026-10-02T20:00:00.000Z"
+   },
+   "f-blade": {
+    "status": "completed",
+    "rating": 8,
+    "at": "2026-06-07T20:00:00.000Z"
+   },
+   "g-elden": {
+    "status": "dropped",
+    "rating": 5,
+    "progress": {
+     "unit": "hours",
+     "value": 11
+    },
+    "at": "2026-05-21T20:00:00.000Z",
+    "review": {
+     "title": "Trop de monde, trop peu de mots",
+     "body": "Immense et muet. J'admire la construction, je n'ai rien à en raconter — et c'est ce que je cherche."
+    }
+   },
+   "s-chern": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 5
+    },
+    "at": "2025-10-15T20:00:00.000Z"
+   },
+   "b-rose": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "pages",
+     "value": 640
+    },
+    "at": "2026-09-05T20:00:00.000Z",
+    "review": {
+     "title": "Un polar qui se méfie du rire",
+     "body": "Eco cache une thèse sur la censure dans une enquête d'abbaye. Les cent premières pages trient les lecteurs ; les cinq cents suivantes récompensent ceux qui restent."
+    }
+   },
+   "f-dune": {
+    "status": "completed",
+    "rating": 6,
+    "at": "2024-09-22T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "g-disco",
+   "s-chern",
+   "f-anatomie",
+   "b-rose"
+  ],
+  "marks": [
+   "lg-b1",
+   "lg-b2b"
+  ],
+  "loge": [
+   {
+    "order": "barde",
+    "id": "lg-b1",
+    "at": "2026-09-30T19:00:00.000Z",
+    "body": "On ouvre la Loge. Règle unique : on ne cite pas une œuvre sans dire ce qui nous y a tenus."
+   },
+   {
+    "order": "barde",
+    "id": "lg-b2b",
+    "at": "2026-10-03T09:49:00.000Z",
+    "body": "La musique fait la moitié du travail, d'accord. L'autre moitié c'est le montage, et personne n'en parle jamais."
+   },
+   {
+    "order": "barde",
+    "id": "lg-b3",
+    "at": "2026-10-05T18:22:00.000Z",
+    "ref": "b-rose",
+    "body": "Le Nom de la rose se lit mieux à voix haute. J'en ferai la démonstration à la prochaine veillée."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-arrakis",
+    "at": "2026-07-02T20:00:00.000Z",
+    "title": "Le Cycle d'Arrakis",
+    "line": "Le livre et le film. Dans cet ordre, de préférence.",
+    "trials": [
+     {
+      "rung": 3,
+      "media": [
+       "b-dune",
+       "f-dune"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "iferrand",
+   "firstName": "Inès",
+   "handle": "Nès",
+   "circle": "barde",
+   "sign": "🐈",
+   "discord": "nes"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {
+   "b-nomrose": {
+    "mediaType": "book",
+    "title": "Le Nom de la rose",
+    "year": 1980,
+    "genres": [
+     "Policier"
+    ],
+    "manual": true
+   }
+  },
+  "entries": {
+   "s-arcane": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 18
+    },
+    "at": "2026-10-04T20:00:00.000Z"
+   },
+   "f-ee": {
+    "status": "completed",
+    "rating": 9,
+    "at": "2026-09-08T20:00:00.000Z"
+   },
+   "g-hades": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 41
+    },
+    "at": "2026-08-25T20:00:00.000Z"
+   },
+   "g-inscr": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 7
+    },
+    "at": "2026-10-09T20:00:00.000Z"
+   },
+   "f-past": {
+    "status": "completed",
+    "rating": 8,
+    "at": "2026-07-30T20:00:00.000Z"
+   },
+   "s-bear": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 28
+    },
+    "at": "2026-09-26T20:00:00.000Z",
+    "review": {
+     "title": "Une cuisine comme champ de bataille",
+     "body": "Jamais série n'a aussi bien filmé le bruit. On sort de chaque épisode épuisé et affamé."
+    }
+   },
+   "g-celeste": {
+    "status": "dropped",
+    "rating": 6,
+    "progress": {
+     "unit": "hours",
+     "value": 5
+    },
+    "at": "2025-08-11T20:00:00.000Z"
+   },
+   "b-dune": {
+    "status": "completed",
+    "rating": 7,
+    "progress": {
+     "unit": "pages",
+     "value": 788
+    },
+    "at": "2026-05-18T20:00:00.000Z"
+   },
+   "g-disco": {
+    "status": "wishlist",
+    "rating": null,
+    "at": "2026-10-03T20:00:00.000Z"
+   },
+   "b-nomrose": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "pages",
+     "value": 640
+    },
+    "at": "2026-09-19T20:00:00.000Z"
+   }
+  },
+  "favorites": [
+   "s-arcane",
+   "s-bear",
+   "f-ee"
+  ],
+  "marks": [
+   "lg-b1"
+  ],
+  "loge": [
+   {
+    "order": "barde",
+    "id": "lg-b1b",
+    "at": "2026-09-30T19:08:00.000Z",
+    "body": "Adopté."
+   },
+   {
+    "order": "barde",
+    "id": "lg-b2",
+    "at": "2026-10-02T15:35:00.000Z",
+    "ref": "s-arcane",
+    "body": "Arcane, alors. Pour la musique, uniquement la musique, et je l'assume entièrement."
+   },
+   {
+    "order": "barde",
+    "id": "lg-b4",
+    "at": "2026-10-09T10:41:00.000Z",
+    "replyTo": "lg-b3",
+    "body": "Prévoyez du temps. Léo ne fait jamais une démonstration courte."
+   },
+   {
+    "order": "barde",
+    "id": "lg-b5",
+    "at": "2026-10-10T13:15:00.000Z",
+    "body": "J'apporte de quoi tenir jusqu'au bout. Prévois une voix de rechange."
+   }
+  ],
+  "quests": [
+   {
+    "id": "q-nuits",
+    "at": "2026-09-11T20:00:00.000Z",
+    "title": "Deux Nuits Blanches",
+    "line": "Deux séries qu'on ne repose pas avant la fin.",
+    "trials": [
+     {
+      "rung": 3,
+      "media": [
+       "s-arcane",
+       "s-bear"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "efaure",
+   "firstName": "Éliot",
+   "handle": "Éli",
+   "circle": "barde",
+   "sign": "🦔",
+   "discord": "eli"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {},
+  "entries": {
+   "g-celeste": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "hours",
+     "value": 31
+    },
+    "at": "2026-09-20T20:00:00.000Z"
+   },
+   "s-arcane": {
+    "status": "completed",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 18
+    },
+    "at": "2026-08-30T20:00:00.000Z"
+   },
+   "f-dune": {
+    "status": "completed",
+    "rating": 10,
+    "at": "2026-10-04T20:00:00.000Z",
+    "review": {
+     "title": "Le ver, surtout le ver",
+     "body": "Papa dit que le livre est mieux. Papa n'a pas vu le ver sur grand écran."
+    }
+   },
+   "g-hades": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "hours",
+     "value": 12
+    },
+    "at": "2026-10-09T20:00:00.000Z",
+    "reflections": [
+     {
+      "at": "2026-10-09T20:00:00.000Z",
+      "text": "Trente-quatre essais. Je ne compte plus, je m'entraîne."
+     }
+    ]
+   },
+   "g-hollow": {
+    "status": "dropped",
+    "rating": 4,
+    "progress": {
+     "unit": "hours",
+     "value": 2
+    },
+    "at": "2026-07-14T20:00:00.000Z"
+   }
+  },
+  "kin": [
+   {
+    "id": "jfaure",
+    "rel": "pere"
+   },
+   {
+    "id": "nfaure",
+    "rel": "soeur"
+   }
+  ]
+ },
+ {
+  "schemaVersion": 1,
+  "user": {
+   "id": "nfaure",
+   "firstName": "Nina",
+   "handle": "Nine",
+   "circle": "soigneur",
+   "sign": "🦢",
+   "discord": "nine"
+  },
+  "updatedAt": "2026-10-10T21:00:00.000Z",
+  "works": {},
+  "entries": {
+   "s-arcane": {
+    "status": "mastered",
+    "rating": 10,
+    "progress": {
+     "unit": "episodes",
+     "value": 18
+    },
+    "at": "2026-09-02T20:00:00.000Z"
+   },
+   "g-celeste": {
+    "status": "completed",
+    "rating": 9,
+    "progress": {
+     "unit": "hours",
+     "value": 19
+    },
+    "at": "2026-10-01T20:00:00.000Z"
+   },
+   "f-ee": {
+    "status": "completed",
+    "rating": 8,
+    "at": "2026-08-17T20:00:00.000Z"
+   },
+   "b-piranesi": {
+    "status": "playing",
+    "rating": null,
+    "progress": {
+     "unit": "pages",
+     "value": 94
+    },
+    "at": "2026-10-06T20:00:00.000Z"
+   }
+  },
+  "kin": [
+   {
+    "id": "jfaure",
+    "rel": "pere"
+   },
+   {
+    "id": "efaure",
+    "rel": "frere"
+   }
+  ]
+ }
+]

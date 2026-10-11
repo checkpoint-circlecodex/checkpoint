@@ -61,7 +61,7 @@ export type User = {
 };
 
 /** Un message de la Loge vit chez son auteur et porte son Ordre (invariant 25). */
-export type Post = { id: string; order: CircleId; at: string; body: string; ref?: string; reply?: string };
+export type Post = { id: string; order: CircleId; at: string; body: string; ref?: string; replyTo?: string };
 
 /** Une épreuve : un palier atteint sur un groupe d'œuvres. Monotone. */
 export type Trial = { rung: 1 | 2 | 3; media: string[] };

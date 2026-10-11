@@ -9,24 +9,21 @@
 
 ## Prochaine action
 
-**Étape 4 du portage — les vues.**
+**Étape 4 du portage, suite — les vues qui restent.**
 
-Le noyau est là (étape 3, 11 octobre) : schéma typé, migrations montantes,
-fusion avec repli des alias à la lecture, lexique accordé par nature, et les
-sélecteurs — œuvres, gens, quêtes, Loge, lignée, Greffe. **Dix-sept essais
-tournent sans réseau ni navigateur**, parce que le noyau est une fonction pure
-de ce qu'on lui donne.
+La première passe est faite (11 octobre) : la coque, la barre, la bascule de
+mise au point, les surfaces, et **deux vues réelles** — l'accueil et le
+Répertoire — nourries par le jeu d'essai du prototype, extrait tel quel.
 
-L'étape 4 porte les vues dans l'ordre du registre, en reprenant le prototype
-qui fait foi. Elle commence par ce qui leur manque : les **primitives du
-design system** et les **surfaces** (invariant 14) — un bloc ne réinvente
-jamais les siennes, et chacune a une forme large et une forme étroite décidée
-dans le noyau (invariant 22).
+Restent, dans l'ordre du registre : la **fiche** d'une œuvre, les **Ordres**
+et leurs chambres, la **feuille** de personnage, les **Quêtes**, la
+**lignée**, le **Greffe**, le **volet-lanceur**. Puis les écritures —
+inscrire une œuvre, poser un checkpoint, prendre la parole.
 
 Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
 
-⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding, la section
-« banc d'essai » du Greffe, et l'écran d'essai actuel de `App.svelte`.
+⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding et la section
+« banc d'essai » du Greffe.
 
 ---
 
@@ -259,6 +256,39 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — la coque et les deux premières vues
+
+- **Le jeu de données du prototype est repris tel quel**, extrait en évaluant
+  sa région de données sous Node plutôt qu'en le recopiant à la main : douze
+  fragments, trente-quatre œuvres. Et il est **chargé à la demande** — 43 Ko
+  qui n'ont rien à faire dans le binaire livré, donc un morceau séparé que la
+  coque ne demande jamais.
+- ⚠️ **Les couches s'empilaient sans se retirer, pour la quatrième fois.**
+  Les transitions de Svelte sont pilotées par l'horloge d'animation, et dans
+  un onglet qui ne rend pas, l'horloge s'arrête : la couche sortante n'était
+  jamais retirée. Trois, puis quatre, en silence. *Un rappel d'animation
+  anime, il ne met jamais en place.* La Scène clone désormais la couche qui
+  part, l'anime, et **un minuteur la retire quoi qu'il arrive**. Mesuré :
+  une seule couche après cinq navigations.
+  **La leçon était déjà écrite dans la note mère — je l'ai quand même
+  rejouée en changeant d'outil.** Un invariant ne se transporte pas tout
+  seul d'une technique à l'autre.
+- **`forward` est décidé par la coque**, qui seule connaît la route qu'on
+  quitte. Déduit dans un effet, il avait un cran de retard : la première
+  bascule annonçait la profondeur de la précédente.
+- **Une règle `:global` perd contre un style scopé, en silence.** La barre
+  latérale refusait de disparaître en étroit parce que la coque la masquait
+  de l'extérieur — `.rail.svelte-xxx` l'emporte sur `:global(.rail)`. La
+  règle est repartie dans le composant qui la connaît, ce qui est de toute
+  façon où elle devait être (invariant 23).
+- **Six cibles sous 44 px**, trouvées par la mesure et non à l'œil : le
+  sigle, la bascule, les rangées, le chevron. Corrigées en gardant le cadre
+  visible petit et en agrandissant **la zone qu'on vise**, avec des marges
+  négatives pour que la mise en page ne s'écarte pas (invariant 20).
+- Vérifié : une seule couche après cinq navigations, aucun débordement
+  horizontal à 375 px, la barre absente en étroit, quatre entrées en bas,
+  aucune erreur de console.
 
 ### 11 octobre 2026 — le noyau
 
