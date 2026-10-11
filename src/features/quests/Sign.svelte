@@ -6,8 +6,8 @@
 
      Accomplie, la planche **s'inverse** — encre pleine, texte en papier : le
      plus fort contraste disponible sans couleur, et il ne sert qu'à ça. */
-  import { roman } from "$core/model/lexicon.ts";
-  import type { OpenQuest } from "$core/model/world.ts";
+  import { roman } from "#core/model/lexicon.ts";
+  import type { OpenQuest } from "#core/model/world.ts";
 
   let { q, i = 0, done = false, holders = 0 }:
     { q: OpenQuest; i?: number; done?: boolean; holders?: number } = $props();

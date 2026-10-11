@@ -6,10 +6,10 @@
      l'instrument, qu'on vient consulter.
 
      On sépare comme le ferait du papier, pas comme le ferait un écran. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { Face } from "$core/ui/index.ts";
-  import { KIND, STATUS, VERB, ago, roman } from "$core/model/lexicon.ts";
-  import { chronicles, register, titleOf } from "$core/selectors/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { Face } from "#core/ui/index.ts";
+  import { KIND, STATUS, VERB, ago, roman } from "#core/model/lexicon.ts";
+  import { chronicles, register, titleOf } from "#core/selectors/index.ts";
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { registre } from "$core/model/store.svelte.ts";
-  import { roman } from "$core/model/lexicon.ts";
-  import { questHolders, questScore, questsDoneBy, questsOpenFor } from "$core/selectors/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { roman } from "#core/model/lexicon.ts";
+  import { questHolders, questScore, questsDoneBy, questsOpenFor } from "#core/selectors/index.ts";
   import Sign from "./Sign.svelte";
 
   const w = $derived(registre.world);

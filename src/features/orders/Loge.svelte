@@ -9,11 +9,11 @@
 
      ⚠️ Lecture seule pour l'instant — prendre la parole et surligner sont des
      écritures, elles arrivent avec la passe des écritures. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { Face } from "$core/ui/index.ts";
-  import { dayKey, dayName, hhmm, roman } from "$core/model/lexicon.ts";
-  import { groupsWith, litIn, logeOf, markers, marksOf, postById, speaksIn, titleOf } from "$core/selectors/index.ts";
-  import type { CircleId } from "$core/model/schema.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { Face } from "#core/ui/index.ts";
+  import { dayKey, dayName, hhmm, roman } from "#core/model/lexicon.ts";
+  import { groupsWith, litIn, logeOf, markers, marksOf, postById, speaksIn, titleOf } from "#core/selectors/index.ts";
+  import type { CircleId } from "#core/model/schema.ts";
 
   let { cid }: { cid: CircleId } = $props();
 

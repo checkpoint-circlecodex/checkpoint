@@ -18,10 +18,10 @@
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
     "paths": {
-      "$core/*":     ["./src/core/*"],
-      "$platform/*": ["./src/platform/*"],
-      "$features/*": ["./src/features/*"],
-      "$shell/*":    ["./src/shell/*"]
+      "#core/*":     ["./src/core/*"],
+      "#platform/*": ["./src/platform/*"],
+      "#features/*": ["./src/features/*"],
+      "#shell/*":    ["./src/shell/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

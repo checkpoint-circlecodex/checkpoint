@@ -2,10 +2,10 @@
   /* **Catalogue typographique, jaquettes en exception.** Deux vues : un
      registre dense sans aucune image, et une grille de jaquettes en noir et
      blanc. Quand une œuvre n'a pas de jaquette, le cadre porte son titre. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { KIND, KINDS, STATUS, dec, roman } from "$core/model/lexicon.ts";
-  import { avgOf, rowsFor, titleOf, tracked } from "$core/selectors/index.ts";
-  import type { MediaType } from "$core/model/schema.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { KIND, KINDS, STATUS, dec, roman } from "#core/model/lexicon.ts";
+  import { avgOf, rowsFor, titleOf, tracked } from "#core/selectors/index.ts";
+  import type { MediaType } from "#core/model/schema.ts";
 
   let { kind = null }: { kind?: MediaType | null } = $props();
 

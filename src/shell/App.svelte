@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { registre } from "$core/model/store.svelte.ts";
-  import { platform } from "$platform/index.ts";
-  import { Stage, Surface, pile } from "$core/ui/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { platform } from "#platform/index.ts";
+  import { Stage, Surface, pile } from "#core/ui/index.ts";
   import Rail from "./Rail.svelte";
   import { HOME, REGISTRY, route } from "./routes.ts";
 

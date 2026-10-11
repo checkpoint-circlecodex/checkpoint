@@ -6,13 +6,16 @@
    cercle s'affiche. Les ennuis sont rendus à l'appelant, qui les montrera à
    l'établi au lieu de les taire. */
 
-import type { Cache, Storage } from "$platform/index.ts";
+import type { Cache, Storage } from "#platform/index.ts";
 import { migrate } from "./migrate.ts";
 import { merge, type World } from "./world.ts";
 import type { Shard } from "./schema.ts";
 
 export type Problem = { path: string; message: string };
-export type Opening = { world: World; problems: Problem[]; fromCache: number; fetched: number };
+/** On rend aussi les fragments eux-mêmes : le scribe a besoin du sien pour
+    y appliquer des intentions, et le refabriquer depuis le monde fusionné
+    serait reconstruire une source depuis sa dérivée. */
+export type Opening = { world: World; shards: Shard[]; problems: Problem[]; fromCache: number; fetched: number };
 
 const isFragment = (path: string) => /^data\/[^/]+\.json$/.test(path);
 
@@ -52,5 +55,5 @@ export async function openWorld(storage: Storage, cache: Cache): Promise<Opening
     }
   }
 
-  return { world: merge(shards), problems, fromCache, fetched };
+  return { world: merge(shards), shards, problems, fromCache, fetched };
 }

@@ -3,7 +3,7 @@
    vue, c'est un dossier et une ligne, la retirer, c'est effacer le dossier. */
 
 import Home from "./Home.svelte";
-import type { ViewEntry } from "$core/ui/registry.ts";
+import type { ViewEntry } from "#core/ui/registry.ts";
 
 export const home: ViewEntry = {
   id: "home",

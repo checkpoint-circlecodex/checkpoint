@@ -5,8 +5,8 @@
 
      « Ma Feuille » n'y figure pas : le visage en bas y mène déjà, et deux
      portes pour la même pièce, c'est une porte de trop. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { Face } from "$core/ui/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { Face } from "#core/ui/index.ts";
   import { HOME, REGISTRY } from "./routes.ts";
 
   let { hash, collapsed = $bindable(false) }:

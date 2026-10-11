@@ -1,15 +1,15 @@
 /* La coque rassemble les blocs. **C'est le seul endroit qui les connaît
    tous** — et elle ne connaît de chacun que sa ligne de registre. */
 
-import type { ViewEntry } from "$core/ui/registry.ts";
-import type { CircleId, MediaType } from "$core/model/schema.ts";
-import { registre } from "$core/model/store.svelte.ts";
-import { home } from "$features/home/index.ts";
-import { works } from "$features/works/index.ts";
-import { folio } from "$features/folio/index.ts";
-import { orders } from "$features/orders/index.ts";
-import { soul } from "$features/soul/index.ts";
-import { quest, quests } from "$features/quests/index.ts";
+import type { ViewEntry } from "#core/ui/registry.ts";
+import type { CircleId, MediaType } from "#core/model/schema.ts";
+import { registre } from "#core/model/store.svelte.ts";
+import { home } from "#features/home/index.ts";
+import { works } from "#features/works/index.ts";
+import { folio } from "#features/folio/index.ts";
+import { orders } from "#features/orders/index.ts";
+import { soul } from "#features/soul/index.ts";
+import { quest, quests } from "#features/quests/index.ts";
 
 export const REGISTRY: ViewEntry[] = [orders, works, quests];
 export const HOME = home;

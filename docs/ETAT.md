@@ -9,22 +9,24 @@
 
 ## Prochaine action
 
-**Étape 4, dernière passe de lecture — la lignée, le Greffe, le
-volet-lanceur.** Puis les **écritures**.
+**Étape 4, suite des écritures.**
 
-Sept vues réelles tiennent (11 octobre) : l'accueil, le Répertoire, la fiche,
-les Ordres avec leurs **cinq volets** (chambre, annales, magnum opus, quêtes,
-**Grande Loge**), la feuille de personnage, les **Quêtes** et leurs planches.
+Le **chemin d'écriture existe et il est éprouvé** (11 octobre) : un seul
+passage, des intentions rejouables, le regroupement, le conflit, la file qui
+ne perd rien. Six essais le mettent en défaut exprès. La première surface
+d'écriture tourne — la boîte « ta position » sur la fiche : statut, jugement,
+distinction, checkpoint.
 
-Restent en lecture : la **lignée**, le **Greffe**, le **volet-lanceur**.
-Puis les écritures — inscrire une œuvre, poser un checkpoint, prendre la
-parole, surligner, distinguer, ouvrir une quête. **Tout ce qui est fait
-jusqu'ici est en lecture seule.**
+Restent les écritures : **inscrire une œuvre** (et le formulaire « hors du
+fonds » avec ses catégories), **écrire une chronique**, **prendre la parole**
+dans la Loge, **surligner**, **ouvrir une quête**, **déclarer une parenté**,
+les **actes du Greffe**. Les actes sont tous écrits dans
+`core/model/acts.ts` — il ne manque que les surfaces.
+
+Et en lecture : la **lignée**, le **Greffe**, le **volet-lanceur**, plus ce
+qui manque à l'accueil (la cité, Le Sort, l'encart du guetteur, Tes affaires).
 
 Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
-
-⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding et la section
-« banc d'essai » du Greffe.
 
 ---
 
@@ -257,6 +259,36 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — l'écriture
+
+- **Une écriture est une intention, pas un instantané.** Le scribe garde des
+  fonctions `(shard) => void`, pas l'état qu'elles produisent. C'est
+  exactement ce qui permet, sur un conflit, de **relire et rejouer** :
+  renvoyer un instantané périmé écraserait l'écriture de l'autre appareil.
+  **Éprouvé** : un essai provoque une écriture concurrente juste avant la
+  nôtre, et vérifie que les deux survivent. Invariants 33 et 34 ajoutés.
+- **Une rafale fait un seul commit** — quatre intentions, un commit, vérifié
+  en comptant les appels. Et le message dit ce qui s'est passé : « pose un
+  checkpoint », jamais « mise à jour ».
+- **Ce qui n'est pas parti n'est pas perdu** : l'intention retourne en tête
+  de file et part au coup suivant. **Ce qui arrive pendant l'envoi appartient
+  au tour suivant** — ni perdu, ni envoyé deux fois.
+- ⚠️ **L'alias `$` n'existait que pour Vite.** Node ne le connaissait pas, et
+  il ne l'a dit que le jour où un module du noyau a importé une **valeur** de
+  la plateforme et non un type — les types étant effacés, le chemin n'était
+  jamais résolu. Les alias passent en `#`, que le champ `imports` de
+  `package.json` fait comprendre à Node, à Vite et à TypeScript à la fois.
+  *Un chemin qui ne marche que dans un outil est une dette qui attend le
+  mauvais moment.*
+- ⚠️ **Mon essai bouclait, pas le code.** Le leurre qui simulait « quelqu'un
+  écrit pendant l'envoi » repoussait une intention **à chaque** écriture,
+  donc indéfiniment. Les six essais passaient ; c'est le processus qui ne
+  rendait pas la main. *Quand un essai ne finit pas, soupçonner l'essai.*
+- **La preuve de bout en bout** : noter VIII sur Elden Ring fait passer la
+  moyenne du groupe de 7,7 à 7,8 **à l'instant** — rien n'est stocké. Et la
+  relecture du fragment dans le dépôt montre les trois gestes arrivés :
+  statut, note, et le quatrième checkpoint.
 
 ### 11 octobre 2026 — les Quêtes et la Grande Loge
 

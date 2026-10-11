@@ -1,8 +1,8 @@
 import Orders from "./Orders.svelte";
-import type { ViewEntry } from "$core/ui/registry.ts";
-import { CIRCLES, roman } from "$core/model/lexicon.ts";
-import { registre } from "$core/model/store.svelte.ts";
-import { membersOf } from "$core/selectors/index.ts";
+import type { ViewEntry } from "#core/ui/registry.ts";
+import { CIRCLES, roman } from "#core/model/lexicon.ts";
+import { registre } from "#core/model/store.svelte.ts";
+import { membersOf } from "#core/selectors/index.ts";
 
 export const orders: ViewEntry = {
   id: "orders",

@@ -56,7 +56,7 @@ const featureOf = abs => {
   return r.startsWith("features/") ? r.split("/")[1] : null;
 };
 
-const ALIAS = { "$core": "core", "$platform": "platform", "$features": "features", "$shell": "shell" };
+const ALIAS = { "#core": "core", "#platform": "platform", "#features": "features", "#shell": "shell" };
 
 let bad = 0;
 for (const file of files){

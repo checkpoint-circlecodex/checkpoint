@@ -9,10 +9,10 @@ const at = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 export default defineConfig({
   plugins: [svelte()],
   resolve: { alias: {
-    "$core":     at("./src/core"),
-    "$platform": at("./src/platform"),
-    "$features": at("./src/features"),
-    "$shell":    at("./src/shell"),
+    "#core":     at("./src/core"),
+    "#platform": at("./src/platform"),
+    "#features": at("./src/features"),
+    "#shell":    at("./src/shell"),
   } },
   clearScreen: false,
   server: { port: 1420, strictPort: true },

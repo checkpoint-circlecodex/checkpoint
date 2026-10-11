@@ -228,6 +228,23 @@ pas contourner.
    phrase qui le dit, et qui ne ment pas : *ce n'est pas une pièce fermée,
    c'est une charge.*
 
+33. *(Code)* **Une écriture est une intention, pas un instantané.** Tout ce
+   qu'on inscrit passe par un seul chemin (`core/model/write.ts`), qui garde
+   des **fonctions** `(shard) => void` et non l'état qu'elles produisent.
+   C'est ce qui permet, sur un `409`, de **relire le dépôt et de rejouer les
+   intentions sur la version fraîche** : renvoyer un instantané périmé
+   écraserait l'écriture de l'autre appareil. Il en découle trois règles :
+   une rafale fait **un seul commit** (invariant 27) ; ce qui arrive pendant
+   l'envoi appartient au tour suivant ; et **ce qui n'est pas parti retourne
+   dans la file** plutôt que d'être perdu. Le message de commit dit ce qui
+   s'est passé — « pose un checkpoint », jamais « mise à jour ».
+34. *(Code)* **Un dérivé ne retombe jamais dans le fichier.** `circleRef`, les
+   moyennes, les compteurs sont calculés à la lecture ; les réécrire dans un
+   fragment en ferait des agrégats stockés (invariant 2), et ils
+   deviendraient faux le jour où leur source change. Quand on compose un
+   fragment depuis un objet de vue, on **énumère les champs**, on ne répand
+   jamais l'objet entier.
+
 *(La numérotation est en ajout seul, comme les champs du schéma : des documents
 citent ces numéros, on n'en renumérote aucun.)*
 

@@ -3,10 +3,13 @@
      fiche** — floutée, étalée, très diluée — et **s'éteint avant les
      chiffres** : au-delà du titre la page est un instrument, et un instrument
      ne se colore pas. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { Face } from "$core/ui/index.ts";
-  import { KIND, STATUS, UNIT, dec, roman, ago } from "$core/model/lexicon.ts";
-  import { avgOf, otherTitle, progressOf, rowsFor, titleOf } from "$core/selectors/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { Face } from "#core/ui/index.ts";
+  import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
+  import { avgOf, favsOf, otherTitle, progressOf, rowsFor, titleOf } from "#core/selectors/index.ts";
+  import { changerStatut, distinguer, inscrire, juger, poserCheckpoint } from "#core/model/acts.ts";
+  import { STATE_ORDER } from "#core/model/lexicon.ts";
+  import { FAV_MAX } from "#core/model/schema.ts";
 
   let { id }: { id: string } = $props();
 
@@ -24,6 +27,18 @@
     : 0);
   const chrons = $derived(rows.filter(r => r.review));
   let open = $state<Record<string, boolean>>({});
+
+  /* --- Ce qu'on peut inscrire ici. Les vues décrivent une intention ; elles
+     ne touchent jamais au stockage. --- */
+  const favs = $derived(favsOf(w, registre.me ?? ""));
+  const isFav = $derived(favs.includes(id));
+  /* **On ne distingue pas ce qu'on convoite sans l'avoir fréquenté.** */
+  const canFav = $derived(!!mine && mine.status !== "wishlist");
+  let thought = $state("");
+  const inscribe = () => registre.act(inscrire(id, { status: "wishlist" }, m));
+  const setStatus = (st: string) => registre.act(changerStatut(id, st as never));
+  const rate = (n: number) => registre.act(juger(id, mine?.rating === n ? null : n));
+  const checkpoint = () => { if (!thought.trim()) return; registre.act(poserCheckpoint(id, thought)); thought = ""; };
 </script>
 
 {#if !m}
@@ -119,9 +134,67 @@
       {/if}
     </section>
 
-    {#if mine}
-      <p class="mien">Tu l'as inscrite — {STATUS[m.mediaType][mine.status].toLowerCase()}{typeof mine.rating === "number" ? `, ${mine.rating}/10` : ""}.</p>
-    {/if}
+    <!-- Ta position sur l'œuvre. Les commandes sont **visibles**, jamais
+         révélées au survol : le survol peut confirmer, jamais découvrir. -->
+    <section class="mienne">
+      {#if !mine}
+        <div class="m-vide">
+          <span>Tu ne l'as pas inscrite.</span>
+          <button class="btn" onclick={inscribe}>Inscrire au registre</button>
+        </div>
+      {:else}
+        <div class="m-l">
+          <span class="k">Ta position</span>
+          <div class="picks">
+            {#each STATE_ORDER as st}
+              <button class="pick" class:on={mine.status === st} onclick={() => setStatus(st)}>
+                {STATUS[m.mediaType][st]}
+              </button>
+            {/each}
+          </div>
+        </div>
+
+        <div class="m-l">
+          <span class="k">Ton jugement</span>
+          <div class="notes">
+            {#each Array.from({ length: 10 }, (_, i) => i + 1) as n}
+              <button class="note" class:on={mine.rating === n} onclick={() => rate(n)}>{n}</button>
+            {/each}
+          </div>
+        </div>
+
+        <div class="m-l">
+          <span class="k">Distinction</span>
+          <button class="btn" class:held={isFav} onclick={() => registre.act(distinguer(id))}
+                  disabled={!canFav || (!isFav && favs.length >= FAV_MAX)}>
+            {isFav ? "Retirer des favoris" : "Distinguer"}
+          </button>
+          {#if !canFav}
+            <span class="why">On ne distingue pas ce qu'on convoite sans l'avoir fréquenté.</span>
+          {:else if !isFav && favs.length >= FAV_MAX}
+            <span class="why">Douze au plus. Il faut en retirer une.</span>
+          {/if}
+        </div>
+
+        <div class="m-l">
+          <span class="k">Un checkpoint</span>
+          <!-- Une pensée datée, prise en chemin. Ce n'est pas une chronique
+               en plus court. -->
+          <form onsubmit={e => { e.preventDefault(); checkpoint(); }}>
+            <input bind:value={thought} placeholder="Ce que tu te dis maintenant…" />
+            <button class="btn" disabled={!thought.trim()}>Poser</button>
+          </form>
+        </div>
+
+        {#if mine.reflections?.length}
+          <ol class="cps">
+            {#each mine.reflections.slice().reverse() as c}
+              <li><i>{ago(c.at)}</i>{c.text}</li>
+            {/each}
+          </ol>
+        {/if}
+      {/if}
+    </section>
   </div>
 {/if}
 
@@ -138,7 +211,7 @@
     mask-image: linear-gradient(to bottom, #000 0, #000 30%, transparent 80%);
     pointer-events: none;
   }
-  header, .sect, .mien { position: relative; z-index: 1; }
+  header, .sect { position: relative; z-index: 1; }
 
   .back { font-size: 11px; color: var(--dim); min-height: 44px; display: inline-flex; align-items: center; }
   .back:hover { color: var(--ink); }
@@ -188,7 +261,29 @@
   .ch-b p + p { margin-top: 11px; }
 
   .none { font-size: 12.5px; color: var(--dim); font-style: italic; }
-  .mien { margin-top: 26px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 12px; color: var(--dim); }
+  .mienne { position: relative; z-index: 1; margin-top: 30px; padding: 16px 18px;
+            border: 1px solid var(--rule2); border-left: 2px solid var(--ink); background: var(--raise); }
+  .m-vide { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--dim); }
+  .m-l + .m-l { margin-top: 14px; }
+  .m-l .k { display: block; font-size: 9px; font-weight: 700; letter-spacing: .16em;
+            text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+  .picks, .notes { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pick, .note, .btn {
+    min-height: 44px; padding: 9px 12px; border: 1px solid var(--rule2);
+    font-size: 11px; font-weight: 600; color: var(--dim);
+  }
+  .note { min-width: 38px; display: grid; place-items: center; font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  .pick:hover, .note:hover, .btn:hover:not(:disabled) { color: var(--ink); border-color: var(--ink); }
+  .pick.on, .note.on, .btn.held { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+  .btn:disabled { opacity: .4; cursor: default; }
+  .why { display: block; margin-top: 6px; font-size: 11px; color: var(--dim); font-style: italic; }
+  .m-l form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .m-l input { flex: 1; min-width: 200px; min-height: 44px; padding: 10px 12px;
+               border: 1px solid var(--rule2); background: var(--paper); font-size: 13px; }
+  .cps { list-style: none; margin-top: 14px; border-top: 1px solid var(--rule); }
+  .cps li { display: grid; grid-template-columns: 90px 1fr; gap: 12px; padding: 8px 0;
+            border-bottom: 1px solid var(--rule); font-family: var(--fr); font-size: 13.5px; line-height: 1.5; }
+  .cps i { font-style: normal; font-family: var(--fu); font-size: 10.5px; color: var(--faint); }
 
   @media (max-width: 860px) {
     .wrap { padding: 22px 18px 80px; }

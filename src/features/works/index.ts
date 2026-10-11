@@ -1,9 +1,9 @@
 import Works from "./Works.svelte";
-import type { ViewEntry } from "$core/ui/registry.ts";
-import { KINDS } from "$core/model/lexicon.ts";
-import { registre } from "$core/model/store.svelte.ts";
-import { roman } from "$core/model/lexicon.ts";
-import { tracked } from "$core/selectors/index.ts";
+import type { ViewEntry } from "#core/ui/registry.ts";
+import { KINDS } from "#core/model/lexicon.ts";
+import { registre } from "#core/model/store.svelte.ts";
+import { roman } from "#core/model/lexicon.ts";
+import { tracked } from "#core/selectors/index.ts";
 
 export const works: ViewEntry = {
   id: "works",

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { registre } from "$core/model/store.svelte.ts";
-  import { Face } from "$core/ui/index.ts";
-  import { KIND, STATUS, dateShort, roman } from "$core/model/lexicon.ts";
-  import { questById, questHolders, questScore, reached, rung, titleOf } from "$core/selectors/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { Face } from "#core/ui/index.ts";
+  import { KIND, STATUS, dateShort, roman } from "#core/model/lexicon.ts";
+  import { questById, questHolders, questScore, reached, rung, titleOf } from "#core/selectors/index.ts";
 
   let { id }: { id: string } = $props();
 

@@ -1,6 +1,6 @@
 import Quests from "./Quests.svelte";
 import Quest from "./Quest.svelte";
-import type { ViewEntry } from "$core/ui/registry.ts";
+import type { ViewEntry } from "#core/ui/registry.ts";
 
 export const quests: ViewEntry = {
   id: "quests",

@@ -2,13 +2,13 @@
   /* La feuille de personnage. Elle **porte la trame de son Ordre à présence
      réduite** — touchée par lui, sans être la chambre : la quatrième des
      quatre exceptions au noir et blanc. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { Face, Panes } from "$core/ui/index.ts";
-  import { weave } from "$core/ui/weave.ts";
-  import { KIND, STATUS, UNIT, dec, roman, ago } from "$core/model/lexicon.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { Face, Panes } from "#core/ui/index.ts";
+  import { weave } from "#core/ui/weave.ts";
+  import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
   import {
     favsOf, figures, household, progressOf, questsDoneBy, rowsBy, soulLine, titleOf,
-  } from "$core/selectors/index.ts";
+  } from "#core/selectors/index.ts";
 
   let { id }: { id: string } = $props();
 

@@ -2,16 +2,16 @@
   /* La racine des Ordres : **cinq disques qui flottent**, pleine couleur. Et
      la chambre, où la couleur baigne la page en halo flou — la deuxième des
      quatre exceptions au noir et blanc. */
-  import { registre } from "$core/model/store.svelte.ts";
-  import { CIRCLES, STATUS, circle, dec, roman } from "$core/model/lexicon.ts";
-  import { Face } from "$core/ui/index.ts";
-  import { burst } from "$core/ui/burst.ts";
-  import { weave } from "$core/ui/weave.ts";
-  import { Panes } from "$core/ui/index.ts";
+  import { registre } from "#core/model/store.svelte.ts";
+  import { CIRCLES, STATUS, circle, dec, roman } from "#core/model/lexicon.ts";
+  import { Face } from "#core/ui/index.ts";
+  import { burst } from "#core/ui/burst.ts";
+  import { weave } from "#core/ui/weave.ts";
+  import { Panes } from "#core/ui/index.ts";
   import Loge from "./Loge.svelte";
-  import { avgOf, logeOf, magnum, membersOf, questsInCircle, register, speaksIn, titleOf } from "$core/selectors/index.ts";
-  import { inCircle } from "$core/model/world.ts";
-  import type { CircleId } from "$core/model/schema.ts";
+  import { avgOf, logeOf, magnum, membersOf, questsInCircle, register, speaksIn, titleOf } from "#core/selectors/index.ts";
+  import { inCircle } from "#core/model/world.ts";
+  import type { CircleId } from "#core/model/schema.ts";
 
   let { cid = null }: { cid?: CircleId | null } = $props();
 
