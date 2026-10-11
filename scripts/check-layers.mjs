@@ -31,6 +31,7 @@ const WHY = {
   "core→shell":         "le noyau ne sait pas dans quelle coque il tourne",
   "features→shell":     "une fonction demande une surface au noyau, elle ne parle jamais à la coque",
   "feature↔feature":    "deux fonctions ne se connaissent jamais — ce qu'elles partagent monte dans le noyau (invariant 13)",
+  "shell→interne":      "un bloc n'a qu'un point de contact : la coque passe par son index.ts, jamais par ses entrailles",
 };
 
 const files = [];
@@ -80,6 +81,15 @@ for (const file of files){
     if (!ALLOWED[from] || !ALLOWED[from].includes(to)) fault = `${from}→${to}`;
     else if (from === "features" && to === "features" && featureOf(file) !== featureOf(target))
       fault = "feature↔feature";
+
+    /* **Un bloc n'a qu'un point de contact.** La coque construit sa
+       navigation depuis le registre : elle a le droit de connaître
+       `features/<x>/index.ts`, et rien de ce qu'il y a derrière. Sans cette
+       règle, « trois couches » redevient « tout le monde connaît tout ». */
+    if (!fault && from === "shell" && to === "features"){
+      const inside = relative(SRC, target).split("/").slice(2).join("/");
+      if (inside && !/^index\.(ts|js)$/.test(inside)) fault = "shell→interne";
+    }
 
     if (fault){
       bad++;

@@ -7,6 +7,8 @@
      portes pour la même pièce, c'est une porte de trop. */
   import { registre } from "#core/model/store.svelte.ts";
   import { Face } from "#core/ui/index.ts";
+  import { pile } from "#core/ui/index.ts";
+  import { Inscribe } from "#features/inscribe/index.ts";
   import { HOME, REGISTRY } from "./routes.ts";
 
   let { hash, collapsed = $bindable(false) }:
@@ -28,6 +30,14 @@
     </button>
   </div>
 
+  <!-- **Une porte par pièce**, et la barre sépare ce qu'on fait de ce qu'on
+       parcourt. La règle entre les deux subsiste quand la barre est repliée. -->
+  <div class="lbl">Agir</div>
+  <button class="act" onclick={() => pile.open("panneau", "Inscrire une œuvre", Inscribe)}>
+    <span class="gl">+</span><span class="t">Inscrire une œuvre</span>
+  </button>
+
+  <div class="sep"></div>
   <div class="lbl">Parcourir</div>
   <nav>
     <a class="row" class:on={hash === HOME.href} href={HOME.href}>
@@ -103,6 +113,16 @@
   }
   /* La règle qui sépare agir de parcourir subsiste quand la barre est repliée. */
   .collapsed .lbl { color: transparent; border-top: 1px solid var(--rule); margin-top: 18px; }
+
+  .sep { height: 1px; background: var(--rule); margin-top: 16px; }
+  .act { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 44px; padding: 8px 0;
+         font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  /* Un bouton carré ne centre pas son glyphe tout seul : chasse normale,
+     interlettrage à zéro, et une grille (invariant 30). */
+  .act .gl { display: grid; place-items: center; width: 14px; flex: none;
+             font-size: 16px; letter-spacing: 0; line-height: 1; }
+  .act:hover .t { text-decoration: underline; text-underline-offset: 3px; }
+  .collapsed .act { justify-content: center; }
 
   nav { display: flex; flex-direction: column; }
   .row { display: flex; align-items: center; min-height: 44px; }

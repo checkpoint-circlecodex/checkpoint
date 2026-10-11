@@ -67,7 +67,7 @@
 
 {#each pile.stack as s, i (s.id)}
   <Surface surface={s} index={i}>
-    {#if typeof s.render === "function"}{@render (s.render as import("svelte").Snippet)()}{/if}
+    <s.comp {...(s.props ?? {})} close={() => pile.close(s.id)} />
   </Surface>
 {/each}
 

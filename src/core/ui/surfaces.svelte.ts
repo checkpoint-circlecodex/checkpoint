@@ -1,3 +1,5 @@
+import type { Component } from "svelte";
+
 /* Les surfaces sont **dans le noyau** (invariant 14) : panneaux,
    superpositions, tiroirs forment un vocabulaire partagé. Un bloc demande une
    surface, jamais une disposition (invariant 22).
@@ -13,8 +15,11 @@ export type Surface = {
   id: number;
   kind: SurfaceKind;
   title: string;
-  /** Ce qui s'affiche dedans : au bloc de le dire, pas au noyau de le deviner. */
-  render: unknown;
+  /** Ce qui s'affiche dedans : **le bloc fournit son composant**, le noyau ne
+      devine rien. C'est la règle « un bloc demande une surface, jamais une
+      disposition » (invariant 22) prise au mot. */
+  comp: Component<any>;
+  props?: Record<string, unknown>;
   onClose?: () => void;
 };
 
@@ -27,9 +32,10 @@ class Pile {
   get top() { return this.stack.at(-1) ?? null; }
   get depth() { return this.stack.length; }
 
-  open(kind: SurfaceKind, title: string, render: unknown, onClose?: () => void): number {
+  open(kind: SurfaceKind, title: string, comp: Component<any>,
+       props?: Record<string, unknown>, onClose?: () => void): number {
     const id = ++seq;
-    this.stack = [...this.stack, { id, kind, title, render, onClose }];
+    this.stack = [...this.stack, { id, kind, title, comp, props, onClose }];
     return id;
   }
 

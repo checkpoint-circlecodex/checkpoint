@@ -9,22 +9,20 @@
 
 ## Prochaine action
 
-**Étape 4, suite des écritures.**
+**Les surfaces d'écriture qui restent.**
 
-Le **chemin d'écriture existe et il est éprouvé** (11 octobre) : un seul
-passage, des intentions rejouables, le regroupement, le conflit, la file qui
-ne perd rien. Six essais le mettent en défaut exprès. La première surface
-d'écriture tourne — la boîte « ta position » sur la fiche : statut, jugement,
-distinction, checkpoint.
+Faites : la boîte « ta position » sur la fiche, et **inscrire une œuvre** —
+dans le corpus ou hors du fonds, avec ses catégories. La barre a retrouvé sa
+section **Agir**.
 
-Restent les écritures : **inscrire une œuvre** (et le formulaire « hors du
-fonds » avec ses catégories), **écrire une chronique**, **prendre la parole**
-dans la Loge, **surligner**, **ouvrir une quête**, **déclarer une parenté**,
-les **actes du Greffe**. Les actes sont tous écrits dans
+Restent : **écrire une chronique**, **prendre la parole** dans la Loge,
+**surligner**, **ouvrir une quête**, **déclarer une parenté**, les **actes du
+Greffe**, et le panneau **« mes en cours »**. Les actes sont tous écrits dans
 `core/model/acts.ts` — il ne manque que les surfaces.
 
-Et en lecture : la **lignée**, le **Greffe**, le **volet-lanceur**, plus ce
-qui manque à l'accueil (la cité, Le Sort, l'encart du guetteur, Tes affaires).
+En lecture : la **lignée**, le **Greffe**, le **volet-lanceur**, et ce qui
+manque à l'accueil (la cité en pixel art, Le Sort, l'encart du guetteur,
+Tes affaires).
 
 Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
 
@@ -259,6 +257,27 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — inscrire, et une garde de plus
+
+- **Un bloc n'a qu'un point de contact, et c'est maintenant vérifié.** La
+  coque importait un composant *à l'intérieur* d'un bloc. Le vérificateur
+  interdit désormais tout ce qui n'est pas `features/<x>/index.ts` — et je
+  l'ai **mis en défaut exprès** avant de le garder : une garde qu'on n'a pas
+  vue refuser quelque chose n'est pas une garde, c'est une intention.
+- **Changer la nature d'une œuvre vide ses genres.** Un genre de jeu ne veut
+  rien dire pour un livre, et le garder en silence serait pire que le
+  perdre. Vérifié : 44 étiquettes en Forme/Thème pour un jeu, 24 en
+  Genre/Forme pour un livre, et la sélection repart à zéro.
+- **Le corpus ne propose pas ce qu'on a déjà.** Chercher « dune » ne rend
+  rien pour Nathan — il tient les deux. L'écran le dit au lieu de laisser
+  croire à une absence.
+- **Et il dit aussi ce qui n'existe pas encore** : la recherche IGDB et TMDb
+  n'est pas branchée, donc une œuvre nouvelle passe par « hors du fonds ».
+  *Mieux vaut un manque annoncé qu'un champ qui fait semblant de chercher.*
+- Vérifié de bout en bout : inscrire *Hades* depuis la barre, le retrouver
+  « Convoité » sur sa fiche parmi six témoins, et le relire dans le fragment
+  du dépôt trois secondes plus tard.
 
 ### 11 octobre 2026 — l'écriture
 
