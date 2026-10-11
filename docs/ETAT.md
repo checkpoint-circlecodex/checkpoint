@@ -9,22 +9,28 @@
 
 ## Prochaine action
 
-**Porter le prototype en Svelte.**
+**Étape 2 du portage — la plateforme réelle.**
 
-Le spike est **fini** : les six questions ont leur réponse, toutes mesurées
-(journal du 11 octobre). L'architecture tient, l'organisation existe, le
-device flow passe, le 409 se déclenche, une adhésion se lit et une issue
-d'inconnu suffit comme porte. ⚠️ **`spike/` est maintenant jetable** — il a
-servi, il ne doit pas devenir du code de production.
+Le squelette tient (étape 1, 11 octobre) : Tauri 2 + Svelte 5 + TypeScript,
+les trois couches, le vérificateur de dépendances, la CI verte, une fenêtre
+qui s'ouvre. La plateforme n'est encore que ses **interfaces** et un **faux en
+mémoire**.
 
-Le portage : squelette Vite + Svelte + TypeScript, les trois couches, le
-registre de vues, le script de vérification des dépendances. `crossfade` et
-`flip` remplacent le code de bascule écrit à la main ; le module de pixel art
-se transpose tel quel. **Et les deux bancs d'essai disparaissent** : l'onglet
-Onboarding et la section « banc d'essai » du Greffe.
+L'étape 2 écrit les vraies implémentations, en reprenant ce que le spike a
+mesuré — **réécrit, pas copié** :
 
-*(Nathan a demandé le 11 octobre de continuer d'abord à itérer sur le
-prototype — le portage attend son signal.)*
+- `storage.ts` — arbre Git en un appel, blobs conditionnels, écriture avec
+  `ConflictError` sur SHA périmé, ouverture d'issue, lecture de rôle.
+- `secrets.ts` — jeton dans le trousseau, via Rust. Implémentation
+  **portable** (invariant 15, et c'est ce qui garde l'APK bon marché).
+- `cache.ts` — cache fichier, pour que seule la première ouverture paie.
+- Le **device flow** côté Rust : c'est là que la coque native gagne sa place.
+
+Les étapes suivantes : 3 le noyau · 4 les vues · 5 l'entrée dans le groupe en
+dur · 6 la livraison (Actions trois OS, updater, bandeau de version).
+
+⚠️ **À retirer à l'étape 5** : le banc d'essai de l'onboarding dans la barre
+latérale, et la section « banc d'essai » du Greffe.
 
 ---
 
@@ -257,6 +263,36 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 11 octobre 2026 — le portage commence
+
+- **Le dépôt public existe** — `checkpoint-circlecodex/checkpoint`. Invariants,
+  spec, parcours, prototype, journal, banc d'essai. ⚠️ **Sans licence** :
+  Nathan a tranché, le code est visible et tous droits réservés. Le README le
+  dit franchement plutôt que d'écrire « open source » en mentant.
+- **Rust n'était dans aucun PATH.** Les shims de rustup sont keg-only chez
+  Homebrew. Une ligne ajoutée à `~/.zshrc`.
+- **Le point d'entrée a dû déménager.** `src/main.ts` à la racine de `src/`
+  n'appartient à aucune couche, et le vérificateur l'a refusé à la première
+  exécution. Il est passé dans `src/shell/` — ce qui est juste : **c'est la
+  coque qui monte la coque.** *Un vérificateur qui proteste dès le premier
+  fichier n'est pas trop strict, il rend un avis.*
+- **La règle de lint ne vaut que si une machine la lance.** L'invariant 11 dit
+  « vérifié par une règle de lint, pas par la discipline » — or un script
+  qu'on lance quand on y pense **est** de la discipline. D'où la CI dès
+  l'étape 1, verte en 10 s, et `npm run build` qui passe par le
+  vérificateur.
+- **Pas d'ESLint.** La règle tient en trente lignes de Node sans dépendance,
+  et son message d'erreur peut dire *pourquoi* la dépendance est interdite —
+  ce qu'une règle générique ne sait pas faire.
+- **Deux réglages posés tout de suite parce qu'ils coûtent cher après coup** :
+  l'identifiant de bundle réel (`com.circlecodex.checkpoint`, le gabarit met
+  `com.tauri.dev` et le bundler le refuse) et la CSP.
+- **Le faux stockage simule le conflit comme GitHub le rend** : par comparaison
+  de SHA, pas de contenu. Un faux qui ment sur la forme de l'échec ne sert à
+  rien.
+- Vérifié : construction en 189 ms, Rust en 49 s, `svelte-check` à zéro, et la
+  chaîne coque → noyau → plateforme lit un fragment de bout en bout.
 
 ### 11 octobre 2026 — le spike est fini, six sur six
 
