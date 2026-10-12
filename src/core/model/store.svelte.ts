@@ -8,7 +8,7 @@ import { emptyWorld, merge, type World } from "./world.ts";
 import { openWorld, type Problem } from "./load.ts";
 import { makeScribe, parseShard, type Mutation, type Scribe, type WriteState } from "./write.ts";
 import { blankShard } from "./write.ts";
-import { shardPath, type Shard } from "./schema.ts";
+import { shardPath, type Fonds, type Shard } from "./schema.ts";
 import type { Cache, Knock, Org, Storage } from "#platform/index.ts";
 import { consigner, fonder, marquerVisite } from "./acts.ts";
 import type { User } from "./schema.ts";
@@ -136,6 +136,9 @@ class Registre {
   get storageRemaining() { return this.#storage?.remaining() ?? null; }
 
   #shards: Shard[] = [];
+  /** Le fonds, gardé pour chaque refusion : sans lui, la première écriture
+      ferait disparaître du catalogue tout ce que personne ne suit encore. */
+  #fonds: Fonds[] = [];
 
   #mine(): Shard {
     const i = this.#shards.findIndex(s => s.user.id === this.me);
@@ -153,7 +156,7 @@ class Registre {
     return fresh;
   }
 
-  #remerge(_touched?: Shard) { this.world = merge(this.#shards); }
+  #remerge(_touched?: Shard) { this.world = merge(this.#shards, this.#fonds); }
 
   /** **Une seule ouverture à la fois.** Deux lectures concurrentes
       créeraient deux scribes et deux visites, et la dernière à finir
@@ -174,9 +177,10 @@ class Registre {
     if (first) this.phase = "ouverture";
     const t0 = performance.now();
     this.me = await storage.me();
-    const { world, problems, fetched, fromCache, shards } = await openWorld(storage, cache);
+    const { world, problems, fetched, fromCache, shards, fonds } = await openWorld(storage, cache);
     this.world = world;
     this.#shards = shards;
+    this.#fonds = fonds;
     this.problems = problems;
     this.last = { fetched, fromCache, ms: Math.round(performance.now() - t0) };
     this.#storage = storage;

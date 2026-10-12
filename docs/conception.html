@@ -373,13 +373,13 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
   <p class="eyebrow">Document de conception · v18 · 12 octobre 2026</p>
   <h1>Checkpoint</h1>
   <p class="deck">Un tracker de jeux partagé au sein d'un groupe d'une vingtaine de personnes. Une application de bureau — Mac, Windows, Linux — distribuée librement, dont l'accès aux données passe par une adhésion validée. Pas de serveur, pas de base à administrer.</p>
-  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v18</span> ou <span class="rev">révisé v18</span> ont bougé depuis la version précédente&nbsp;: la livraison (D28), l'entrée dans le groupe telle qu'elle est construite, et la signature tranchée.</p>
+  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v18</span> ou <span class="rev">révisé v18</span> ont bougé depuis la version précédente&nbsp;: la livraison (D28), le fonds (D29), l'entrée dans le groupe telle qu'elle est construite, et la signature tranchée.</p>
   <dl class="factbar">
     <div class="fact"><dt>Nom</dt><dd>Provisoire</dd></div>
     <div class="fact"><dt>Forme</dt><dd>Application de bureau, Tauri</dd></div>
     <div class="fact"><dt>Stockage</dt><dd>GitHub, dépôt privé</dd></div>
     <div class="fact"><dt>Groupe visé</dt><dd>~20 personnes</dd></div>
-    <div class="fact"><dt>Décisions actées</dt><dd>11 ici, 28 au total</dd></div>
+    <div class="fact"><dt>Décisions actées</dt><dd>12 ici, 29 au total</dd></div>
     <div class="fact"><dt>Document lié</dt><dd><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience</a></dd></div>
     <div class="fact"><dt>Prochaine étape</dt><dd>Première version publiée — <code>v0.1.0</code></dd></div>
   </dl>
@@ -608,6 +608,19 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
             <dt>Les mises à jour</dt><dd>La mise à jour de Tauri porte <strong>sa propre signature</strong>, gratuite et vérifiée avant toute installation&nbsp;: un paquet qui ne la porte pas est refusé. ⚠️ <strong>Perdre la clé privée, c'est ne plus pouvoir mettre à jour personne</strong> — chacun devrait réinstaller à la main. Elle ne vit jamais dans le dépôt&nbsp;; elle se sauvegarde ailleurs.</dd>
             <dt>Le bandeau</dt><dd>Il lit la dernière version <em>publiée</em> sur le dépôt public et propose «&nbsp;Installer et relancer&nbsp;» là où la mise à jour existe, la page de la version ailleurs (Android). Il vide la file d'écriture avant de relancer.</dd>
             <dt>Publier</dt><dd>Pousser l'étiquette <code>vX.Y.Z</code> construit les trois systèmes sur GitHub Actions et prépare un <strong>brouillon</strong>&nbsp;; c'est un humain qui publie. <code>package.json</code> est la seule source de version, et l'intégration continue refuse une étiquette qui ne la dit pas.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D29</div>
+        <div class="adr-body">
+          <h4>Le fonds&nbsp;: des œuvres choisissables avant que quiconque les suive <span class="rev new">nouveau v18</span></h4>
+          <dl>
+            <dt>Le besoin</dt><dd>Trouver «&nbsp;The Thing&nbsp;» déjà décrit au moment de l'inscrire, sans attendre IGDB et TMDb — et sans inventer un catalogue tenu, que le modèle refuse&nbsp;: une œuvre est au corpus parce que quelqu'un la suit.</dd>
+            <dt>La forme</dt><dd><code>fonds/&lt;compte&gt;.json</code> dans le dépôt de données&nbsp;: un fichier par personne qui verse, un seul écrivain, sommé à la lecture — la grammaire de D27. Ses œuvres sont au <strong>catalogue</strong> (on les ouvre, on les cherche, on en fait des quêtes) mais <strong>pas au corpus</strong>&nbsp;: aucun compte, aucune moyenne ne les inclut, et la page des Œuvres leur donne leur propre section.</dd>
+            <dt>Trois règles</dt><dd>Inscrire une œuvre du fonds en <strong>copie la description dans son fragment</strong> — le fonds peut changer sans faire d'orphelin. Une description portée par quelqu'un <strong>l'emporte</strong> sur celle du fonds. Et les identifiants sont ceux des sources&nbsp;: <code>tmdb:movie:120</code>, <code>igdb:elden-ring</code>, <code>ol:OL27513W</code>.</dd>
+            <dt>⚠️ IGDB</dt><dd>Son identité est ici le <em>slug</em>, pas le numéro&nbsp;: sans clé d'API, seul le slug se vérifie. Le branchement d'IGDB devra garder le slug comme identité, sinon chaque jeu du fonds devient un doublon.</dd>
+            <dt>Premier versement</dt><dd>Le 12 octobre&nbsp;: quarante-trois œuvres vérifiées sur Wikidata et Open Library — Tolkien et Jackson, Carpenter, FromSoftware depuis 2009.</dd>
           </dl>
         </div>
       </div>

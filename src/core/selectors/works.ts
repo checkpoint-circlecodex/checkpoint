@@ -54,6 +54,14 @@ export const tracked = (w: World, t?: MediaType, pref: "vo" | "fr" = "fr") =>
     .filter(id => alive(w, id) && (!t || w.catalog[id].mediaType === t) && w.rows.some(r => r.mediaId === id))
     .sort((a, b) => titleOf(w, a, pref).localeCompare(titleOf(w, b, pref), "fr"));
 
+/** **Au fonds, personne ne les suit encore** : versées pour qu'on puisse les
+    choisir, pas encore au corpus. Elles le rejoignent à la première
+    inscription — et le corpus reste ce que les gens suivent. */
+export const unfollowed = (w: World, t?: MediaType, pref: "vo" | "fr" = "fr") =>
+  w.fonds
+    .filter(id => alive(w, id) && w.catalog[id] && (!t || w.catalog[id].mediaType === t) && !w.rows.some(r => r.mediaId === id))
+    .sort((a, b) => titleOf(w, a, pref).localeCompare(titleOf(w, b, pref), "fr"));
+
 export const avgOf = (rows: Row[]): number | null => {
   const r = rows.filter(x => typeof x.rating === "number");
   return r.length ? r.reduce((s, x) => s + (x.rating as number), 0) / r.length : null;

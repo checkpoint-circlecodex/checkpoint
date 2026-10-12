@@ -2,7 +2,7 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 12 octobre 2026 (la livraison)
+**Dernière mise à jour :** 12 octobre 2026 (le fonds)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
@@ -379,6 +379,37 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — le fonds
+
+- **Nathan voulait « ajouter des œuvres à la base » ; le modèle n'a pas de
+  catalogue tenu.** Une œuvre est au corpus parce que quelqu'un la suit. Les
+  inscrire dans son fragment en « convoité » aurait mis un faux fait à son
+  nom. D'où **le fonds** (invariant 36) : des œuvres versées, choisissables,
+  hors du corpus — sa propre idée, une fois le modèle expliqué (« qu'elles
+  existent dans la base sans que personne ait agi »).
+- **Quarante-trois œuvres, vérifiées aux sources, pas à la mémoire** — la
+  leçon des thèmes IGDB écrits de tête. Wikidata pour les identifiants TMDb
+  et les slugs IGDB, Open Library pour les livres. Les six films de Jackson
+  en Terre du Milieu, les quatre livres (Le Hobbit et les trois volumes),
+  les dix-huit longs métrages de cinéma de Carpenter (sans son court
+  d'étudiant, ses téléfilms ni ses *Masters of Horror*), et quinze jeux
+  FromSoftware depuis *Demon's Souls* — sans les quatre restés japonais, ni
+  les extensions et rééditions. *The Duskbloods* n'a qu'une année (2026),
+  pas de date : versé quand même, on peut le convoiter.
+- **Open Library donnait 1950 pour *Le Retour du Roi*** : faux, c'est 1955.
+  Une source se recoupe, même ouverte.
+- **IGDB refuse d'être lu sans clé** (403) : pas de numéro d'identifiant
+  vérifiable. Le slug est devenu l'identité des jeux — et ça engage le
+  branchement futur d'IGDB (voir l'invariant).
+- **Un piège évité dans le registre** : la refusion qui suit chaque
+  écriture ne connaissait que les fragments. Sans garder le fonds à côté,
+  la première inscription aurait fait disparaître du catalogue tout ce que
+  personne ne suit encore.
+- Le jeu d'essai porte aussi *Elden Ring* (`g-elden`) : en développement, le
+  Greffe le signale désormais comme doublon de `igdb:elden-ring`. C'est le
+  jeu d'essai qui ment, pas le fonds — et ça montre que le guichet des
+  doublons sait déjà trancher en faveur de l'identifiant de source.
 
 ### 12 octobre 2026 — la livraison
 

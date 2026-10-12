@@ -8,14 +8,15 @@
      seuil salue l'arrivée, il ne salue pas quelqu'un. */
   import { circle, roman } from "#core/model/lexicon.ts";
   import { registre } from "#core/model/store.svelte.ts";
-  import { alive } from "#core/model/world.ts";
+  import { tracked } from "#core/selectors/index.ts";
   import { burst } from "#core/ui/burst.ts";
   import { porte } from "./gate.svelte.ts";
   import { draft, drop } from "./draft.svelte.ts";
   import { founding } from "./door.ts";
 
   const c = $derived(draft.circle ? circle(draft.circle) : null);
-  const corpus = $derived(Object.keys(registre.world.catalog).filter(id => alive(registre.world, id)).length);
+  /* Le corpus, c'est ce que les gens suivent — pas ce que le fonds propose. */
+  const corpus = $derived(tracked(registre.world).length);
   const me = $derived(draft.firstName.trim() || "vous");
 
   async function enter(e: MouseEvent) {

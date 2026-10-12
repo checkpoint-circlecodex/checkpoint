@@ -255,6 +255,26 @@ pas contourner.
    **non réentrante** (un second appel attend le premier). *Le symptôme
    était loin de la cause ; c'est la marque de ce genre de bug.*
 
+36. *(Données)* **Le fonds propose, il ne compte pas.** Des œuvres peuvent
+   exister dans le dépôt avant que quiconque les suive : elles sont
+   **versées au fonds**, `fonds/<compte>.json` — un fichier par personne qui
+   verse, un seul écrivain, sommé à la lecture (invariant 26, encore). Elles
+   sont au *catalogue* — on les ouvre, on les cherche, on les met dans une
+   quête — mais **pas au corpus** : le corpus reste ce que les gens suivent,
+   et rien du fonds n'entre dans un compte, une moyenne, un « déjà plein ».
+   Sur la page des Œuvres, elles ont leur propre section, « Au fonds —
+   personne ne les suit encore ». Trois règles en découlent : **inscrire une
+   œuvre du fonds en copie la description dans son fragment** (le fonds peut
+   changer sans faire d'orphelin) ; **une description portée par quelqu'un
+   l'emporte sur celle du fonds** ; et **les identifiants sont ceux des
+   sources** — `tmdb:movie:<n>`, `tmdb:tv:<n>`, `igdb:<slug>`,
+   `ol:<œuvre Open Library>`. ⚠️ *Pour IGDB, c'est le* slug *et non le
+   numéro* : sans clé d'API, seul le slug se vérifie (via Wikidata), et
+   l'API le rend aussi. Le jour où IGDB est branché, il faudra **garder le
+   slug comme identité**, sinon chaque jeu du fonds devient un doublon.
+   Décidé avec Nathan le 12 octobre ; les livres prennent l'identifiant
+   gratuit d'Open Library, à sa demande.
+
 *(La numérotation est en ajout seul, comme les champs du schéma : des documents
 citent ces numéros, on n'en renumérote aucun.)*
 

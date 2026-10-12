@@ -3,7 +3,7 @@
    est recalculé à chaque lecture, et c'est ce qui empêche un agrégat de
    devenir faux puis irrécupérable. */
 
-import type { Act, CircleId, Entry, Kin, Post, Quest, Shard, User, Work } from "./schema.ts";
+import type { Act, CircleId, Entry, Fonds, Kin, Post, Quest, Shard, User, Work } from "./schema.ts";
 import { type Circle, circle } from "./lexicon.ts";
 
 /** Une personne, telle que les vues la lisent. */
@@ -33,6 +33,10 @@ export type World = {
   alias: Record<string, string>;
   /** Le journal du Greffe, sommé depuis le fragment de chaque greffier. */
   journal: SignedAct[];
+  /** Les œuvres **versées au fonds** — choisissables, suivies ou non. Elles
+      sont au catalogue pour qu'on puisse les ouvrir et les inscrire ; elles
+      ne sont **au corpus** que si quelqu'un les suit (`tracked`). */
+  fonds: string[];
 };
 
 /** Descend la chaîne d'alias jusqu'au bout.
@@ -44,7 +48,7 @@ export function canon(alias: Record<string, string>, id: string): string {
   return id;
 }
 
-export function merge(shards: Shard[]): World {
+export function merge(shards: Shard[], fondsFiles: Fonds[] = []): World {
   /* Les alias se collectent **avant** tout le reste : ils changent la lecture
      de tous les fragments, y compris de ceux lus avant eux. */
   const alias: Record<string, string> = {};
@@ -52,6 +56,11 @@ export function merge(shards: Shard[]): World {
 
   const catalog: Record<string, Work> = {};
   for (const sh of shards) for (const [id, w] of Object.entries(sh.works)) catalog[id] ??= w;
+  /* Le fonds vient **après** les fragments : quand quelqu'un suit déjà une
+     œuvre, c'est sa description qui fait foi, pas celle du fonds. */
+  const fondsIds = new Set<string>();
+  for (const f of fondsFiles)
+    for (const [id, w] of Object.entries(f.works ?? {})) { catalog[id] ??= w; fondsIds.add(id); }
 
   const people: Record<string, Person> = {};
   const rows: Row[] = [];
@@ -89,11 +98,11 @@ export function merge(shards: Shard[]): World {
   }
 
   journal.sort((a, b) => b.at.localeCompare(a.at));
-  return { people, catalog, rows, posts, quests, alias, journal };
+  return { people, catalog, rows, posts, quests, alias, journal, fonds: [...fondsIds] };
 }
 
 export const emptyWorld = (): World =>
-  ({ people: {}, catalog: {}, rows: [], posts: [], quests: [], alias: {}, journal: [] });
+  ({ people: {}, catalog: {}, rows: [], posts: [], quests: [], alias: {}, journal: [], fonds: [] });
 
 /** Une œuvre fondue garde son titre dans le catalogue — on ne supprime rien —
     mais elle ne se montre plus nulle part. */

@@ -104,3 +104,18 @@ export const FAV_MAX = 12;
 /** Le chemin du fragment d'une personne. Le compte GitHub nomme le fichier
     (invariant 8) : un pseudo se change, un identifiant non. */
 export const shardPath = (id: string) => `data/${id}.json`;
+
+/** **Le fonds** : des œuvres versées pour qu'on puisse les choisir, avant
+    que quiconque les suive (invariant 36). Un fichier par personne qui
+    verse — un seul écrivain, comme partout — sommé à la lecture.
+
+    Les identifiants sont ceux des sources (invariant 9) :
+    `tmdb:movie:120`, `tmdb:tv:…`, `igdb:<slug>`, `ol:<œuvre Open Library>`. */
+export type Fonds = {
+  schemaVersion: number;
+  by: string;
+  updatedAt: string;
+  works: Record<string, Work>;
+};
+
+export const fondsPath = (id: string) => `fonds/${id}.json`;

@@ -54,7 +54,11 @@
   const ready = $derived(title.trim().length > 1 && String(year).length === 4);
 
   function takeExisting(id: string) {
-    registre.act(inscrire(id, { status: "wishlist" }));
+    /* La description part **dans le fragment** de qui inscrit : une œuvre
+       venue du fonds ne doit pas devenir orpheline le jour où le fonds
+       change. Pour une œuvre déjà suivie, rien ne bouge — `inscrire` ne
+       remplace pas une description qu'on porte déjà. */
+    registre.act(inscrire(id, { status: "wishlist" }, w.catalog[id]));
     close();
   }
 

@@ -57,7 +57,7 @@
 
     <dt>Le monde</dt>
     <dd>
-      {roman(Object.keys(w.people).length)} personnes · {roman(Object.keys(w.catalog).length)} œuvres ·
+      {roman(Object.keys(w.people).length)} personnes · {roman(Object.keys(w.catalog).length - w.fonds.filter(id => !w.rows.some(r => r.mediaId === id)).length)} œuvres suivies · {roman(w.fonds.length)} au fonds ·
       {roman(w.rows.length)} inscriptions · {roman(w.posts.length)} paroles · {roman(w.quests.length)} quêtes
     </dd>
   </dl>

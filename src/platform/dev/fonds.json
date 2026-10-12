@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "by": "ncarmichael",
+  "updatedAt": "2026-10-12T16:30:00.000Z",
+  "works": {
+    "tmdb:movie:120": {
+      "mediaType": "film",
+      "title": "The Lord of the Rings: The Fellowship of the Ring",
+      "titleFr": "Le Seigneur des anneaux : La Communauté de l'anneau",
+      "year": 2001
+    },
+    "tmdb:movie:121": {
+      "mediaType": "film",
+      "title": "The Lord of the Rings: The Two Towers",
+      "titleFr": "Le Seigneur des anneaux : Les Deux Tours",
+      "year": 2002
+    },
+    "tmdb:movie:122": {
+      "mediaType": "film",
+      "title": "The Lord of the Rings: The Return of the King",
+      "titleFr": "Le Seigneur des anneaux : Le Retour du roi",
+      "year": 2003
+    },
+    "tmdb:movie:49051": {
+      "mediaType": "film",
+      "title": "The Hobbit: An Unexpected Journey",
+      "titleFr": "Le Hobbit : Un voyage inattendu",
+      "year": 2012
+    },
+    "tmdb:movie:57158": {
+      "mediaType": "film",
+      "title": "The Hobbit: The Desolation of Smaug",
+      "titleFr": "Le Hobbit : La Désolation de Smaug",
+      "year": 2013
+    },
+    "tmdb:movie:122917": {
+      "mediaType": "film",
+      "title": "The Hobbit: The Battle of the Five Armies",
+      "titleFr": "Le Hobbit : La Bataille des Cinq Armées",
+      "year": 2014
+    },
+    "tmdb:movie:1410": {
+      "mediaType": "film",
+      "title": "Dark Star",
+      "year": 1974
+    },
+    "tmdb:movie:17814": {
+      "mediaType": "film",
+      "title": "Assault on Precinct 13",
+      "titleFr": "Assaut",
+      "year": 1976
+    },
+    "tmdb:movie:948": {
+      "mediaType": "film",
+      "title": "Halloween",
+      "titleFr": "Halloween : La Nuit des masques",
+      "year": 1978
+    },
+    "tmdb:movie:790": {
+      "mediaType": "film",
+      "title": "The Fog",
+      "titleFr": "Fog",
+      "year": 1980
+    },
+    "tmdb:movie:1103": {
+      "mediaType": "film",
+      "title": "Escape from New York",
+      "titleFr": "New York 1997",
+      "year": 1981
+    },
+    "tmdb:movie:1091": {
+      "mediaType": "film",
+      "title": "The Thing",
+      "year": 1982
+    },
+    "tmdb:movie:8769": {
+      "mediaType": "film",
+      "title": "Christine",
+      "year": 1983
+    },
+    "tmdb:movie:9663": {
+      "mediaType": "film",
+      "title": "Starman",
+      "year": 1984
+    },
+    "tmdb:movie:6978": {
+      "mediaType": "film",
+      "title": "Big Trouble in Little China",
+      "titleFr": "Les Aventures de Jack Burton dans les griffes du Mandarin",
+      "year": 1986
+    },
+    "tmdb:movie:8852": {
+      "mediaType": "film",
+      "title": "Prince of Darkness",
+      "titleFr": "Prince des ténèbres",
+      "year": 1987
+    },
+    "tmdb:movie:8337": {
+      "mediaType": "film",
+      "title": "They Live",
+      "titleFr": "Invasion Los Angeles",
+      "year": 1988
+    },
+    "tmdb:movie:2687": {
+      "mediaType": "film",
+      "title": "Memoirs of an Invisible Man",
+      "titleFr": "Les Aventures d'un homme invisible",
+      "year": 1992
+    },
+    "tmdb:movie:2654": {
+      "mediaType": "film",
+      "title": "In the Mouth of Madness",
+      "titleFr": "L'Antre de la folie",
+      "year": 1994
+    },
+    "tmdb:movie:12122": {
+      "mediaType": "film",
+      "title": "Village of the Damned",
+      "titleFr": "Le Village des damnés",
+      "year": 1995
+    },
+    "tmdb:movie:10061": {
+      "mediaType": "film",
+      "title": "Escape from L.A.",
+      "titleFr": "Los Angeles 2013",
+      "year": 1996
+    },
+    "tmdb:movie:9945": {
+      "mediaType": "film",
+      "title": "Vampires",
+      "year": 1998
+    },
+    "tmdb:movie:10016": {
+      "mediaType": "film",
+      "title": "Ghosts of Mars",
+      "year": 2001
+    },
+    "tmdb:movie:45657": {
+      "mediaType": "film",
+      "title": "The Ward",
+      "titleFr": "The Ward - L'Hôpital de la terreur",
+      "year": 2010
+    },
+    "ol:OL27482W": {
+      "mediaType": "book",
+      "title": "The Hobbit",
+      "titleFr": "Le Hobbit",
+      "year": 1937
+    },
+    "ol:OL27513W": {
+      "mediaType": "book",
+      "title": "The Fellowship of the Ring",
+      "titleFr": "La Communauté de l'Anneau",
+      "year": 1954
+    },
+    "ol:OL27479W": {
+      "mediaType": "book",
+      "title": "The Two Towers",
+      "titleFr": "Les Deux Tours",
+      "year": 1954
+    },
+    "ol:OL27455W": {
+      "mediaType": "book",
+      "title": "The Return of the King",
+      "titleFr": "Le Retour du Roi",
+      "year": 1955
+    },
+    "igdb:demon-s-souls": {
+      "mediaType": "game",
+      "title": "Demon's Souls",
+      "year": 2009
+    },
+    "igdb:ninja-blade": {
+      "mediaType": "game",
+      "title": "Ninja Blade",
+      "year": 2009
+    },
+    "igdb:dark-souls": {
+      "mediaType": "game",
+      "title": "Dark Souls",
+      "year": 2011
+    },
+    "igdb:steel-battalion-heavy-armor": {
+      "mediaType": "game",
+      "title": "Steel Battalion: Heavy Armor",
+      "year": 2012
+    },
+    "igdb:armored-core-v": {
+      "mediaType": "game",
+      "title": "Armored Core V",
+      "year": 2012
+    },
+    "igdb:armored-core-verdict-day": {
+      "mediaType": "game",
+      "title": "Armored Core: Verdict Day",
+      "year": 2013
+    },
+    "igdb:dark-souls-ii": {
+      "mediaType": "game",
+      "title": "Dark Souls II",
+      "year": 2014
+    },
+    "igdb:bloodborne": {
+      "mediaType": "game",
+      "title": "Bloodborne",
+      "year": 2015
+    },
+    "igdb:dark-souls-iii": {
+      "mediaType": "game",
+      "title": "Dark Souls III",
+      "year": 2016
+    },
+    "igdb:deracine": {
+      "mediaType": "game",
+      "title": "Déraciné",
+      "year": 2018
+    },
+    "igdb:sekiro-shadows-die-twice": {
+      "mediaType": "game",
+      "title": "Sekiro: Shadows Die Twice",
+      "year": 2019
+    },
+    "igdb:elden-ring": {
+      "mediaType": "game",
+      "title": "Elden Ring",
+      "year": 2022
+    },
+    "igdb:armored-core-vi-fires-of-rubicon": {
+      "mediaType": "game",
+      "title": "Armored Core VI: Fires of Rubicon",
+      "year": 2023
+    },
+    "igdb:elden-ring-nightreign": {
+      "mediaType": "game",
+      "title": "Elden Ring Nightreign",
+      "year": 2025
+    },
+    "igdb:the-duskbloods": {
+      "mediaType": "game",
+      "title": "The Duskbloods",
+      "year": 2026
+    }
+  }
+}

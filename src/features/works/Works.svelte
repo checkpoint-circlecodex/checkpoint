@@ -5,7 +5,7 @@
   import { registre } from "#core/model/store.svelte.ts";
   import { gestes } from "#core/ui/index.ts";
   import { KIND, KINDS, STATUS, dec, roman } from "#core/model/lexicon.ts";
-  import { avgOf, rowsFor, titleOf, tracked } from "#core/selectors/index.ts";
+  import { avgOf, rowsFor, titleOf, tracked, unfollowed } from "#core/selectors/index.ts";
   import type { MediaType } from "#core/model/schema.ts";
 
   let { kind = null }: { kind?: MediaType | null } = $props();
@@ -13,6 +13,7 @@
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
   const ids = $derived(tracked(w, kind ?? undefined, pref));
+  const waiting = $derived(unfollowed(w, kind ?? undefined, pref));
   const me = $derived(registre.me);
 
   const mine = (id: string) => w.rows.find(r => r.personId === me && r.mediaId === id) ?? null;
@@ -48,6 +49,27 @@
       </a>
     {/each}
   </div>
+
+  <!-- **Au fonds** : choisissables, pas encore suivies. Hors du compte du
+       corpus, et sous leur propre titre — le corpus reste ce que les gens
+       suivent. -->
+  {#if waiting.length}
+    <section class="fonds">
+      <h2>Au fonds <span class="sub">— personne ne les suit encore</span></h2>
+      <p class="legend">Versées pour qu'on puisse les choisir. Une œuvre rejoint le corpus dès que quelqu'un l'inscrit.</p>
+      <div class="reg">
+        {#each waiting as id (id)}
+          {@const m = w.catalog[id]}
+          <a class="r" href="#/fiche/{id}">
+            <span class="line">
+              <span class="t">{titleOf(w, id, pref)}</span>
+              <span class="kind">{KIND[m.mediaType]} · {m.year}</span>
+            </span>
+          </a>
+        {/each}
+      </div>
+    </section>
+  {/if}
 </div>
 
 <style>
@@ -63,6 +85,12 @@
 
 
   .reg { border-top: 1px solid var(--rule); }
+  /* Le fonds, séparé du corpus par l'espace et par un titre : on ne doit
+     jamais croire qu'une œuvre du fonds est suivie. */
+  .fonds { margin-top: 46px; }
+  .fonds h2 { font-family: var(--fs); font-weight: 400; font-size: 21px; line-height: 1.15; }
+  .fonds .sub { font-style: italic; color: var(--dim); font-size: 16px; }
+  .fonds .legend { font-size: 11.5px; color: var(--dim); margin: 6px 0 14px; max-width: 62ch; }
   .r {
     display: grid; grid-template-columns: minmax(0,1fr) 46px 46px 96px;
     gap: 14px; align-items: center; padding: 9px 0; min-height: 44px;

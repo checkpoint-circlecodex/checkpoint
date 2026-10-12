@@ -27,6 +27,10 @@ export async function bootPlatform(): Promise<Platform> {
   if (!q.has("vide"))
     for (const sh of seed as { user: { id: string } }[])
       files[`data/${sh.user.id}.json`] = JSON.stringify(sh);
+  /* Le fonds versé dans le vrai dépôt, rejoué tel quel — dépôt vide compris :
+     c'est l'état du vrai dépôt au premier soir. */
+  const { default: fonds } = await import("./dev/fonds.json");
+  files["fonds/ncarmichael.json"] = JSON.stringify(fonds);
   /* Les quatre demandes du prototype, choisies pour leurs trois cas : un
      parrain qui se résout, un parrain qui ne désigne personne, aucun parrain. */
   const knock = (issue: number, login: string, at: string, firstName: string, vouchedName: string, vouchedAs: string, discord: string) =>
