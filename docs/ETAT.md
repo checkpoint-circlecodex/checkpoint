@@ -9,15 +9,15 @@
 
 ## Prochaine action
 
-**Le pied de feuille et l'établi aux cinq clics** (ligne 7 du découpage).
+**La cité en pixel art** (lignes 8-9 du découpage) ⚠️ — le seul morceau qui
+ne se juge qu'à l'image.
 
-Fait (12 octobre) : **l'accueil complet** — Le Sort et son dé, l'encart du
-guetteur dans la couleur de ton Ordre, et Tes affaires avec les convoitises
-que d'autres ont achevées depuis.
+Fait (12 octobre) : **le pied de feuille** — préférence de titres, relire le
+dépôt, lire son fragment, se déconnecter — et **l'établi**, ouvert par les
+cinq clics.
 
-Le découpage restant : 7 le pied de feuille et l'établi aux cinq clics —
-8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans le groupe en dur — 12 la
-livraison ⚠️.
+Le découpage restant : 8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans le
+groupe en dur — 12 la livraison ⚠️.
 
 ⚠️ **Pour l'étape 5** : une admission envoie une *invitation* GitHub, que la
 personne doit accepter. L'écran d'attente pourra l'accepter pour elle
@@ -258,6 +258,38 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — le pied de feuille, l'établi, et un effet qui se relançait
+
+- **Le partage tient sans doublon** : le pied de feuille porte ce dont une
+  personne a besoin sans autorité (titres, relire, son fragment, se
+  déconnecter) ; l'établi, les diagnostics de l'atelier. *Une autorité n'est
+  pas une discrétion, et une discrétion n'est pas un diagnostic.*
+- **Son fragment se lit, il ne s'édite pas** : un éditeur de texte brut
+  contournerait le scribe, ses regroupements et sa reprise sur conflit.
+  Vérifié au passage : aucun `circleRef` dans le fichier — l'invariant 34
+  tient dans la donnée réelle, pas seulement dans le code.
+- **Le geste caché est borné et nommé.** Gauche, droite, gauche, droite,
+  gauche ; cinq essais en fixent la logique — une pause trop longue remet à
+  zéro, un bon départ après une erreur compte comme départ, toujours le même
+  bouton n'ouvre rien. Les boutons n'existent que volet déplié, hors de
+  l'ordre de tabulation et des lecteurs d'écran, 44 px quand même. Consigné
+  dans la note mère comme l'entorse délibérée qu'il est.
+- ⚠️ **Relire démontait la page.** La phase « ouverture » remplace toute la
+  vue par un message d'attente ; y repasser à chaque relecture détruisait la
+  page et tout état local — y compris une saisie en cours. Ne sert plus qu'à
+  la première ouverture.
+- ⚠️ **Et relire comptait comme une visite**, ce qui effaçait l'encart du
+  guetteur. *Une relecture n'est pas une visite.*
+- ⚠️ **L'ouverture se relançait elle-même**, et c'est le plus instructif de
+  la journée. Pour distinguer première ouverture et relecture, j'ai lu
+  `phase` au début d'`open()` — appelé depuis un `$effect`, qui s'abonne à
+  tout ce qu'on lit. L'effet dépendait désormais de ce qu'il modifiait :
+  ouvertures concurrentes, deux scribes, et **l'encart vide sans un
+  message**. Diagnostic gêné par une seconde panne de mesure — le module que
+  j'interrogeait depuis la console n'était pas celui de l'application après
+  remplacement à chaud. Correction : `untrack` dans l'effet, et `open()` non
+  réentrante. **Invariant 35.**
 
 ### 12 octobre 2026 — l'accueil complet
 

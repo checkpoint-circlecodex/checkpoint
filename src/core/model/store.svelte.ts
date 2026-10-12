@@ -30,6 +30,7 @@ class Registre {
 
   #scribe: Scribe | null = null;
   #storage: Storage | null = null;
+  #cache: Cache | null = null;
   #org: Org | null = null;
 
   /* --- Le Greffe. Le rôle se lit dans l'organisation (invariant 10) ; tant
@@ -103,6 +104,24 @@ class Registre {
 
   async flush() { await this.#scribe?.flush(); }
 
+  /** Relire le dépôt. **On vide d'abord la file d'écriture** : relire avant
+      que ses propres gestes soient partis ferait croire qu'ils sont perdus. */
+  async resync() {
+    if (!this.#storage || !this.#cache) return;
+    await this.flush();
+    await this.open(this.#storage, this.#cache, this.#org ?? undefined);
+  }
+
+  /** Son propre fragment, tel qu'il partirait — pour le lire, pas pour
+      l'éditer : on n'écrit dans un fragment que par des intentions. */
+  myShardText(): string {
+    const mine = this.#shards.find(s => s.user.id === this.me);
+    return mine ? JSON.stringify(mine, null, 2) : "";
+  }
+
+  get shardCount() { return this.#shards.length; }
+  get storageRemaining() { return this.#storage?.remaining() ?? null; }
+
   #shards: Shard[] = [];
 
   #mine(): Shard {
@@ -123,8 +142,23 @@ class Registre {
 
   #remerge(_touched?: Shard) { this.world = merge(this.#shards); }
 
-  async open(storage: Storage, cache: Cache, org?: Org) {
-    this.phase = "ouverture";
+  /** **Une seule ouverture à la fois.** Deux lectures concurrentes
+      créeraient deux scribes et deux visites, et la dernière à finir
+      écraserait le monde de l'autre. Un second appel pendant la première
+      attend simplement qu'elle finisse. */
+  #opening: Promise<void> | null = null;
+  open(storage: Storage, cache: Cache, org?: Org): Promise<void> {
+    return (this.#opening ??= this.#open(storage, cache, org).finally(() => { this.#opening = null; }));
+  }
+
+  async #open(storage: Storage, cache: Cache, org?: Org) {
+    /* **Relire ne démonte rien.** La phase « ouverture » remplace toute la
+       page par un message d'attente ; si on y repassait à chaque relecture,
+       on détruirait la vue — et avec elle une saisie en cours. Elle ne sert
+       donc qu'à la première ouverture ; ensuite, le monde se remplace en
+       place et les vues suivent. */
+    const first = this.phase !== "prêt";
+    if (first) this.phase = "ouverture";
     const t0 = performance.now();
     this.me = await storage.me();
     const { world, problems, fetched, fromCache, shards } = await openWorld(storage, cache);
@@ -133,6 +167,7 @@ class Registre {
     this.problems = problems;
     this.last = { fetched, fromCache, ms: Math.round(performance.now() - t0) };
     this.#storage = storage;
+    this.#cache = cache;
     this.#org = org ?? null;
     this.role = this.me ? await storage.roleOf(this.me).catch(() => null) : null;
 
@@ -155,12 +190,14 @@ class Registre {
         onState: (s, n, err) => { this.writing = s; this.pending = n; this.writeError = err; },
       });
     }
-    this.lastVisit = this.moi?.seenAt ?? "";
+    /* **Une relecture n'est pas une visite.** On ne retient la visite
+       précédente et on n'inscrit celle-ci qu'à la première ouverture — sinon
+       relire effacerait l'encart du guetteur, qui doit tenir jusqu'à la
+       prochaine vraie visite. Et seulement si on a déjà un fragment : un
+       compte pas encore admis n'a pas de quoi écrire. */
+    if (first) this.lastVisit = this.moi?.seenAt ?? "";
     this.phase = "prêt";
-    /* Inscrire cette visite seulement si on a déjà un fragment : un compte
-       qui n'est pas encore admis n'a pas de quoi écrire, et on ne crée pas un
-       fichier pour y ranger une date. */
-    if (this.moi) this.act(marquerVisite());
+    if (first && this.moi) this.act(marquerVisite());
     void this.refreshGreffe();
   }
 

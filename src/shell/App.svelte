@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import { registre } from "#core/model/store.svelte.ts";
   import { platform } from "#platform/index.ts";
   import { Stage, Surface, pile } from "#core/ui/index.ts";
@@ -45,7 +46,11 @@
     return () => removeEventListener("keydown", onKey);
   });
 
-  $effect(() => { registre.open(platform().storage, platform().cache, platform().org); });
+  /* `untrack` n'est pas un détail : un effet Svelte suit tout ce qu'on lit
+     pendant qu'il s'exécute. Sans lui, l'ouverture lisait `phase`, que
+     l'ouverture modifie — elle se relançait elle-même, plusieurs fois, en
+     parallèle, et l'encart du guetteur restait vide sans un message. */
+  $effect(() => { untrack(() => registre.open(platform().storage, platform().cache, platform().org)); });
 
   const current = $derived(route(hash));
   const tabs = $derived([HOME, ...REGISTRY.filter(v => !v.bench && !v.hold && (!v.only || v.only()))]);

@@ -85,6 +85,8 @@ export function tauriPlatform(): Platform {
       return { number: json(r).number, url: json(r).html_url };
     },
 
+    remaining: () => lastRemaining,
+
     async roleOf(login) {
       const { org } = await where();
       const r = await gh("GET", `/orgs/${org}/memberships/${login}`);

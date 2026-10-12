@@ -25,6 +25,10 @@ export interface Storage {
 
   /** Le rôle, lu dans l'organisation — jamais une liste maison (invariant 10). */
   roleOf(login: string): Promise<"admin" | "member" | null>;
+
+  /** Ce que GitHub a dit du quota à la dernière réponse. Pour l'établi
+      seulement — et jamais présenté comme une gratuité. */
+  remaining(): number | null;
 }
 
 export class ConflictError extends Error {

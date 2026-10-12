@@ -38,6 +38,7 @@ export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmicha
     async openIssue(title) {
       return { number: 1, url: `fake://issue/1#${encodeURIComponent(title)}` };
     },
+    remaining: () => null,
     async roleOf(login) { return roles[login] ?? (files.has(`data/${login}.json`) ? "member" : null); },
   };
 

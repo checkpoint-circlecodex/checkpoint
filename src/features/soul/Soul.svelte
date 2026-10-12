@@ -6,6 +6,10 @@
   import { Face, Panes, pile } from "#core/ui/index.ts";
   import Lignee from "./Lignee.svelte";
   import KinDeclare from "./KinDeclare.svelte";
+  import Fragment from "./Fragment.svelte";
+  import { preferTitres } from "#core/model/acts.ts";
+  import { platform } from "#platform/index.ts";
+  import { hhmm } from "#core/model/lexicon.ts";
   import { weave } from "#core/ui/weave.ts";
   import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
   import {
@@ -29,6 +33,24 @@
   const asked = $derived(self ? kinAsked(w, id) : []);
   const openLignee = () => pile.open("panneau", "La maisonnée", Lignee, { pid: id });
   const openDeclare = () => pile.open("panneau", "Parenté", KinDeclare);
+
+  /* --- Le pied de la feuille : **ce qui ne demande que de la discrétion**.
+     L'autorité vit au Greffe ; ici, rien que pour soi. *Une autorité n'est
+     pas une discrétion.* --- */
+  let reread = $state<string | null>(null);
+  let rereading = $state(false);
+  async function resync() {
+    rereading = true;
+    await registre.resync();
+    rereading = false;
+    reread = hhmm(new Date().toISOString());
+  }
+  let leaving = $state(false);
+  async function leave() {
+    await registre.flush();
+    await platform().session.forget();
+    location.reload();
+  }
 
   let tab = $state("portrait");
   const tabs = $derived([
@@ -154,6 +176,42 @@
           {/if}
         {/snippet}
       </Panes>
+
+      {#if self}
+        <!-- Au pied de sa propre feuille, et seulement de la sienne : des
+             réglages que personne d'autre n'a à voir. -->
+        <section class="foot">
+          <span class="fk">Pour toi seul</span>
+
+          <div class="fr">
+            <span class="fl">Titres</span>
+            <!-- La recherche interroge toujours les deux titres ; ceci ne
+                 change que celui qu'on affiche (invariant 9). -->
+            <div class="pick2">
+              <button class:on={(p.prefs?.titles ?? "fr") === "fr"} onclick={() => registre.act(preferTitres("fr"))}>En français</button>
+              <button class:on={p.prefs?.titles === "vo"} onclick={() => registre.act(preferTitres("vo"))}>D'origine</button>
+            </div>
+          </div>
+
+          <div class="fr">
+            <span class="fl">Le dépôt</span>
+            <button class="lk" onclick={resync} disabled={rereading}>{rereading ? "Lecture…" : "Relire maintenant"}</button>
+            {#if reread}<span class="fn">relu à {reread}</span>{/if}
+            <button class="lk" onclick={() => pile.open("panneau", "Ton fragment", Fragment)}>Lire ton fragment</button>
+          </div>
+
+          <div class="fr">
+            <span class="fl">Le compte</span>
+            {#if !leaving}
+              <button class="lk" onclick={() => (leaving = true)}>Se déconnecter</button>
+            {:else}
+              <span class="fn">Le jeton sera oublié sur cette machine ; il faudra se reconnecter.</span>
+              <button class="lk strong" onclick={leave}>Oui, oublier</button>
+              <button class="lk" onclick={() => (leaving = false)}>Rester</button>
+            {/if}
+          </div>
+        </section>
+      {/if}
     </div>
   </div>
 {/if}
@@ -217,6 +275,20 @@
   .t { font-family: var(--fs); font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .kind { font-size: 11px; color: var(--dim); }
   .sc { font-family: var(--fs); font-size: 17px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .foot { margin-top: 44px; padding-top: 12px; border-top: 1px solid var(--rule); display: grid; gap: 2px; }
+  .fk { font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+  .fr { display: flex; align-items: center; gap: 4px 14px; flex-wrap: wrap; min-height: 44px; }
+  .fl { width: 92px; font-size: 11px; color: var(--dim); }
+  .pick2 { display: flex; gap: 2px; }
+  .pick2 button { min-height: 44px; padding: 0 12px; border: 1px solid var(--rule2); font-size: 11px; color: var(--dim); }
+  .pick2 button.on { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+  .lk { min-height: 44px; font-size: 11.5px; color: var(--ink2); text-decoration: underline;
+        text-decoration-color: var(--rule2); text-underline-offset: 3px; }
+  .lk:hover:not(:disabled) { text-decoration-color: var(--ink); color: var(--ink); }
+  .lk:disabled { opacity: .5; cursor: default; }
+  .lk.strong { font-weight: 600; color: var(--ink); }
+  .fn { font-size: 11px; color: var(--faint); font-style: italic; }
 
   @media (max-width: 860px) {
     .wrap { padding: 22px 18px 80px; }

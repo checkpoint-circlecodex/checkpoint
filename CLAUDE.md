@@ -245,6 +245,16 @@ pas contourner.
    fragment depuis un objet de vue, on **énumère les champs**, on ne répand
    jamais l'objet entier.
 
+35. *(Code)* **Un effet qui déclenche un travail ne doit pas suivre ce que ce
+   travail lit.** Un `$effect` Svelte s'abonne à tout état lu pendant son
+   exécution. Le 12 octobre, l'ouverture du registre lisait `phase`, qu'elle
+   modifie : l'effet qui l'appelait s'est mis à la relancer lui-même,
+   plusieurs fois, en parallèle — deux scribes, deux visites, et l'encart du
+   guetteur vide **sans un message**. D'où deux règles : un effet qui lance
+   une action l'enveloppe dans `untrack`, et une action longue est
+   **non réentrante** (un second appel attend le premier). *Le symptôme
+   était loin de la cause ; c'est la marque de ce genre de bug.*
+
 *(La numérotation est en ajout seul, comme les champs du schéma : des documents
 citent ces numéros, on n'en renumérote aucun.)*
 
@@ -616,6 +626,17 @@ Trois choses que le Greffe impose, et qu'il dit à l'écran :
 Et puisque personne n'est averti de rien, **une demande qui attend paraît dans
 l'encart du guetteur**, pour qui tient la charge seulement : c'est le seul
 moment où quelqu'un regarde.
+
+**L'établi — et le seul geste caché de l'application.** Les diagnostics
+d'atelier (quota, coût de la dernière ouverture, fragments illisibles, file
+d'écriture, cache, versions) s'ouvrent par **cinq clics sur deux boutons
+invisibles**, dans le coin bas-droit de la zone floutée quand le volet est
+déplié : **gauche, droite, gauche, droite, gauche**, sans pause de plus
+d'une seconde et demie. C'est une **entorse délibérée** aux invariants 19 et
+32, demandée par Nathan le 11 octobre, et **bornée** : elle ne mène qu'à
+l'atelier, jamais à une autorité. *Un panneau d'atelier a le droit d'être
+introuvable ; une porte d'admission non.* Rien de ce qu'il contient n'est
+nécessaire pour se servir de Checkpoint — c'est la condition qui l'autorise.
 
 **Une porte par pièce.** La barre latérale sépare **agir** — inscrire une
 œuvre, voir ses en cours, ouvrir une quête — de **parcourir** : les Ordres, les
