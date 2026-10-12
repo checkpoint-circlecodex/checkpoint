@@ -3,6 +3,13 @@
   import { Face } from "#core/ui/index.ts";
   import { KIND, STATUS, dateShort, roman } from "#core/model/lexicon.ts";
   import { questById, questHolders, questScore, reached, rung, titleOf } from "#core/selectors/index.ts";
+  import { arracherQuete } from "#core/model/acts.ts";
+
+  let sure = $state(false);
+  function tear(qid: string) {
+    registre.act(arracherQuete(qid));
+    location.hash = "#/quetes";
+  }
 
   let { id }: { id: string } = $props();
 
@@ -72,6 +79,19 @@
       {/if}
     </section>
 
+    {#if q.personId === registre.me}
+      <section class="sect tear">
+        {#if !sure}
+          <button class="btn" onclick={() => (sure = true)}>Arracher cette planche</button>
+        {:else}
+          <!-- Un geste qui retire quelque chose à tout le monde se confirme. -->
+          <button class="btn btn-ink" onclick={() => tear(q.id)}>Oui, l'arracher</button>
+          <button class="btn" onclick={() => (sure = false)}>La laisser</button>
+        {/if}
+        <p class="legend">Elle est dans ton fragment : toi seul peux la retirer, et elle disparaîtra pour tout le monde.</p>
+      </section>
+    {/if}
+
     <p class="rule">
       <strong>Nul ne valide une quête.</strong> Elle s'accomplit d'elle-même, à mesure que les
       registres avancent — il n'y a personne à convaincre, donc rien à administrer.
@@ -107,6 +127,13 @@
   .t { font-family: var(--fs); font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .kind, .st { font-size: 11px; color: var(--dim); }
 
+  .tear { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .tear .legend { flex-basis: 100%; margin-top: 4px; }
+  .btn { min-height: 44px; padding: 9px 13px; border: 1px solid var(--rule2);
+         font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+  .btn:hover { color: var(--ink); border-color: var(--ink); }
+  .btn-ink { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+  .btn-ink:hover { color: var(--paper); }
   .troop { display: flex; flex-wrap: wrap; gap: 4px; }
   .sold { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 82px; padding: 10px 0; min-height: 44px; }
   .sold:hover { background: var(--raise); }

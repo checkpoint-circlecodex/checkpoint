@@ -3,6 +3,8 @@
   import { roman } from "#core/model/lexicon.ts";
   import { questHolders, questScore, questsDoneBy, questsOpenFor } from "#core/selectors/index.ts";
   import Sign from "./Sign.svelte";
+  import Builder from "./Builder.svelte";
+  import { pile } from "#core/ui/index.ts";
 
   const w = $derived(registre.world);
   const me = $derived(registre.me ?? "");
@@ -28,6 +30,7 @@
     <button class:on={filter === "all"} onclick={() => (filter = "all")}>Toutes<span class="n">{roman(w.quests.length)}</span></button>
     <button class:on={filter === "done"} onclick={() => (filter = "done")}>Accomplies<span class="n">{roman(mine.length)}</span></button>
     <button class:on={filter === "way"} onclick={() => (filter = "way")}>En chemin<span class="n">{roman(questsOpenFor(w, me).length)}</span></button>
+    <button class="plant" onclick={() => pile.open("panneau", "Planter une quête", Builder)}>+ Ouvrir une quête</button>
   </div>
 
   {#if list.length}
@@ -56,6 +59,8 @@
   .filt button:hover { color: var(--ink); }
   .filt button.on { color: var(--ink); border-color: var(--ink); background: var(--raise); }
   .n { font-size: 9.5px; color: var(--faint); }
+  .filt .plant { margin-left: auto; border-color: var(--ink); color: var(--ink);
+                 font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 
   .signs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 26px 20px; }
   @media (max-width: 860px) { .wrap { padding: 22px 18px 80px; } .signs { grid-template-columns: 1fr; } }

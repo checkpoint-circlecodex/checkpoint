@@ -21,3 +21,7 @@ export const quest: ViewEntry = {
   depth: 2,
   view: Quest,
 };
+
+/* Le bâtisseur s'ouvre depuis la barre (« Agir ») et depuis la liste des
+   quêtes : deux portes vers la même surface, mais **une seule surface**. */
+export { default as Builder } from "./Builder.svelte";

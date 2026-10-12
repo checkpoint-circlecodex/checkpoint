@@ -9,6 +9,8 @@
   import { Face } from "#core/ui/index.ts";
   import { pile } from "#core/ui/index.ts";
   import { Inscribe } from "#features/inscribe/index.ts";
+  import { Live } from "#features/live/index.ts";
+  import { Builder } from "#features/quests/index.ts";
   import { HOME, REGISTRY } from "./routes.ts";
 
   let { hash, collapsed = $bindable(false) }:
@@ -35,6 +37,12 @@
   <div class="lbl">Agir</div>
   <button class="act" onclick={() => pile.open("panneau", "Inscrire une œuvre", Inscribe)}>
     <span class="gl">+</span><span class="t">Inscrire une œuvre</span>
+  </button>
+  <button class="act" onclick={() => pile.open("panneau", "Ce que tu mènes", Live)}>
+    <span class="gl">◈</span><span class="t">Mes en cours</span>
+  </button>
+  <button class="act" onclick={() => pile.open("panneau", "Planter une quête", Builder)}>
+    <span class="gl">⚑</span><span class="t">Ouvrir une quête</span>
   </button>
 
   <div class="sep"></div>

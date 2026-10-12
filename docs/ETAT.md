@@ -9,16 +9,16 @@
 
 ## Prochaine action
 
-**« Mes en cours » et ouvrir une quête** (ligne 2 du découpage).
+**La lignée, et déclarer une parenté** (ligne 3 du découpage).
 
-Faites (12 octobre) : **prendre la parole** dans la Loge — répondre, citer une
-œuvre, Cmd+Entrée — **surligner**, et **écrire une chronique** sur la fiche.
+Faites (12 octobre) : le panneau **« mes en cours »** — mettre de côté,
+reprendre, achever, renoncer, poser un checkpoint d'un geste — et le
+**bâtisseur de quête**, jusqu'à la planche plantée puis arrachée.
 
-Le découpage restant, un tour par ligne, tel que donné à Nathan :
-2 mes en cours · ouvrir une quête — 3 la lignée — 4 le Greffe — 5 le
-volet-lanceur — 6 l'accueil complet — 7 le pied de feuille et l'établi aux
-cinq clics — 8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans le groupe en
-dur — 12 la livraison ⚠️.
+Le découpage restant : 3 la lignée — 4 le Greffe — 5 le volet-lanceur — 6
+l'accueil complet — 7 le pied de feuille et l'établi aux cinq clics — 8-9 la
+cité en pixel art ⚠️ — 10-11 l'entrée dans le groupe en dur — 12 la
+livraison ⚠️.
 
 Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
 Twitch) et **la décision de signature** (99 $/an).
@@ -254,6 +254,30 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — mes en cours, et planter une quête
+
+- **Suspendre n'est pas renoncer, et le panneau le montre.** Mettre
+  *Severance* de côté la fait passer dans « Mis de côté », juste dessous,
+  avec « Reprendre » en tête de ligne ; la reprendre la remonte. C'était le
+  défaut du prototype d'origine : l'œuvre suspendue tombait dans le registre
+  général et il fallait l'y retrouver.
+- **Une planche sans œuvre ne se plante pas.** Elle ne s'accomplirait
+  jamais — ou toujours, selon la façon de compter zéro sur zéro. Le bouton
+  dit pourquoi il est éteint : *il lui faut un nom*, puis *chaque épreuve
+  demande au moins une œuvre*. **Un bouton désactivé sans raison donnée est
+  une devinette.**
+- **Arracher se confirme.** C'est le seul geste de cette passe qui retire
+  quelque chose **à tout le monde** — la planche vit dans mon fragment, et
+  sa disparition se lit chez chacun. Vérifié dans le dépôt : présente après
+  la plantation, absente après l'arrachage.
+- **Les titres-liens ne faisaient que 20 px.** Un lien est une cible : il
+  occupe maintenant toute la hauteur de sa ligne. Troisième fois que la
+  mesure des cibles attrape ce que l'œil laissait passer — elle fait
+  désormais partie de chaque passe, pas d'une revue de fin.
+- Le « + » du panneau : 44 × 44, centré à 0,01 px près horizontalement,
+  0,5 px verticalement — l'arrondi des métriques de la police, pas un
+  décalage.
 
 ### 12 octobre 2026 — parler, surligner, chroniquer
 
