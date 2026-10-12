@@ -60,10 +60,10 @@
   <button class="act" onclick={() => gestes.inscrire?.()}>
     <span class="gl">+</span><span class="t">Inscrire une œuvre</span>
   </button>
-  <button class="act" onclick={() => pile.open("panneau", "Ce que tu mènes", Live)}>
+  <button class="act" onclick={() => pile.swap("panneau", "Ce que tu mènes", Live)}>
     <span class="gl">◈</span><span class="t">Mes en cours</span>
   </button>
-  <button class="act" onclick={() => pile.open("panneau", "Planter une quête", Builder)}>
+  <button class="act" onclick={() => pile.swap("panneau", "Planter une quête", Builder)}>
     <span class="gl">⚑</span><span class="t">Ouvrir une quête</span>
   </button>
 
@@ -127,13 +127,17 @@
   }
   /* La barre latérale est le corps de la console : elle ne se défocalise
      jamais, et elle ne porte aucune couleur. */
-  .collapsed { width: var(--railc); padding-left: 10px; padding-right: 10px; }
+  /* Repliée, la colonne utile fait **exactement 44 px** : la largeur d'une
+     cible (invariant 20). Avec 10 px de marge elle en faisait 40, et tout ce
+     qui mesurait 44 débordait d'un côté — le sceau sortait par la gauche. */
+  .collapsed { width: var(--railc); padding-left: 8px; padding-right: 8px; }
 
   .top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
   /* **Cibles tactiles d'au moins 44 px partout, bureau compris** (invariant
      20). Le cadre visible reste petit ; c'est la zone qu'on vise qui grandit,
      et les marges négatives empêchent la mise en page de s'écarter. */
   .sigil {
+    position: relative;
     display: grid; place-items: center; width: 44px; height: 44px; flex: none;
     margin: -9px 0 -9px -9px; font-family: var(--fs); font-size: 15px;
     letter-spacing: 0; line-height: 1;
@@ -145,7 +149,15 @@
   .mark { flex: 1; font-size: 12.5px; letter-spacing: .02em; }
   .tgl { display: grid; place-items: center; width: 44px; height: 44px; margin: 0 -9px 0 0; color: var(--dim); }
   .tgl:hover { color: var(--ink); }
-  .collapsed .mark, .collapsed .tgl { display: none; }
+  /* **Repliée, la barre se déplie par un bouton à elle**, entre le sceau et
+     la loupe (décidé par Nathan le 12 octobre). Elle n'avait que la loupe,
+     et il l'avait trouvée par hasard : masquer la bascule à l'état replié,
+     c'était retirer la seule porte de sortie. Le chevron se retourne — il
+     montre le sens où l'on va. */
+  .collapsed .mark { display: none; }
+  .collapsed .top { flex-direction: column; gap: 4px; }
+  .collapsed .sigil, .collapsed .tgl { margin: 0; }
+  .collapsed .tgl svg { transform: rotate(180deg); }
 
   .lbl {
     margin: 22px 0 6px; font-size: 9px; font-weight: 700; letter-spacing: .2em;
@@ -158,9 +170,12 @@
           border: 1px solid var(--rule2); background: var(--paper); color: var(--dim); }
   .find:focus-within { border-color: var(--ink); color: var(--ink); }
   .find input { flex: 1; min-width: 0; border: none; background: none; outline: none; font-size: 12.5px; }
-  .find-ic { display: grid; place-items: center; width: 44px; height: 44px; margin: 10px auto 0; color: var(--dim); }
+  .find-ic { display: grid; place-items: center; width: 44px; height: 44px; margin: 4px auto 0; color: var(--dim); }
   .find-ic:hover { color: var(--ink); }
   .sep { height: 1px; background: var(--rule); margin-top: 16px; }
+  /* Repliée, c'est l'étiquette qui porte la règle : le filet en plus en
+     faisait deux à chaque séparation. */
+  .collapsed .sep { display: none; }
   .act { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 44px; padding: 8px 0;
          font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
   /* Un bouton carré ne centre pas son glyphe tout seul : chasse normale,
@@ -181,6 +196,11 @@
   .row.on { box-shadow: inset 2px 0 0 var(--ink); }
   .row:hover .t { text-decoration: underline; text-underline-offset: 3px; }
   .collapsed .t, .collapsed .exp, .collapsed .sub, .collapsed .who { display: none; }
+  /* **Un seul axe** : repliée, chaque glyphe se centre — ceux d'agir, ceux
+     de parcourir, le visage. Ils se centraient pour agir et se collaient à
+     gauche pour parcourir. */
+  .collapsed .row > a, .collapsed nav > .row { justify-content: center; gap: 0; }
+  .collapsed .foot a { justify-content: center; gap: 0; }
 
   .exp { display: grid; place-items: center; width: 44px; height: 44px; margin-right: -9px; color: var(--faint); }
   .exp:hover { color: var(--ink); }

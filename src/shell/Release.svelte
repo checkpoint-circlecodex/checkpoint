@@ -5,7 +5,9 @@
      on sait le faire, d'aller sur la page de la version ailleurs.
 
      Ce n'est pas une notification — il n'y en a pas : il se lit à
-     l'ouverture et toutes les six heures, et « Plus tard » le range jusqu'au
+     l'ouverture, toutes les six heures, et **au retour dans la fenêtre**
+     (au plus une fois toutes les dix minutes) — une application restée
+     ouverte ne voyait pas une version publiée entre-temps, et « Plus tard » le range jusqu'au
      prochain lancement. Une vérification qui échoue ne dit rien : l'absence
      de nouvelle n'est pas une nouvelle. */
   import { untrack } from "svelte";
@@ -14,12 +16,15 @@
   import { newer } from "./version.ts";
 
   const EVERY_MS = 6 * 3600_000;
+  const FOCUS_GAP_MS = 10 * 60_000;
+  let lastLook = 0;
   let found = $state<{ version: string; url: string } | null>(null);
   let later = $state(false);
   let busy = $state(false);
   let error = $state<string | null>(null);
 
   async function look() {
+    lastLook = Date.now();
     try {
       const r = await platform().updates.latest();
       found = r && newer(r.version, __APP_VERSION__) ? r : null;
@@ -28,7 +33,9 @@
   $effect(() => {
     untrack(() => void look());
     const t = setInterval(look, EVERY_MS);
-    return () => clearInterval(t);
+    const onFocus = () => { if (Date.now() - lastLook > FOCUS_GAP_MS) void look(); };
+    addEventListener("focus", onFocus);
+    return () => { clearInterval(t); removeEventListener("focus", onFocus); };
   });
 
   async function install() {

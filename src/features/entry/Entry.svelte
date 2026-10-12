@@ -7,7 +7,14 @@
 
      Le nom paraît seul, lettre à lettre, puis recule et la tuile arrive.
      Changer d'étape **glisse latéralement** : même profondeur, donc jamais
-     de zoom — on n'entre nulle part, on avance. */
+     de zoom — on n'entre nulle part, on avance.
+
+     **L'ouverture se joue à chaque lancement** (décidé par Nathan le
+     12 octobre), pas seulement pour qui arrive. Le même rideau couvre
+     l'examen de la porte et la lecture du registre ; pour un membre, il ne
+     se lève pas sur des tuiles, il s'efface sur l'accueil. Il couvre un
+     chargement réel, il ne l'allonge pas : s'il a fini son geste avant le
+     registre, il attend ; un clic le passe. */
   import { untrack } from "svelte";
   import { roman } from "#core/model/lexicon.ts";
   import { skyline } from "#core/ui/skyline.ts";
@@ -23,15 +30,30 @@
   const KICKER = ["Bienvenue", "La demande", "Votre Ordre", "Entrée"];
   const NAME = [..."Checkpoint"];
 
-  let step = $state(porte.door === "dehors" ? 0 : 1);
-  let curtain = $state(true);
+  let step = $state(porte.door === "dehors" || porte.door === "examen" ? 0 : 1);
 
-  /* Le rideau se lève par minuterie, jamais par la fin d'une animation : une
-     fenêtre qui ne rend pas n'en finit aucune, et il ne se lèverait jamais. */
+  /* Le geste du nom a sa durée ; le rideau ne se lève qu'une fois ce geste
+     fait **et** la porte connue. Par minuterie, jamais par la fin d'une
+     animation : une fenêtre qui ne rend pas n'en finit aucune. */
+  let played = $state(false);
   $effect(() => {
-    const t = setTimeout(() => (curtain = false), 1750);
+    const t = setTimeout(() => (played = true), 1750);
     return () => clearTimeout(t);
   });
+  /* Pour un membre, le rideau ne se lève jamais : c'est tout l'écran qui
+     s'efface sur l'accueil, déjà prêt dessous. */
+  const curtain = $derived(!played || porte.door === "examen" || porte.door === "dedans");
+  let leaving = $state(false);
+  $effect(() => {
+    if (!played || porte.door !== "dedans" || leaving) return;
+    untrack(() => {
+      leaving = true;
+      setTimeout(() => porte.lift(), 520);
+    });
+  });
+  /** **Un clic passe l'ouverture** — le geste du nom, pas l'attente du
+      registre : si la porte n'est pas encore connue, il n'y a rien derrière. */
+  const skip = () => { if (!played) played = true; };
 
   let stage = $state<HTMLElement | null>(null);
   let host = $state<HTMLElement | null>(null);
@@ -72,7 +94,8 @@
   });
 </script>
 
-<div class="onb" class:curtain class:at-forge={step === 1}>
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+<div class="onb" class:curtain class:leaving class:at-forge={step === 1} onclick={skip}>
   <canvas class="onb-fall" use:falling aria-hidden="true"></canvas>
   <canvas class="onb-sky" use:skyline aria-hidden="true"></canvas>
 
@@ -81,6 +104,16 @@
   <div class="onb-name" role="heading" aria-level="1" aria-label="Checkpoint">
     {#each NAME as ch, i (i)}<i style="--k:{i}" aria-hidden="true">{ch}</i>{/each}<u></u>
   </div>
+
+  <!-- La porte n'a pas pu être examinée : on le dit sous le nom, au lieu de
+       laisser le rideau tomber pour toujours. Une panne n'est pas une
+       déconnexion. -->
+  {#if porte.door === "examen" && porte.error}
+    <div class="fail" role="alert">
+      <p>GitHub ne répond pas : {porte.error}</p>
+      <button onclick={e => { e.stopPropagation(); porte.retry(); }}>Réessayer</button>
+    </div>
+  {/if}
 
   <div class="onb-stage" bind:this={stage}>
     <div class="onb-tile" bind:this={host}>
@@ -117,6 +150,14 @@
     padding: 0 20px; overflow: hidden; animation: fade 300ms var(--e) both;
   }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  /* Pour un membre, l'ouverture s'efface sur l'accueil déjà prêt dessous. */
+  .onb.leaving { opacity: 0; transition: opacity 500ms var(--e); pointer-events: none; }
+  .curtain { cursor: default; }
+
+  .fail { position: relative; z-index: 1; margin-top: 34px; display: grid; justify-items: center; gap: 10px;
+          font-size: 12.5px; color: var(--dim); text-align: center; max-width: 60ch; }
+  .fail button { min-height: 44px; padding: 0 16px; border: 1px solid var(--rule2); font-size: 10.5px; font-weight: 700;
+                 letter-spacing: .17em; text-transform: uppercase; color: var(--ink); }
 
   .onb-name {
     position: relative; z-index: 1; font-family: var(--fs); color: var(--ink); white-space: nowrap;
@@ -133,10 +174,14 @@
   .curtain .onb-name u { animation: ruleIn 620ms var(--e) both 760ms; }
   /* Une fois le rideau levé, le trait reste tiré. */
   .onb:not(.curtain) .onb-name u { width: 100%; }
+  /* ⚠️ **Sans flou** (12 octobre). Chaque lettre tombait floutée de 7 px et
+     agrandie de 28 % : dans l'application Mac, Nathan voyait de gros points
+     très flous derrière le nom, et ne les aimait pas. La chute, la rotation
+     et le dépassement restent — c'est eux qui font le geste. */
   @keyframes letterIn {
-    0%   { opacity: 0; transform: translateY(-26px) rotate(-7deg) scale(1.28); filter: blur(7px); }
-    62%  { opacity: 1; transform: translateY(3px) rotate(.6deg) scale(.985); filter: blur(0); }
-    100% { opacity: 1; transform: none; filter: blur(0); }
+    0%   { opacity: 0; transform: translateY(-26px) rotate(-7deg) scale(1.28); }
+    62%  { opacity: 1; transform: translateY(3px) rotate(.6deg) scale(.985); }
+    100% { opacity: 1; transform: none; }
   }
   @keyframes ruleIn { from { width: 0; opacity: 0; } to { width: 100%; opacity: .5; } }
 

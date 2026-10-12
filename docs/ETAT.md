@@ -2,7 +2,7 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 12 octobre 2026 (le fonds)
+**Dernière mise à jour :** 12 octobre 2026 (v0.1.2 — les premiers retours de Nathan)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
@@ -40,19 +40,19 @@ compte développeur Twitch avec la double authentification.
 
 ### La barre latérale repliée — signalé le 12 octobre (application Mac, v0.1.0)
 
-- [ ] **Elle ne se déplie plus par un bouton à elle.** Le bouton de bascule
+- [x] **Elle ne se déplie plus par un bouton à elle.** Le bouton de bascule
       est masqué à l'état replié (`.collapsed .tgl { display: none }`) ; seule
       la loupe la déplie, et Nathan l'a trouvé par hasard. **Décidé par
       Nathan le 12 octobre : un bouton « déplier » entre le sceau « C » et la
       loupe**, toujours visible replié. (Le prototype le gardait aussi, tourné
       de 180°, sous le sceau — c'est le portage qui l'avait perdu.)
-- [ ] **Les glyphes ne sont pas sur le même axe.** Ceux d'*Agir* (+ ◈ ⚑) et
+- [x] **Les glyphes ne sont pas sur le même axe.** Ceux d'*Agir* (+ ◈ ⚑) et
       du Greffe sont centrés ; ceux de *Parcourir* (≡ ◎ ❧ ❖) sont collés à
       gauche ; le visage du pied aussi. Le prototype centre tout
       (`.nrow a{justify-content:center}`, `.foot a{justify-content:center}`).
-- [ ] **Le sceau « C » est coupé au bord gauche** : sa marge négative
+- [x] **Le sceau « C » est coupé au bord gauche** : sa marge négative
       (pensée pour la barre dépliée) le pousse hors du cadre une fois replié.
-- [ ] **Deux filets à chaque séparation** au lieu d'un : la règle `.sep` et
+- [x] **Deux filets à chaque séparation** au lieu d'un : la règle `.sep` et
       la bordure que prend l'étiquette repliée (`.collapsed .lbl`) se
       cumulent.
 - ⚠️ *Pourquoi ça n'a pas été vu* : l'état replié a été balayé pour la
@@ -61,7 +61,7 @@ compte développeur Twitch avec la double authentification.
 
 ### Les panneaux d'*Agir* s'empilent — signalé le 12 octobre
 
-- [ ] « Inscrire une œuvre », puis « Ce que tu mènes » ou « Planter une
+- [x] « Inscrire une œuvre », puis « Ce que tu mènes » ou « Planter une
       quête » : les panneaux se superposent. **Décidé par Nathan : le
       précédent se ferme, sans rien garder** — une saisie en cours est
       perdue, c'est assumé (on lui a proposé le brouillon ou la
@@ -77,7 +77,7 @@ compte développeur Twitch avec la double authentification.
 
 ### L'ouverture à chaque lancement — demandé le 12 octobre
 
-- [ ] Aujourd'hui l'ouverture (le nom qui tombe lettre à lettre, les étoiles,
+- [x] Aujourd'hui l'ouverture (le nom qui tombe lettre à lettre, les étoiles,
       la cité) ne se joue que **dans l'entrée**, donc une seule fois dans la
       vie d'un compte. **Décidé par Nathan : elle se joue à chaque
       lancement** — nom, étoiles et cité, pendant que le registre se charge
@@ -118,14 +118,14 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
 
 ### Le bandeau de version ne regarde qu'au lancement — relevé le 12 octobre
 
-- [ ] Il vérifie au démarrage puis toutes les six heures : une application
+- [x] Il vérifie au démarrage puis toutes les six heures : une application
       restée ouverte ne voit pas une version publiée entre-temps. Ajouter
       une vérification **au retour dans la fenêtre** (un appel, comme la
       porte le fait déjà pendant l'attente).
 
 ### Des points flous derrière le nom — signalé le 12 octobre
 
-- [ ] Nathan voit, **dans l'application Mac**, de gros points très flous
+- [x] Nathan voit, **dans l'application Mac**, de gros points très flous
       derrière « Checkpoint » pendant l'ouverture, et ne les aime pas : **à
       retirer.** Dans Chromium on ne voit que des poussières minuscules : le
       rendu de WebKit diffère, ou bien ce sont autre chose. Deux suspects :
@@ -386,6 +386,30 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — v0.1.2, les premiers retours de Nathan
+
+- **La barre repliée** : un bouton « déplier » entre le sceau et la loupe ;
+  tous les glyphes sur un seul axe — **mesuré : écart nul au centre** pour
+  chacun, sceau, bascule, loupe, gestes, portes, visage ; un seul filet par
+  séparation. La colonne utile repliée fait maintenant 44 px exactement :
+  avec 40, tout ce qui mesurait 44 débordait d'un côté, d'où le sceau
+  coupé. *Un défaut d'alignement venait d'une marge de 2 px.*
+- **Les gestes de la barre se remplacent** (`pile.swap`) ; l'invariant 17
+  est précisé plutôt que contredit : depuis une surface on empile, depuis
+  la barre on remplace.
+- **L'ouverture à chaque lancement**, par le même rideau que l'entrée : il
+  couvre l'examen de la porte et la lecture du registre, puis s'efface sur
+  l'accueil. Un clic le passe (0,6 s, le temps du fondu). Une panne pendant
+  l'examen se dit désormais **sous le nom**, avec « Réessayer » — sans quoi
+  le rideau serait tombé pour toujours.
+- **Les points flous** : deux suspects, deux retraits — le flou de 7 px des
+  lettres qui tombent (dans Chromium, seule la lettre en vol était floue ;
+  WebKit, que l'application Mac emploie, l'a manifestement rendu
+  autrement) et les poussières fixes du ciel. ⚠️ *Non vérifiable ici : c'est
+  Nathan qui dira si c'est parti.*
+- **Le bandeau** regarde aussi au retour dans la fenêtre, au plus toutes
+  les dix minutes.
 
 ### 12 octobre 2026 — la première mise à jour, pour de vrai
 

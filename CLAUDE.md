@@ -302,6 +302,11 @@ citent ces numéros, on n'en renumérote aucun.)*
 17. **Les surfaces s'empilent, elles ne se remplacent jamais.** Une surface
     ouverte depuis une autre doit la retrouver intacte en se fermant — sinon on
     détruit une saisie en cours. Celle du dessous se défocalise.
+    ⚠️ *Précisé le 12 octobre, à la demande de Nathan* : la règle vaut pour
+    une surface ouverte **depuis une surface**. Un geste de **la barre** (ou
+    de l'en-tête en étroit) est une nouvelle destination : il **remplace** ce
+    qui était ouvert (`pile.swap`), comme une navigation le fait déjà — et
+    une saisie en cours dans le panneau remplacé est perdue, c'est assumé.
 18. **Jamais de mesure de mise en page pendant une animation de transformation.**
     `getBoundingClientRect()` inclut les transformations ; employer
     `offsetWidth` / `offsetHeight`, et mesurer après la mise en page.
@@ -322,7 +327,11 @@ citent ces numéros, on n'en renumérote aucun.)*
 ## L'entrée dans le groupe — l'ordre des écrans
 
 **Quatre tuiles**, précédées d'une ouverture où le nom paraît lettre à lettre
-puis recule. Ce qui fixe l'ordre n'est pas le goût, c'est une contrainte
+puis recule. ⚠️ *Révisé le 12 octobre, à la demande de Nathan* : **l'ouverture
+se joue à chaque lancement**, pas seulement à l'entrée. Le même rideau
+couvre l'examen de la porte et la lecture du registre ; pour un membre il ne
+se lève pas sur des tuiles, il **s'efface sur l'accueil** déjà prêt dessous.
+Il couvre un chargement réel sans l'allonger, et **un clic le passe**. Ce qui fixe l'ordre n'est pas le goût, c'est une contrainte
 technique : **le profil ne peut pas s'écrire avant l'admission**, puisqu'on n'a
 pas les droits sur le dépôt de données. D'où :
 
@@ -366,7 +375,10 @@ formulaire.*
 - **Le nom ne se fond pas, il tombe lettre à lettre** — chacune un peu après la
   précédente, avec un léger dépassement, puis le mot recule et un trait se tire
   dessous. Et **des étoiles filantes traversent le fond** : pas la trame d'un
-  Ordre, on n'en a pas encore, donc tout est à l'encre.
+  Ordre, on n'en a pas encore, donc tout est à l'encre. ⚠️ *Le 12 octobre,
+  Nathan a vu dans l'application Mac « de gros points très flous » derrière
+  le nom* : la chute ne floute plus les lettres, et les poussières fixes du
+  ciel sont retirées — les deux suspects. **Rien de flou dans l'ouverture.**
 - **L'entrée finit sur une onde — la même que celle des pastilles d'Ordre**,
   simplement plus ample et plus lente. Elle reste **translucide d'un bout à
   l'autre** : on voit l'accueil se former au travers, et c'est ce qui la rend

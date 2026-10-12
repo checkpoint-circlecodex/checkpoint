@@ -31,11 +31,20 @@ class Porte {
   /** Le code du device flow, tant qu'on attend que la personne le saisisse. */
   code = $state<{ user: string; uri: string } | null>(null);
   busy = $state(false);
+  /** **Le rideau est là** : l'ouverture ou l'entrée couvrent l'application.
+      Il tombe à chaque lancement, et se retire une fois franchi. */
+  veil = $state(true);
 
   #p: Platform | null = null;
   #timer: ReturnType<typeof setInterval> | null = null;
   #checking: Promise<void> | null = null;
   #flow = 0;
+
+  /** L'ouverture a fini de s'effacer sur l'accueil. */
+  lift() { this.veil = false; }
+
+  /** Réessayer d'examiner la porte, après une panne. */
+  retry() { if (this.#p) void this.start(this.#p); }
 
   async start(p: Platform) {
     this.#p = p;
@@ -164,7 +173,8 @@ class Porte {
     return true;
   }
 
-  arrive() { this.door = "dedans"; }
+  /** Entré : l'onde couvre le passage, le rideau se retire avec elle. */
+  arrive() { this.door = "dedans"; this.veil = false; }
 }
 
 export const porte = new Porte();

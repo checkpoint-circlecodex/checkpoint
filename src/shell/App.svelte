@@ -14,7 +14,7 @@
 
   /* La coque est la seule à connaître tous les blocs : c'est elle qui dit
      ce que fait « inscrire », pour tous ceux qui l'offrent. */
-  gestes.inscrire = () => pile.open("panneau", "Inscrire une œuvre", Inscribe);
+  gestes.inscrire = () => pile.swap("panneau", "Inscrire une œuvre", Inscribe);
 
   let hash = $state(location.hash || "#/");
 
@@ -45,7 +45,7 @@
      chose, en vue — un geste qui n'existerait qu'au clavier serait aussi
      peu découvrable qu'un survol (invariants 19 et 32). */
   const onKey = (e: KeyboardEvent) => {
-    if (porte.door !== "dedans") return;   // l'entrée n'a pas de lanceur
+    if (porte.door !== "dedans" || porte.veil) return;   // ni l'entrée ni l'ouverture n'ont de lanceur
     if (e.key === "Escape" && lanceur.open && !pile.depth) { lanceur.chose(); return; }
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); lanceur.seek(); }
   };
@@ -68,21 +68,14 @@
   const tabs = $derived([HOME, ...REGISTRY.filter(v => !v.hold && (!v.only || v.only()))]);
 </script>
 
-{#if porte.door === "examen"}
-  <!-- On ne sait pas encore de quel côté de la porte on est : rien plutôt
-       qu'un écran qui sauterait. Sauf si ça échoue — alors on le dit. -->
-  <div class="wait">
-    {#if porte.error}
-      <p>GitHub ne répond pas : {porte.error}</p>
-      <button class="retry" onclick={() => porte.start(platform())}>Réessayer</button>
-    {/if}
-  </div>
-{:else if porte.door !== "dedans"}
-  <Release />
-  <Entry />
-{:else}
+<!-- L'application ne se monte qu'une fois la porte franchie — **dessous** le
+     rideau de l'ouverture, qui s'efface ensuite sur elle : on la voit se
+     former au travers, déjà prête. -->
+{#if porte.door === "dedans"}
 <div class="shell">
-<Release />
+<!-- Le bandeau attend que le rideau soit levé : rien ne doit percer
+     l'ouverture. -->
+{#if !porte.veil}<Release />{/if}
 <div class="app">
   <Rail {hash} />
 
@@ -93,7 +86,7 @@
     <span class="mark">Checkpoint</span>
     <!-- En étroit la barre n'existe pas : la recherche devient une feuille
          qui monte du bas, la forme étroite de la même surface. -->
-    <button class="mob-seek" onclick={() => pile.open("panneau", "Chercher", SeekSheet)} aria-label="Chercher">
+    <button class="mob-seek" onclick={() => pile.swap("panneau", "Chercher", SeekSheet)} aria-label="Chercher">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="6.4" /><path d="M19.6 19.6l-3-3" /></svg>
     </button>
     <!-- En étroit la barre basse reste à quatre entrées : la charge passe
@@ -141,6 +134,13 @@
 {/each}
 {/if}
 
+<!-- **Le rideau** : l'ouverture à chaque lancement, puis, pour qui n'est pas
+     encore entré, les quatre tuiles. -->
+{#if porte.veil}
+  {#if porte.door !== "examen" && porte.door !== "dedans"}<Release />{/if}
+  <Entry />
+{/if}
+
 <style>
   /* Une colonne : le bandeau de version, s'il y en a un, puis l'application. */
   .shell { display: flex; flex-direction: column; height: 100%; }
@@ -150,8 +150,7 @@
   .dim .focus { filter: blur(13px); transform: scale(1.015); pointer-events: none; }
   .mob-seek { display: none; }
   .wait { display: grid; place-content: center; justify-items: center; gap: 10px; height: 100%; color: var(--dim); font-size: 12.5px; }
-  .retry { min-height: 44px; padding: 0 16px; border: 1px solid var(--rule2); font-size: 10.5px; font-weight: 700;
-           letter-spacing: .17em; text-transform: uppercase; color: var(--ink); }
+
 
   .mob, .tabs { display: none; }
 
