@@ -54,13 +54,30 @@ export function merge(shards: Shard[], fondsFiles: Fonds[] = []): World {
   const alias: Record<string, string> = {};
   for (const sh of shards) for (const a of sh.aliases ?? []) alias[a.from] = a.to;
 
+  /* La description d'une œuvre est la **première contribution** — mais deux
+     choses s'y somment au lieu de s'y écraser, parce que chacun peut les
+     poser depuis son propre fragment : **les catégories s'additionnent**, et
+     **la jaquette la plus récente l'emporte** (`coverAt`). C'est encore la
+     même grammaire : déclaré chez soi, sommé à la lecture. */
   const catalog: Record<string, Work> = {};
-  for (const sh of shards) for (const [id, w] of Object.entries(sh.works)) catalog[id] ??= w;
+  const genres: Record<string, Set<string>> = {};
+  const covers: Record<string, { url: string; at: string }> = {};
+  const take = (id: string, w: Work) => {
+    catalog[id] ??= { ...w };
+    for (const g of w.genres ?? []) (genres[id] ??= new Set()).add(g);
+    if (w.cover !== undefined && w.coverAt && (!covers[id] || w.coverAt > covers[id].at))
+      covers[id] = { url: w.cover, at: w.coverAt };
+  };
+  for (const sh of shards) for (const [id, w] of Object.entries(sh.works)) take(id, w);
   /* Le fonds vient **après** les fragments : quand quelqu'un suit déjà une
      œuvre, c'est sa description qui fait foi, pas celle du fonds. */
   const fondsIds = new Set<string>();
   for (const f of fondsFiles)
-    for (const [id, w] of Object.entries(f.works ?? {})) { catalog[id] ??= w; fondsIds.add(id); }
+    for (const [id, w] of Object.entries(f.works ?? {})) { take(id, w); fondsIds.add(id); }
+  for (const id of Object.keys(catalog)) {
+    if (genres[id]) catalog[id].genres = [...genres[id]];
+    if (covers[id]) { if (covers[id].url) catalog[id].cover = covers[id].url; else delete catalog[id].cover; }
+  }
 
   const people: Record<string, Person> = {};
   const rows: Row[] = [];

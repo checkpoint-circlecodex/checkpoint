@@ -16,8 +16,8 @@ type Reply = { status: number; body: string; etag: string | null; remaining: num
     présenté comme une gratuité : un 304 décompte, c'est mesuré. */
 export let lastRemaining: number | null = null;
 
-async function gh(method: string, path: string, body?: unknown): Promise<Reply> {
-  const r = await invoke<Reply>("gh", { method, path, body: body ?? null, etag: null });
+async function gh(method: string, path: string, body?: unknown, etag?: string | null): Promise<Reply> {
+  const r = await invoke<Reply>("gh", { method, path, body: body ?? null, etag: etag ?? null });
   lastRemaining = r.remaining;
   if (r.status === 401) throw new AuthError();
   return r;
@@ -46,6 +46,12 @@ export function tauriPlatform(): Platform {
   let site: Promise<{ org: string; repo: string; public_repo: string }> | null = null;
   const where = () => (site ??= invoke("whereabouts"));
 
+  /* **La relecture conditionnelle.** On garde l'arbre et son ETag : tant que
+     rien n'a bougé, GitHub rend 304 — et un 304 authentifié **ne décompte
+     pas du quota** (invariant 27, mesuré et tenu par un essai). C'est ce qui
+     permet de relire toutes les trente secondes sans rien coûter. */
+  let tree: { etag: string; entries: TreeEntry[] } | null = null;
+
   const storage: Storage = {
     async me() {
       if (!(await invoke<boolean>("gh_has_token"))) return null;
@@ -61,16 +67,19 @@ export function tauriPlatform(): Platform {
       const { org, repo } = await where();
       /* `HEAD` plutôt qu'un nom de branche : on ne suppose pas « main », et
          ça survit à une branche par défaut renommée. */
-      const r = await gh("GET", `/repos/${org}/${repo}/git/trees/HEAD?recursive=1`);
+      const r = await gh("GET", `/repos/${org}/${repo}/git/trees/HEAD?recursive=1`, undefined, tree?.etag);
+      if (r.status === 304 && tree) return tree.entries;
       if (r.status !== 200) throw fail("lecture de l'arbre", r);
       const t = json(r);
       /* GitHub tronque au-delà de 100 000 entrées et le dit. À vingt
          fichiers ça n'arrivera pas — mais un jour où ça arriverait, mieux
          vaut une erreur franche qu'une bibliothèque silencieusement amputée. */
       if (t?.truncated) throw new Error("L'arbre du dépôt est tronqué : il faudrait paginer.");
-      return (t?.tree ?? [])
+      const entries = (t?.tree ?? [])
         .filter((e: { type: string }) => e.type === "blob")
         .map((e: { path: string; sha: string }): TreeEntry => ({ path: e.path, sha: e.sha }));
+      tree = r.etag ? { etag: r.etag, entries } : null;
+      return entries;
     },
 
     async readBlob(sha) {

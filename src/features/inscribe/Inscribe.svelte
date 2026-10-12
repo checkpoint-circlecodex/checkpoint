@@ -8,10 +8,9 @@
      l'écran le dit au lieu de faire semblant de chercher. */
   import { registre } from "#core/model/store.svelte.ts";
   import { KIND, KINDS, STATE_ORDER, STATUS } from "#core/model/lexicon.ts";
-  import { groupsWithLegacy } from "#core/model/genres.ts";
-  import { inscrire } from "#core/model/acts.ts";
+  import { identity, inscrire } from "#core/model/acts.ts";
   import { matchTitle, titleOf } from "#core/selectors/index.ts";
-  import { pile } from "#core/ui/index.ts";
+  import { GenrePicker, pile } from "#core/ui/index.ts";
   import type { MediaType, Status } from "#core/model/schema.ts";
 
   let { close }: { close: () => void } = $props();
@@ -50,7 +49,6 @@
     gn = n;
   };
 
-  const groups = $derived(groupsWithLegacy(kind, gn));
   const ready = $derived(title.trim().length > 1 && String(year).length === 4);
 
   function takeExisting(id: string) {
@@ -58,7 +56,7 @@
        venue du fonds ne doit pas devenir orpheline le jour où le fonds
        change. Pour une œuvre déjà suivie, rien ne bouge — `inscrire` ne
        remplace pas une description qu'on porte déjà. */
-    registre.act(inscrire(id, { status: "wishlist" }, w.catalog[id]));
+    registre.act(inscrire(id, { status: "wishlist" }, identity(w.catalog[id])));
     close();
   }
 
@@ -131,18 +129,7 @@
 
     <div class="f">
       <span class="k">Ses catégories</span>
-      <!-- **Un choix qu'on ne voit pas n'existe pas** : les familles
-           s'affichent en entier, jamais dans une boîte à défilement interne. -->
-      {#each groups as grp (grp.g)}
-        <div class="grp">
-          <span class="gl">{grp.g}</span>
-          <div class="tags">
-            {#each grp.l as g (g)}
-              <button class="tag" class:on={gn.has(g)} onclick={() => toggle(g)}>{g}</button>
-            {/each}
-          </div>
-        </div>
-      {/each}
+      <GenrePicker {kind} chosen={gn} {toggle} />
     </div>
 
     <div class="f">
@@ -190,19 +177,16 @@
   .f label { display: grid; gap: 6px; }
   .f .k { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
 
-  .picks, .tags { display: flex; gap: 4px; flex-wrap: wrap; }
-  .pick, .tag, .btn-main {
+  .picks { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pick, .btn-main {
     min-height: 44px; padding: 9px 12px; border: 1px solid var(--rule2);
     font-size: 11px; font-weight: 600; color: var(--dim);
   }
-  .tag { min-height: 34px; padding: 7px 10px; font-weight: 500; }
-  .pick:hover, .tag:hover, .btn-main:hover:not(:disabled) { color: var(--ink); border-color: var(--ink); }
-  .pick.on, .tag.on { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+  .pick:hover, .btn-main:hover:not(:disabled) { color: var(--ink); border-color: var(--ink); }
+  .pick.on { color: var(--paper); background: var(--ink); border-color: var(--ink); }
   .btn-main { border-color: var(--ink); color: var(--ink); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 10px; }
   .btn-main:disabled { opacity: .4; cursor: default; }
 
-  .grp { display: grid; gap: 5px; margin-top: 8px; }
-  .gl { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
   .go { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding-top: 4px; }
   .why { font-size: 11px; color: var(--dim); font-style: italic; }
 

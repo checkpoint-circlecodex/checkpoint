@@ -7,5 +7,8 @@ export { default as Panes } from "./Panes.svelte";
    le Répertoire dans un bloc, et la coque ne partage rien avec un bloc
    autrement que par le noyau. */
 export { default as Cover } from "./Cover.svelte";
+export { default as Traits } from "./Traits.svelte";
+export { default as Banner } from "./Banner.svelte";
+export { default as GenrePicker } from "./GenrePicker.svelte";
 export * from "./surfaces.svelte.ts";
 export { gestes } from "./gestes.ts";

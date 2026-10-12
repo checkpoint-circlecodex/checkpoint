@@ -12,11 +12,29 @@ import type { Mutation } from "./write.ts";
 
 const now = () => new Date().toISOString();
 
+/** La part d'une description qu'on recopie chez soi quand on ne la porte pas
+    encore : **l'identité seule, champ par champ** (invariant 34). Jamais la
+    fiche telle que le catalogue la montre — elle somme les catégories et les
+    jaquettes des autres, ce serait faire retomber un dérivé dans son fichier. */
+export const identity = (w: Work): Work => ({
+  mediaType: w.mediaType, title: w.title, year: w.year,
+  ...(w.titleFr ? { titleFr: w.titleFr } : {}), ...(w.manual ? { manual: true } : {}),
+});
+const carry = (s: Shard, id: string, base?: Work) => {
+  if (!s.works[id] && base) s.works[id] = identity(base);
+  return s.works[id] ?? null;
+};
+
 /** Poser ou changer sa position sur une œuvre. */
 export const inscrire = (mediaId: string, patch: Partial<Entry>, work?: Work): Mutation => ({
   label: "inscrit une œuvre",
   apply: s => {
-    if (work && !s.works[mediaId]) s.works[mediaId] = work;
+    /* Une copie, jamais une référence : un objet partagé entre deux
+       fragments — ou entre un fragment et le catalogue — se modifierait des
+       deux côtés à la fois. **Les appelants passent l'identité seule**
+       quand l'œuvre vient du catalogue (`identity`), la description entière
+       seulement quand ils la créent. */
+    if (work && !s.works[mediaId]) s.works[mediaId] = { ...work, ...(work.genres ? { genres: [...work.genres] } : {}) };
     const base: Entry = s.entries[mediaId] ?? { status: "wishlist", rating: null, at: now() };
     s.entries[mediaId] = { ...base, ...patch, at: now() };
   },
@@ -94,6 +112,14 @@ export const parler = (order: Shard["user"]["circle"], body: string, ref?: strin
   },
 });
 
+/** **Retirer son message.** Nul n'efface celui d'un autre (invariant 25) —
+    on n'a pas accès à son fichier — mais chacun peut retirer le sien. Les
+    réponses qui le citaient disent qu'il a été retiré. */
+export const retirerMessage = (postId: string): Mutation => ({
+  label: "retire un message",
+  apply: s => { s.loge = (s.loge ?? []).filter(m => m.id !== postId); },
+});
+
 /** Surligner : une marque personnelle. On ne retire que la sienne. */
 export const surligner = (postId: string): Mutation => ({
   label: "surligne un passage",
@@ -106,6 +132,14 @@ export const surligner = (postId: string): Mutation => ({
 export const ouvrirQuete = (q: NonNullable<Shard["quests"]>[number]): Mutation => ({
   label: "ouvre une quête",
   apply: s => { s.quests = [...(s.quests ?? []), q]; },
+});
+
+/** **Modifier une planche** — la sienne seulement : elle vit dans son
+    fragment. Même identifiant, même date de plantation ; son
+    accomplissement se recalcule de lui-même (invariant 28). */
+export const modifierQuete = (q: NonNullable<Shard["quests"]>[number]): Mutation => ({
+  label: "retouche une planche",
+  apply: s => { s.quests = (s.quests ?? []).map(x => (x.id === q.id ? { ...q, at: x.at } : x)); },
 });
 
 export const arracherQuete = (id: string): Mutation => ({
@@ -169,6 +203,67 @@ export const defaire = (from: string): Mutation => ({
 export const fonder = (user: User): Mutation => ({
   label: "entre dans le registre",
   apply: s => { s.user = { ...user }; s.seenAt = now(); },
+});
+
+/** **Avancer** : heures, épisodes ou pages. `null` efface la progression. */
+export const avancer = (mediaId: string, unit: "hours" | "episodes" | "pages", value: number | null): Mutation => ({
+  label: "avance dans une œuvre",
+  apply: s => {
+    const e = s.entries[mediaId];
+    if (!e) return;
+    if (value === null || !Number.isFinite(value) || value < 0) delete e.progress;
+    else e.progress = { unit, value };
+    e.at = now();
+  },
+});
+
+/** **Avec** : une œuvre faite à plusieurs. Les chroniques restent
+    individuelles ; c'est la fréquentation qui se partage. */
+export const accompagner = (mediaId: string, ids: string[]): Mutation => ({
+  label: "dit avec qui",
+  apply: s => {
+    const e = s.entries[mediaId];
+    if (!e) return;
+    if (ids.length) e.with = [...new Set(ids)]; else delete e.with;
+  },
+});
+
+/** **Refait** : un passage de plus — rejoué, revu, relu. */
+export const refaire = (mediaId: string): Mutation => ({
+  label: "refait une œuvre",
+  apply: s => {
+    const e = s.entries[mediaId];
+    if (!e) return;
+    e.plays = (e.plays ?? 1) + 1;
+    e.at = now();
+  },
+});
+
+/** **Ses catégories** : elles partent dans sa copie de l'œuvre, et s'ajoutent
+    à celles des autres à la lecture — on ne retire pas la catégorie d'un
+    autre. */
+export const categoriser = (mediaId: string, genres: string[], base?: Work): Mutation => ({
+  label: "range une œuvre",
+  apply: s => { const w = carry(s, mediaId, base); if (w) w.genres = [...new Set(genres)]; },
+});
+
+/** **Poser une jaquette** — son adresse, jamais ses octets. Datée : la plus
+    récente l'emporte pour tout le monde. Une adresse vide la retire. */
+export const poserJaquette = (mediaId: string, url: string, base?: Work): Mutation => ({
+  label: url ? "pose une jaquette" : "retire une jaquette",
+  apply: s => { const w = carry(s, mediaId, base); if (w) { w.cover = url.trim(); w.coverAt = now(); } },
+});
+
+/** **Retirer de son registre.** Sa ligne, sa copie de l'œuvre, sa
+    distinction. L'œuvre reste au corpus tant que quelqu'un d'autre la suit :
+    on ne retire que ce qui est à soi. */
+export const retirerInscription = (mediaId: string): Mutation => ({
+  label: "retire une œuvre de son registre",
+  apply: s => {
+    delete s.entries[mediaId];
+    delete s.works[mediaId];
+    if (s.favorites) s.favorites = s.favorites.filter(x => x !== mediaId);
+  },
 });
 
 export const marquerVisite = (): Mutation => ({

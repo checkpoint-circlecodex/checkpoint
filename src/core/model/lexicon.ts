@@ -21,6 +21,11 @@ export const VERB: Record<MediaType, Record<Status, string>> = {
 export const KIND:  Record<MediaType, string> = { game:"Jeu",  film:"Film",  series:"Série",  book:"Livre"  };
 export const KINDS: Record<MediaType, string> = { game:"Jeux", film:"Films", series:"Séries", book:"Livres" };
 export const UNIT: Record<string, string> = { hours:" h", episodes:" ép.", pages:" p.", chapters:" ch." };
+/** Ce qu'on compte pour avancer dans une œuvre. Un film ne se compte pas :
+    on l'a vu, ou pas. */
+export const UNIT_OF: Record<MediaType, "hours" | "episodes" | "pages" | null> =
+  { game: "hours", film: null, series: "episodes", book: "pages" };
+export const UNIT_LBL: Record<string, string> = { hours: "heures", episodes: "épisodes", pages: "pages", chapters: "chapitres" };
 
 /** L'ordre d'affichage d'une liste d'inscriptions : le présent d'abord. */
 export const ORDER: Status[] = ["playing", "completed", "mastered", "paused", "dropped", "wishlist"];

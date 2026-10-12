@@ -15,7 +15,7 @@ export type Problem = { path: string; message: string };
 /** On rend aussi les fragments eux-mêmes : le scribe a besoin du sien pour
     y appliquer des intentions, et le refabriquer depuis le monde fusionné
     serait reconstruire une source depuis sa dérivée. */
-export type Opening = { world: World; shards: Shard[]; fonds: Fonds[]; problems: Problem[]; fromCache: number; fetched: number };
+export type Opening = { world: World; shards: Shard[]; fonds: Fonds[]; problems: Problem[]; fromCache: number; fetched: number; sig: string };
 
 const isFragment = (path: string) => /^data\/[^/]+\.json$/.test(path);
 const isFonds = (path: string) => /^fonds\/[^/]+\.json$/.test(path);
@@ -38,10 +38,23 @@ export function parseFonds(text: string): { fonds: Fonds; skipped: string[] } {
   return { fonds: { schemaVersion: v, by: String(raw.by ?? ""), updatedAt: String(raw.updatedAt ?? ""), works }, skipped };
 }
 
-export async function openWorld(storage: Storage, cache: Cache): Promise<Opening> {
+/** L'empreinte d'un arbre : ses chemins et leurs SHA. Deux arbres de même
+    empreinte ont exactement le même contenu — rien à relire. */
+export const treeSig = (entries: { path: string; sha: string }[]) =>
+  entries.filter(e => isFragment(e.path) || isFonds(e.path))
+         .map(e => `${e.path}@${e.sha}`).sort().join("\n");
+
+/** Ouvrir, ou **relire** : avec `since`, l'empreinte de la lecture
+    précédente, on rend `null` si rien n'a bougé — et on n'a alors rien lu
+    d'autre que l'arbre. */
+export async function openWorld(storage: Storage, cache: Cache): Promise<Opening>;
+export async function openWorld(storage: Storage, cache: Cache, since: string): Promise<Opening | null>;
+export async function openWorld(storage: Storage, cache: Cache, since?: string): Promise<Opening | null> {
   /* Un seul appel donne tous les chemins et tous les SHA : c'est lui qui rend
      l'ouverture rapide, et c'est le seul appel d'une ouverture sans changement. */
   const all = await storage.list();
+  const sig = treeSig(all);
+  if (since !== undefined && sig === since) return null;
   const tree = all.filter(e => isFragment(e.path) || isFonds(e.path));
 
   const problems: Problem[] = [];
@@ -80,5 +93,5 @@ export async function openWorld(storage: Storage, cache: Cache): Promise<Opening
     }
   }
 
-  return { world: merge(shards, fonds), shards, fonds, problems, fromCache, fetched };
+  return { world: merge(shards, fonds), shards, fonds, problems, fromCache, fetched, sig };
 }

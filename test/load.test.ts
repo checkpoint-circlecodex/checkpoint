@@ -66,3 +66,23 @@ test("un fragment qui change est le seul à être relu", async () => {
   assert.equal(third.fetched, 1, "un seul blob téléchargé");
   assert.equal(third.fromCache, 1);
 });
+
+test("une relecture sans changement ne lit rien d'autre que l'arbre", async () => {
+  const P = fakePlatform({ "data/alice.json": frag("alice"), "fonds/alice.json": JSON.stringify({ schemaVersion: 1, by: "alice", works: {} }) });
+  const first = await openWorld(P.storage, P.cache);
+  let reads = 0;
+  const readBlob = P.storage.readBlob;
+  P.storage.readBlob = async sha => { reads++; return readBlob(sha); };
+  const cacheGet = P.cache.get;
+  P.cache.get = async k => { reads++; return cacheGet(k); };
+
+  assert.equal(await openWorld(P.storage, P.cache, first.sig), null, "rien n'a bougé : rien à refusionner");
+  assert.equal(reads, 0, "ni blob ni cache : l'arbre suffit");
+
+  const bob = frag("bob");
+  await P.storage.write("data/bob.json", bob, null, "arrive");
+  const again = await openWorld(P.storage, P.cache, first.sig);
+  assert.ok(again, "un fragment nouveau se voit à la relecture");
+  assert.ok(again.world.people.bob);
+  assert.notEqual(again.sig, first.sig);
+});

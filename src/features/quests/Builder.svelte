@@ -12,16 +12,22 @@
   import { registre } from "#core/model/store.svelte.ts";
   import { KIND, roman } from "#core/model/lexicon.ts";
   import { RUNGS, matchTitle, rung, titleOf } from "#core/selectors/index.ts";
-  import { ouvrirQuete } from "#core/model/acts.ts";
+  import { untrack } from "svelte";
+  import { modifierQuete, ouvrirQuete } from "#core/model/acts.ts";
+  import type { Quest } from "#core/model/schema.ts";
 
-  let { close }: { close: () => void } = $props();
+  /* Avec `quest`, on **retouche** une planche existante au lieu d'en planter
+     une : mêmes champs, prérempli, et l'identifiant ne change pas. */
+  let { close, quest = null }: { close: () => void; quest?: Quest | null } = $props();
+  const editing = untrack(() => quest);
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
 
-  let title = $state("");
-  let line = $state("");
-  let trials = $state<{ rung: 1 | 2 | 3; media: string[]; q: string }[]>([{ rung: 3, media: [], q: "" }]);
+  let title = $state(editing?.title ?? "");
+  let line = $state(editing?.line ?? "");
+  let trials = $state<{ rung: 1 | 2 | 3; media: string[]; q: string }[]>(
+    editing ? editing.trials.map(t => ({ rung: t.rung, media: [...t.media], q: "" })) : [{ rung: 3, media: [], q: "" }]);
 
   const hits = (i: number) => {
     const t = trials[i];
@@ -44,6 +50,14 @@
 
   function plant() {
     if (!ready) return;
+    if (editing) {
+      registre.act(modifierQuete({
+        id: editing.id, at: editing.at, title: title.trim(), line: line.trim(),
+        trials: trials.map(t => ({ rung: t.rung, media: t.media })),
+      }));
+      close();
+      return;
+    }
     const id = `q-${(registre.me ?? "x")}-${Date.now().toString(36)}`;
     registre.act(ouvrirQuete({
       id, at: new Date().toISOString(), title: title.trim(), line: line.trim(),
@@ -109,7 +123,7 @@
   <button class="lien more" onclick={more}>+ Une autre épreuve</button>
 
   <div class="go">
-    <button class="btn-main" onclick={plant} disabled={!ready}>Planter la quête</button>
+    <button class="btn-main" onclick={plant} disabled={!ready}>{editing ? "Consigner la retouche" : "Planter la quête"}</button>
     {#if !ready}
       <span class="why">
         {!title.trim() ? "Il lui faut un nom." : "Chaque épreuve demande au moins une œuvre."}

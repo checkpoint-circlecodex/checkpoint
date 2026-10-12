@@ -15,7 +15,7 @@
   import { Face } from "#core/ui/index.ts";
   import { dayKey, dayName, hhmm, roman } from "#core/model/lexicon.ts";
   import { groupsWith, litIn, logeOf, markers, marksOf, matchTitle, postById, speaksIn, titleOf } from "#core/selectors/index.ts";
-  import { parler, surligner } from "#core/model/acts.ts";
+  import { parler, retirerMessage, surligner } from "#core/model/acts.ts";
   import type { CircleId } from "#core/model/schema.ts";
 
   let { cid }: { cid: CircleId } = $props();
@@ -32,6 +32,8 @@
   /* --- Prendre la parole --- */
   let draft = $state("");
   let replyTo = $state<string | null>(null);
+  /** Le message qu'on s'apprête à retirer : **un geste qui se confirme**. */
+  let wiping = $state<string | null>(null);
   let ref = $state<string | null>(null);
   let refQ = $state("");
   const mineMarks = $derived(marksOf(w, me));
@@ -98,7 +100,7 @@
       <!-- Un signe qu'on n'a jamais lu n'est pas découvrable : les glyphes
            sont nommés une fois, en tête du fil. -->
       <span class="legend">
-        <b>✦</b> surligner — garder un passage pour le retrouver · <b>↩</b> répondre
+        <b>✦</b> surligner — garder un passage pour le retrouver · <b>↩</b> répondre · <b>×</b> retirer le sien
       </span>
       <button class="fold" onclick={() => (folded = !folded)} disabled={!lit.length}>
         {folded ? "Dérouler le fil" : `Replier sur ${roman(lit.length)} passages`}
@@ -142,9 +144,18 @@
                   <button class="quote" onclick={() => jump(r.id)}>
                     en réponse à {w.people[r.personId]?.firstName} — « {r.body.slice(0, 60)}… »
                   </button>
+                {:else}
+                  <span class="quote gone">en réponse à un message retiré</span>
                 {/if}
               {/if}
               <p>{m.body}</p>
+              {#if wiping === m.id}
+                <span class="wipe">
+                  Retirer ce message ? Il disparaîtra pour tout le monde à la prochaine synchronisation.
+                  <button onclick={() => { registre.act(retirerMessage(m.id)); wiping = null; }}>Oui, le retirer</button>
+                  <button onclick={() => (wiping = null)}>Le garder</button>
+                </span>
+              {/if}
               {#if m.ref && w.catalog[m.ref]}
                 <a class="ref" href="#/fiche/{m.ref}">❧ {titleOf(w, m.ref, pref)}</a>
               {/if}
@@ -160,6 +171,10 @@
                 ✦{#if mk.length > 1}<i>{mk.length}</i>{/if}
               </button>
               <button class="rp" onclick={() => (replyTo = m.id)} aria-label="Répondre">↩</button>
+              <!-- **Nul n'efface le message d'un autre** — mais chacun le sien. -->
+              {#if m.personId === registre.me}
+                <button class="rp" onclick={() => (wiping = m.id)} aria-label="Retirer mon message">×</button>
+              {/if}
             </span>
           </div>
         {/each}
@@ -270,6 +285,11 @@
   .mk.on { color: var(--dim); }
   .mk.mine { color: var(--ink); }
   .mk:hover, .rp:hover { color: var(--ink); }
+  .quote.gone { font-style: italic; color: var(--faint); cursor: default; }
+  .wipe { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px;
+          font-size: 11.5px; color: var(--dim); font-style: italic; }
+  .wipe button { min-height: 44px; font-style: normal; font-size: 11px; font-weight: 600; color: var(--ink);
+                 text-decoration: underline; text-underline-offset: 3px; }
 
   .say { display: grid; gap: 8px; margin-top: 12px; }
   .say textarea, .cite {

@@ -3,7 +3,7 @@
      réduite** — touchée par lui, sans être la chambre : la quatrième des
      quatre exceptions au noir et blanc. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { Face, Panes, pile } from "#core/ui/index.ts";
+  import { Banner, Face, Panes, Traits, pile } from "#core/ui/index.ts";
   import Lignee from "./Lignee.svelte";
   import KinDeclare from "./KinDeclare.svelte";
   import Fragment from "./Fragment.svelte";
@@ -11,9 +11,9 @@
   import { platform } from "#platform/index.ts";
   import { hhmm } from "#core/model/lexicon.ts";
   import { weave } from "#core/ui/weave.ts";
-  import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
+  import { KIND, KINDS, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
   import {
-    KIN, favsOf, figures, household, kinAsked, progressOf, questsDoneBy, rowsBy, soulLine, titleOf,
+    KIN, affinity, favsOf, figures, peaks, pct, signed, singularity, temper, household, kinAsked, progressOf, questsDoneBy, rowsBy, soulLine, titleOf,
   } from "#core/selectors/index.ts";
 
   let { id }: { id: string } = $props();
@@ -53,8 +53,27 @@
   }
 
   let tab = $state("portrait");
+  /* **Le portrait dit qui on lit**, pas seulement ce qu'il a fait : son
+     tempérament face au groupe, ce qu'il tient pour le meilleur, l'œuvre où
+     il est seul contre tous. */
+  const t = $derived(p ? temper(w, rows) : null);
+  const traits = $derived(t && f ? [
+    t.sev === null ? null : { k: "Sévérité", v: signed(t.sev),
+      d: Math.abs(t.sev) < .25 ? "juge comme l'ensemble"
+        : t.sev < 0 ? `juge ${dec(Math.abs(t.sev))} point${Math.abs(t.sev) >= 2 ? "s" : ""} plus durement que l'ensemble`
+                    : `juge ${dec(t.sev)} point${t.sev >= 2 ? "s" : ""} plus généreusement que l'ensemble` },
+    { k: "Achèvement", v: pct(t.rate), d: `contre ${pct(t.grate)} pour l'ensemble` },
+    t.pref ? { k: "Prédilection", v: KINDS[t.pref as keyof typeof KINDS], d: `${pct(t.prefShare)} de ce qui est inscrit` } : null,
+    { k: "Renoncements", v: roman(f.gone), d: f.gone ? "œuvres laissées en chemin" : "ne lâche jamais rien" },
+  ] : []);
+  const tops = $derived(p ? peaks(w, id).slice(0, 6) : []);
+  const alone = $derived(p ? singularity(w, id) : null);
+  /* **Toi et X** — sur la feuille de quelqu'un d'autre seulement. */
+  const aff = $derived(p && !self && registre.me ? affinity(w, registre.me, id) : null);
+
   const tabs = $derived([
     { k: "portrait", l: "Portrait" },
+    ...(self || !p ? [] : [{ k: "toi", l: `Toi et ${p.firstName}`, n: aff?.common.length ?? 0 }]),
     { k: "favorites", l: "Favoris", n: favs.length },
     { k: "quests", l: "Quêtes", n: done.length },
     { k: "registry", l: "Le registre", n: rows.length },
@@ -113,6 +132,25 @@
         {#snippet children(k)}
           {#if k === "portrait"}
             <section class="pane-b">
+              <Traits {traits} />
+              {#if tops.length}
+                <p class="aside">{self ? "Ce que tu tiens" : `Ce que ${p.firstName} tient`} pour le meilleur :</p>
+                <div class="peaks">
+                  {#each tops as r (r.mediaId)}
+                    <a class="pk" href="#/fiche/{r.mediaId}">
+                      <span class="pk-n">{r.rating}</span>
+                      <span class="pk-t">{titleOf(w, r.mediaId, pref)}</span>
+                      <span class="kind">{KIND[w.catalog[r.mediaId].mediaType]}</span>
+                    </a>
+                  {/each}
+                </div>
+              {/if}
+              {#if alone}
+                <Banner href="#/fiche/{alone.id}" k="Seul contre le reste" t={titleOf(w, alone.id, pref)}
+                        d="{alone.d > 0 ? 'Défendue' : 'Déclassée'} à {alone.mine} sur dix, quand les autres la jugent {dec(alone.theirs)}. Un écart de {dec(Math.abs(alone.d))}." />
+              {/if}
+            </section>
+            <section class="pane-b">
               <h2>En cours</h2>
               <!-- **« En cours » est un tableau de bord, pas une lecture** :
                    titre et commandes sur la même ligne, dernier checkpoint sur
@@ -128,6 +166,42 @@
               {:else}
                 <p class="none">Rien en cours.</p>
               {/each}
+            </section>
+          {:else if k === "toi" && aff}
+            <!-- **Toi et X : la comparaison entre amis**, le cœur du projet.
+                 Ce qu'on a fréquenté tous les deux, l'écart, le désaccord —
+                 et ce que l'autre a adoré sans que tu y aies touché. -->
+            <section class="pane-b">
+              {#if !aff.common.length}
+                <p class="none">Vous n'avez encore rien fréquenté en commun.</p>
+              {:else}
+                <Traits traits={[
+                  { k: "En commun", v: roman(aff.common.length), d: "œuvres fréquentées par vous deux" },
+                  { k: "Accord", v: aff.accord === null ? "—" : dec(aff.accord),
+                    d: aff.accord === null ? "aucun jugement comparable"
+                      : aff.accord < 1 ? "point d'écart moyen — vous vous ressemblez"
+                      : aff.accord < 2 ? "points d'écart moyen" : "points d'écart moyen — vous divergez" },
+                  aff.clash ? { k: "Divergence", v: dec(aff.clash.d),
+                    d: `sur ${titleOf(w, aff.clash.id, pref)} — toi ${aff.clash.me}, ${p.firstName} ${aff.clash.them}` } : null,
+                ]} />
+                {#if aff.clash && aff.clash.d >= 3}
+                  <Banner href="#/fiche/{aff.clash.id}" k="Votre plus grand désaccord" t={titleOf(w, aff.clash.id, pref)}
+                          d="Tu l'as jugée {aff.clash.me} sur dix. {p.firstName} {aff.clash.them}. Il y a là une conversation." />
+                {/if}
+              {/if}
+              {#if aff.urge.length}
+                <p class="aside">{p.firstName} a adoré, tu n'en as rien fait :</p>
+                <div class="reg">
+                  {#each aff.urge.slice(0, 6) as r (r.mediaId)}
+                    {@const m = w.catalog[r.mediaId]}
+                    <a class="r" href="#/fiche/{r.mediaId}">
+                      <span class="t">{titleOf(w, r.mediaId, pref)}</span>
+                      <span class="kind">{KIND[m.mediaType]} · {m.year}</span>
+                      <span class="sc">{r.rating}</span>
+                    </a>
+                  {/each}
+                </div>
+              {/if}
             </section>
           {:else if k === "favorites"}
             <section class="pane-b">
@@ -254,6 +328,14 @@
   h2 { font-family: var(--fs); font-weight: 400; font-size: 20px; margin-bottom: 10px; }
   .legend { font-size: 11.5px; color: var(--dim); margin: -4px 0 14px; max-width: 60ch; }
   .none { font-size: 12.5px; color: var(--dim); font-style: italic; }
+  .aside { font-size: 11px; color: var(--dim); margin: 20px 0 6px; font-style: italic; font-family: var(--fr); }
+  .peaks { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); border-top: 1px solid var(--rule); }
+  .pk { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: baseline; padding: 10px 4px;
+        min-height: 44px; border-bottom: 1px solid var(--rule); }
+  .pk:hover { background: var(--raise); }
+  .pk-n { font-family: var(--fs); font-size: 23px; line-height: 1; }
+  .pk-t { font-family: var(--fs); font-size: 16px; line-height: 1.15; }
+  .pk .kind { grid-column: 2; }
 
   .live { display: grid; gap: 1px; padding: 10px 0; min-height: 44px; border-bottom: 1px solid var(--rule); }
   .live:hover { background: var(--raise); }

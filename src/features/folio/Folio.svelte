@@ -4,10 +4,15 @@
      chiffres** : au-delà du titre la page est un instrument, et un instrument
      ne se colore pas. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { Face } from "#core/ui/index.ts";
-  import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
+  import { Face, pile } from "#core/ui/index.ts";
+  import { KIND, STATUS, UNIT, UNIT_LBL, UNIT_OF, dec, roman, ago } from "#core/model/lexicon.ts";
+  import Plate from "./Plate.svelte";
+  import Ranger from "./Ranger.svelte";
   import { avgOf, favsOf, otherTitle, progressOf, rowsFor, titleOf } from "#core/selectors/index.ts";
-  import { changerStatut, chroniquer, distinguer, inscrire, juger, poserCheckpoint } from "#core/model/acts.ts";
+  import {
+    accompagner, avancer, changerStatut, chroniquer, distinguer, identity, inscrire, juger,
+    poserCheckpoint, poserJaquette, refaire, retirerInscription,
+  } from "#core/model/acts.ts";
   import { STATE_ORDER } from "#core/model/lexicon.ts";
   import { FAV_MAX } from "#core/model/schema.ts";
 
@@ -35,10 +40,55 @@
   /* **On ne distingue pas ce qu'on convoite sans l'avoir fréquenté.** */
   const canFav = $derived(!!mine && mine.status !== "wishlist");
   let thought = $state("");
-  const inscribe = () => registre.act(inscrire(id, { status: "wishlist" }, m));
+  /* L'identité seule part dans le fragment — la fiche du catalogue somme les
+     catégories et les jaquettes des autres (invariant 34). */
+  const inscribe = () => registre.act(inscrire(id, { status: "wishlist" }, identity(m)));
   const setStatus = (st: string) => registre.act(changerStatut(id, st as never));
   const rate = (n: number) => registre.act(juger(id, mine?.rating === n ? null : n));
   const checkpoint = () => { if (!thought.trim()) return; registre.act(poserCheckpoint(id, thought)); thought = ""; };
+
+  /* --- **Modifier son inscription** : le formulaire du prototype, rendu en
+     lignes de commande visibles (invariant 19). Chaque geste part tout de
+     suite ; le scribe regroupe les écritures (invariant 27). --- */
+  const unit = $derived(m ? UNIT_OF[m.mediaType] : null);
+  let prog = $state("");
+  $effect(() => { prog = mine?.progress ? String(mine.progress.value) : ""; });
+  const saveProg = () => {
+    if (!unit) return;
+    const v = prog.trim() === "" ? null : Number(prog.replace(",", "."));
+    registre.act(avancer(id, unit, v));
+  };
+  const done = $derived(!!mine && (mine.status === "completed" || mine.status === "mastered"));
+  const others = $derived(Object.values(w.people).filter(p => p.id !== registre.me)
+    .sort((a, b) => a.firstName.localeCompare(b.firstName, "fr")));
+  const toggleWith = (pid: string) => {
+    const cur = new Set(mine?.with ?? []);
+    cur.has(pid) ? cur.delete(pid) : cur.add(pid);
+    registre.act(accompagner(id, [...cur]));
+  };
+  const openRanger = () => pile.open("panneau", "Ranger cette œuvre", Ranger,
+    { id, work: m, mine: registre.myWork(id)?.genres ?? [] });
+
+  /* **La jaquette : son adresse, jamais ses octets.** Git n'efface jamais un
+     binaire remplacé, et chacun le retéléchargerait à chaque clone. */
+  let coverUrl = $state("");
+  let coverBad = $state(false);
+  /* Sa propre copie ne se lit pas par une rune : on dépend du monde, qui est
+     refusionné à chaque geste — c'est lui qui dit quand relire. */
+  const myCover = $derived.by(() => { void w; return registre.myWork(id)?.cover || ""; });
+  const okUrl = (u: string) => /^https:\/\/[^\s]+$/i.test(u.trim());
+  const saveCover = () => {
+    if (!okUrl(coverUrl)) { coverBad = true; return; }
+    registre.act(poserJaquette(id, coverUrl, m));
+    coverUrl = ""; coverBad = false;
+  };
+  const openPlate = () => m?.cover && pile.open("panneau", titleOf(w, id, pref), Plate,
+    { src: m.cover, title: titleOf(w, id, pref), sub: `${KIND[m.mediaType]} · ${m.year}` });
+
+  /* Retirer : **un geste qui se confirme**, et qui ne retire que ce qui est
+     à soi — l'œuvre reste au corpus tant qu'un autre la suit. */
+  let leaving = $state(false);
+  const leave = () => { registre.act(retirerInscription(id)); leaving = false; };
 
   /* La chronique : **un jugement rédigé**, une seule par personne et par
      œuvre. On la réécrit, on n'en empile pas. Le formulaire ne s'ouvre que si
@@ -67,6 +117,12 @@
     {/if}
 
     <header>
+      <!-- **La planche** : en noir et blanc, elle reprend sa couleur au
+           survol, et s'agrandit au clic. Sans jaquette, le cadre porte le
+           titre — et rien ne s'agrandit. -->
+      <button class="plate" onclick={openPlate} disabled={!m.cover} aria-label={m.cover ? "Agrandir la jaquette" : "Pas de jaquette"}>
+        {#if m.cover}<img src={m.cover} alt="" />{:else}<span>{titleOf(w, id, pref)}</span>{/if}
+      </button>
       <button class="back" onclick={() => history.back()}>← Retour</button>
       <span class="eyebrow">{KIND[m.mediaType]} · {m.year}</span>
       <h1>{titleOf(w, id, pref)}</h1>
@@ -222,6 +278,76 @@
           {/if}
         </div>
 
+        {#if unit}
+          <div class="m-l">
+            <span class="k">Progression <em>en {UNIT_LBL[unit]}</em></span>
+            <form onsubmit={e => { e.preventDefault(); saveProg(); }}>
+              <input class="num" bind:value={prog} inputmode="decimal" placeholder="0" aria-label="Progression en {UNIT_LBL[unit]}" />
+              <button class="btn">Consigner</button>
+            </form>
+          </div>
+        {/if}
+
+        {#if done}
+          <div class="m-l">
+            <span class="k">Refait</span>
+            <div class="row">
+              <button class="btn" onclick={() => registre.act(refaire(id))}>＋ Refait</button>
+              <span class="why inline">{(mine.plays ?? 1) > 1 ? `${roman(mine.plays as number)} fois en tout` : "Une seule fois, pour l'instant."}</span>
+            </div>
+          </div>
+        {/if}
+
+        {#if others.length}
+          <div class="m-l">
+            <span class="k">Avec <em>si l'œuvre a été faite à plusieurs — les chroniques restent à chacun</em></span>
+            <div class="withs">
+              {#each others as p (p.id)}
+                <button class="wth" class:on={mine.with?.includes(p.id)} aria-pressed={!!mine.with?.includes(p.id)}
+                        onclick={() => toggleWith(p.id)}>
+                  <Face who={p} size="s" /><b>{p.firstName}</b>
+                </button>
+              {/each}
+            </div>
+          </div>
+        {/if}
+
+        <div class="m-l">
+          <span class="k">Catégories</span>
+          <div class="row">
+            <span class="why inline">{m.genres?.length ? m.genres.join(" · ") : "Aucune encore."}</span>
+            <button class="btn" onclick={openRanger}>La ranger</button>
+          </div>
+        </div>
+
+        <div class="m-l">
+          <span class="k">Jaquette <em>— l'adresse d'une image, jamais le fichier</em></span>
+          <form onsubmit={e => { e.preventDefault(); saveCover(); }}>
+            <input bind:value={coverUrl} oninput={() => (coverBad = false)} inputmode="url"
+                   placeholder="https://… (clic droit sur une image › Copier l'adresse de l'image)" aria-label="Adresse de la jaquette" />
+            <button class="btn" disabled={!coverUrl.trim()}>Poser</button>
+          </form>
+          {#if coverBad}<span class="why">Il faut une adresse qui commence par https://</span>{/if}
+          {#if myCover}
+            <div class="row">
+              <span class="why inline">Tu en as posé une ; la plus récente l'emporte, pour tout le monde.</span>
+              <button class="btn" onclick={() => registre.act(poserJaquette(id, "", m))}>Retirer la mienne</button>
+            </div>
+          {/if}
+        </div>
+
+        <div class="m-l leave">
+          {#if !leaving}
+            <button class="btn" onclick={() => (leaving = true)}>Retirer de mon registre</button>
+          {:else}
+            <span class="why">Ta ligne, ta chronique, tes checkpoints et ta distinction disparaissent. L'œuvre reste au corpus si quelqu'un d'autre la suit.</span>
+            <div class="row">
+              <button class="btn btn-ink" onclick={leave}>Oui, retirer</button>
+              <button class="btn" onclick={() => (leaving = false)}>La garder</button>
+            </div>
+          {/if}
+        </div>
+
         {#if mine.reflections?.length}
           <ol class="cps">
             {#each mine.reflections.slice().reverse() as c}
@@ -248,6 +374,26 @@
     pointer-events: none;
   }
   header, .sect { position: relative; z-index: 1; }
+  /* La planche, à droite du titre. */
+  .plate { float: right; width: 132px; aspect-ratio: 2 / 3; margin: 0 0 12px 22px; display: grid; place-items: center;
+           overflow: hidden; border: 1px solid var(--rule2); background: var(--raise); }
+  .plate img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.04);
+               transition: filter 460ms var(--e); }
+  .plate:hover img, .plate:focus-visible img { filter: none; }
+  .plate:not(:disabled) { cursor: zoom-in; }
+  .plate span { padding: 10px; text-align: center; font-family: var(--fs); font-size: 16px; line-height: 1.15; color: var(--ink2); }
+  .m-l .k em { font-style: normal; text-transform: none; letter-spacing: .02em; font-weight: 400; }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .why.inline { display: inline; margin: 0; }
+  .m-l input.num { flex: 0 0 120px; min-width: 0; }
+  .withs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .wth { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 6px 12px 6px 8px;
+         border: 1px solid var(--rule2); font-size: 11.5px; color: var(--dim); }
+  .wth b { font-weight: 600; }
+  .wth:hover { color: var(--ink); border-color: var(--ink); }
+  .wth.on { color: var(--ink); border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  .leave { margin-top: 22px !important; padding-top: 14px; border-top: 1px solid var(--rule); }
+  @media (max-width: 560px) { .plate { width: 96px; margin-left: 14px; } }
 
   .back { font-size: 11px; color: var(--dim); min-height: 44px; display: inline-flex; align-items: center; }
   .back:hover { color: var(--ink); }

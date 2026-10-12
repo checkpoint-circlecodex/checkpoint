@@ -275,6 +275,18 @@ pas contourner.
    Décidé avec Nathan le 12 octobre ; les livres prennent l'identifiant
    gratuit d'Open Library, à sa demande.
 
+37. *(Données)* **La fiche d'une œuvre se somme à la lecture, comme le
+   reste.** Chacun porte sa copie de l'œuvre dans son fragment ; l'identité
+   (titres, année, nature) est la première contribution, mais **les
+   catégories s'additionnent** et **la jaquette la plus récente l'emporte**
+   (`coverAt`), pour tout le monde. Une jaquette est **une adresse, jamais
+   des octets** ; une adresse vide la retire. Il en découle une règle de
+   copie, apprise le 12 octobre par un essai qui a échoué : **on ne recopie
+   jamais la fiche du catalogue dans son fragment**, seulement son identité
+   (`identity`), et jamais par référence — la fiche sommée porte les
+   catégories des autres, et un objet partagé se modifiait des deux côtés à
+   la fois (invariant 34).
+
 *(La numérotation est en ajout seul, comme les champs du schéma : des documents
 citent ces numéros, on n'en renumérote aucun.)*
 

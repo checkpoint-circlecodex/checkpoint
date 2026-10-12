@@ -39,7 +39,12 @@ export type Work = {
   title: string;
   titleFr?: string;
   year: number;
+  /** L'adresse d'une jaquette — **jamais ses octets** : Git n'efface jamais
+      un binaire remplacé. Vide : retirée. */
   cover?: string;
+  /** Quand cette jaquette a été posée. Chacun porte la sienne dans son
+      fragment ; **la plus récente l'emporte**, pour tout le monde. */
+  coverAt?: string;
   genres?: string[];
   platforms?: string[];
   /** Inscrite à la main faute d'avoir été trouvée — candidate à un doublon. */

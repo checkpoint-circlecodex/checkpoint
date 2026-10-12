@@ -3,7 +3,7 @@
      registre dense sans aucune image, et une grille de jaquettes en noir et
      blanc. Quand une œuvre n'a pas de jaquette, le cadre porte son titre. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { gestes } from "#core/ui/index.ts";
+  import { Cover, gestes } from "#core/ui/index.ts";
   import { KIND, KINDS, STATUS, dec, roman } from "#core/model/lexicon.ts";
   import { avgOf, rowsFor, titleOf, tracked, unfollowed } from "#core/selectors/index.ts";
   import type { MediaType } from "#core/model/schema.ts";
@@ -17,6 +17,33 @@
   const me = $derived(registre.me);
 
   const mine = (id: string) => w.rows.find(r => r.personId === me && r.mediaId === id) ?? null;
+
+  /* **Deux vues et quatre ordres**, repris du prototype. La préférence est
+     une commodité de cette machine : rangée dans le navigateur, et rien ne
+     casse si elle n'y est pas. */
+  type Sort = "alpha" | "recent" | "verdict" | "wit";
+  type View = "reg" | "jq";
+  const SORTS: { k: Sort; l: string }[] = [
+    { k: "alpha", l: "Alphabétique" }, { k: "recent", l: "Récence" },
+    { k: "verdict", l: "Jugement" }, { k: "wit", l: "Témoins" },
+  ];
+  const read = <T extends string>(key: string, ok: readonly T[], d: T): T => {
+    try { const v = localStorage.getItem(key) as T | null; return v && ok.includes(v) ? v : d; } catch { return d; }
+  };
+  const keep = (key: string, v: string) => { try { localStorage.setItem(key, v); } catch { /* commodité seulement */ } };
+  let sortKey = $state<Sort>(read("checkpoint.oeuvres.ordre", ["alpha", "recent", "verdict", "wit"], "alpha"));
+  let view = $state<View>(read("checkpoint.oeuvres.vue", ["reg", "jq"], "reg"));
+  const setSort = (k: Sort) => { sortKey = k; keep("checkpoint.oeuvres.ordre", k); };
+  const setView = (k: View) => { view = k; keep("checkpoint.oeuvres.vue", k); };
+
+  const lastAt = (id: string) => rowsFor(w, id).reduce((m, r) => (r.at > m ? r.at : m), "");
+  const sorted = $derived.by(() => {
+    const l = ids.slice();
+    if (sortKey === "recent") l.sort((a, b) => lastAt(b).localeCompare(lastAt(a)));
+    else if (sortKey === "verdict") l.sort((a, b) => (avgOf(rowsFor(w, b)) ?? -1) - (avgOf(rowsFor(w, a)) ?? -1));
+    else if (sortKey === "wit") l.sort((a, b) => rowsFor(w, b).length - rowsFor(w, a).length);
+    return l;
+  });
 </script>
 
 <div class="wrap">
@@ -32,8 +59,30 @@
     <div class="acts"><button class="add" onclick={() => gestes.inscrire?.()}>＋ Inscrire une œuvre</button></div>
   {/if}
 
+  {#if ids.length}
+    <div class="filt">
+      <span class="fk">Ordonner par</span>
+      {#each SORTS as o (o.k)}<button class:on={sortKey === o.k} aria-pressed={sortKey === o.k} onclick={() => setSort(o.k)}>{o.l}</button>{/each}
+      <span class="fk vsep">Vue</span>
+      <button class:on={view === "reg"} aria-pressed={view === "reg"} onclick={() => setView("reg")}>Registre</button>
+      <button class:on={view === "jq"} aria-pressed={view === "jq"} onclick={() => setView("jq")}>Jaquettes</button>
+    </div>
+  {/if}
+
+  {#if view === "jq"}
+    <!-- **Catalogue typographique, jaquettes en exception** : en noir et
+         blanc, la couleur revient au survol ; faute de jaquette, le cadre
+         porte le titre. -->
+    <div class="jqs">
+      {#each sorted as id (id)}
+        {@const m = w.catalog[id]}
+        <Cover href="#/fiche/{id}" title={titleOf(w, id, pref)} sub="{KIND[m.mediaType]} · {m.year}" cover={m.cover ?? null} />
+      {/each}
+    </div>
+    <p class="legend">Faute de jaquette, le cadre porte le titre. La couleur revient au survol.</p>
+  {:else}
   <div class="reg">
-    {#each ids as id (id)}
+    {#each sorted as id (id)}
       {@const m = w.catalog[id]}
       {@const rs = rowsFor(w, id)}
       {@const avg = avgOf(rs)}
@@ -49,6 +98,7 @@
       </a>
     {/each}
   </div>
+  {/if}
 
   <!-- **Au fonds** : choisissables, pas encore suivies. Hors du compte du
        corpus, et sous leur propre titre — le corpus reste ce que les gens
@@ -85,6 +135,14 @@
 
 
   .reg { border-top: 1px solid var(--rule); }
+  .filt { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 4px; margin: 0 0 12px; }
+  .fk { font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); margin-right: 6px; }
+  .fk.vsep { margin-left: 14px; }
+  .filt button { min-height: 44px; padding: 0 10px; font-size: 11px; font-weight: 600; color: var(--dim); }
+  .filt button:hover { color: var(--ink); }
+  .filt button.on { color: var(--ink); box-shadow: inset 0 -1.5px 0 var(--ink); }
+  .jqs { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 18px 14px; }
+  .legend { font-size: 11.5px; color: var(--dim); margin: 14px 0 0; }
   /* Le fonds, séparé du corpus par l'espace et par un titre : on ne doit
      jamais croire qu'une œuvre du fonds est suivie. */
   .fonds { margin-top: 46px; }

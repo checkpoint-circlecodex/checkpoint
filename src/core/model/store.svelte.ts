@@ -11,9 +11,13 @@ import { blankShard } from "./write.ts";
 import { shardPath, type Fonds, type Shard } from "./schema.ts";
 import type { Cache, Knock, Org, Storage } from "#platform/index.ts";
 import { consigner, fonder, marquerVisite } from "./acts.ts";
-import type { User } from "./schema.ts";
+import type { User, Work } from "./schema.ts";
 
 type Phase = "vide" | "ouverture" | "prêt" | "fermé";
+
+/** Le rythme de la relecture. Trente secondes : le plancher de latence que
+    la spec assume — jamais instantané, et c'est dit. */
+export const REFRESH_MS = 30_000;
 
 class Registre {
   world = $state<World>(emptyWorld());
@@ -133,6 +137,13 @@ class Registre {
   }
 
   get shardCount() { return this.#shards.length; }
+
+  /** **Sa propre** copie d'une œuvre, telle qu'elle est dans son fragment —
+      pas la fiche du catalogue, qui somme celles des autres. Pour savoir ce
+      qu'on a soi-même posé (ses catégories, sa jaquette). */
+  myWork(id: string): Work | null {
+    return this.#shards.find(x => x.user.id === this.me)?.works[id] ?? null;
+  }
   get storageRemaining() { return this.#storage?.remaining() ?? null; }
 
   #shards: Shard[] = [];
@@ -177,7 +188,8 @@ class Registre {
     if (first) this.phase = "ouverture";
     const t0 = performance.now();
     this.me = await storage.me();
-    const { world, problems, fetched, fromCache, shards, fonds } = await openWorld(storage, cache);
+    const { world, problems, fetched, fromCache, shards, fonds, sig } = await openWorld(storage, cache);
+    this.#sig = sig;
     this.world = world;
     this.#shards = shards;
     this.#fonds = fonds;
@@ -216,6 +228,60 @@ class Registre {
     this.phase = "prêt";
     if (first && this.moi) this.act(marquerVisite());
     void this.refreshGreffe();
+    this.#watch();
+  }
+
+  /* --- **La relecture périodique.** Sans elle, l'application n'est pas
+     collective au quotidien : le message d'un ami, sa nouvelle inscription,
+     une demande au Greffe n'apparaissaient qu'au lancement suivant. --- */
+  #sig = "";
+  #refreshing: Promise<void> | null = null;
+  #watching = false;
+
+  /** **Relire en silence.** Seul l'arbre est demandé, et conditionnellement
+      — un `304`, gratuit, quand rien n'a bougé (invariant 27). Ce qui a
+      changé se lit, le reste sort du cache. **Son propre fragment se garde
+      tel qu'il est en mémoire** : il porte peut-être des gestes pas encore
+      partis, et l'on est seul à l'écrire (invariant 1). Non réentrant, et
+      jamais pendant une ouverture (invariant 35). */
+  refresh(): Promise<void> {
+    return (this.#refreshing ??= this.#refresh().finally(() => { this.#refreshing = null; }));
+  }
+
+  async #refresh() {
+    if (this.phase !== "prêt" || this.#opening || !this.#storage || !this.#cache) return;
+    try {
+      const got = await openWorld(this.#storage, this.#cache, this.#sig);
+      if (!got) return;
+      const mine = this.#shards.find(x => x.user.id === this.me);
+      const shards = got.shards.map(x => (mine && x.user.id === mine.user.id ? mine : x));
+      if (mine && !shards.includes(mine)) shards.push(mine);
+      this.#sig = got.sig;
+      this.#shards = shards;
+      this.#fonds = got.fonds;
+      this.problems = got.problems;
+      this.#remerge();
+    } catch { /* hors ligne, ou GitHub en panne : on réessaiera au tour suivant */ }
+  }
+
+  /** Toutes les trente secondes tant que la fenêtre est visible, et au retour
+      dans la fenêtre. Le Greffe, lui, se relit toutes les deux minutes : ses
+      demandes ne se lisent pas conditionnellement. */
+  #watch() {
+    if (this.#watching || typeof window === "undefined") return;
+    this.#watching = true;
+    let tick = 0, focused = 0;
+    setInterval(() => {
+      if (document.hidden) return;
+      void this.refresh();
+      if (++tick % 4 === 0) void this.refreshGreffe();
+    }, REFRESH_MS);
+    addEventListener("focus", () => {
+      if (Date.now() - focused < 10_000) return;
+      focused = Date.now();
+      void this.refresh();
+      void this.refreshGreffe();
+    });
   }
 
   /** Celui qu'on est, tel que le monde le connaît. `null` tant qu'on n'est pas

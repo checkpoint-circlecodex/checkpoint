@@ -2,7 +2,7 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 12 octobre 2026 (v0.1.2 — les premiers retours de Nathan)
+**Dernière mise à jour :** 12 octobre 2026 (v0.1.3 — l'audit, comblé)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
@@ -96,39 +96,39 @@ répétées.
 
 **1. La synchronisation — sans elle, l'application n'est pas collective au
 quotidien.**
-- [ ] **Aucune relecture automatique.** Le dépôt n'est lu qu'au lancement et
+- [x] **Aucune relecture automatique.** Le dépôt n'est lu qu'au lancement et
       sur « Relire maintenant » (pied de feuille, établi). Le message d'un
       ami dans la Loge, sa nouvelle inscription, sa demande d'adhésion au
       Greffe : rien n'apparaît tant qu'on ne relance pas. La spec prévoit une
       relecture **toutes les vingt à trente secondes**, conditionnelle.
-- [ ] **Les relectures ne sont pas conditionnelles** : `gh` passe toujours
+- [x] **Les relectures ne sont pas conditionnelles** : `gh` passe toujours
       `etag: null`. Or le `304` est gratuit (invariant 27, mesuré) — c'est
       lui qui rend la relecture périodique sans coût. À brancher avec
       elle.
 
 **2. La comparaison — la valeur ajoutée entière de l'application.**
-- [ ] **« Toi et X »**, l'onglet de la feuille de quelqu'un d'autre : œuvres
+- [x] **« Toi et X »**, l'onglet de la feuille de quelqu'un d'autre : œuvres
       en commun, accord moyen, plus grande divergence (« Il y a là une
       conversation »), et « X a adoré, tu n'en as rien fait ». **Absent.**
       C'est la comparaison entre amis, le cœur du projet (`paneKin`,
       `kinship` dans le prototype).
-- [ ] Sur le portrait : **« Ce que X tient pour le meilleur »** (ses six
+- [x] Sur le portrait : **« Ce que X tient pour le meilleur »** (ses six
       plus hautes notes) et **« Seul contre le reste »** (l'œuvre où il
       s'écarte le plus du groupe, `singularity`). Absents.
-- [ ] Dans la chambre d'un Ordre : la grille de traits du prototype
+- [x] Dans la chambre d'un Ordre : la grille de traits du prototype
       (sévérité, achèvement, prédilection, renoncements…) et l'œuvre que
       l'Ordre défend contre les autres (`partisan`). **En partie** : une
       ligne de tempérament existe, pas la grille.
 
 **3. La fiche « Modifier ton inscription » du prototype — un seul
 formulaire, six gestes manquants.**
-- [ ] **Progression** (heures, épisodes, pages) : affichée si elle existe,
+- [x] **Progression** (heures, épisodes, pages) : affichée si elle existe,
       **impossible à saisir**.
-- [ ] **« Avec »** (`with[]`, une œuvre faite à plusieurs) : absent.
-- [ ] **« ＋ Refait »** (compteur `plays`) : affiché, impossible à incrémenter.
-- [ ] **Catégories après coup** : on ne les choisit qu'à la création manuelle.
-- [ ] **Retirer du registre** (déjà consigné plus bas).
-- [ ] **Jaquette** : déposer, recadrer, et l'agrandir sur la fiche (la
+- [x] **« Avec »** (`with[]`, une œuvre faite à plusieurs) : absent.
+- [x] **« ＋ Refait »** (compteur `plays`) : affiché, impossible à incrémenter.
+- [x] **Catégories après coup** : on ne les choisit qu'à la création manuelle.
+- [x] **Retirer du registre** (déjà consigné plus bas).
+- [x] **Jaquette** — *par adresse, décidé le 12 octobre ; l'import de fichier reste ouvert* : déposer, recadrer, et l'agrandir sur la fiche (la
       « planche »). ⚠️ *Le prototype rangeait l'image encodée dans le
       fragment* — ce que la règle « jamais d'octets d'image dans le dépôt de
       données » interdit. Décision à prendre avant d'écrire : **coller
@@ -136,13 +136,13 @@ formulaire, six gestes manquants.**
       (il faut alors un endroit où le ranger).
 
 **4. La page des Œuvres.**
-- [ ] **La vue en grille de jaquettes**, en noir et blanc qui reprend sa
+- [x] **La vue en grille de jaquettes**, en noir et blanc qui reprend sa
       couleur au survol — le Répertoire a deux vues (CLAUDE.md), l'application
       n'a que le registre dense.
-- [ ] **Ordonner par** (titre, jugement, témoins…) : absent.
+- [x] **Ordonner par** (titre, jugement, témoins…) : absent.
 
 **5. Le reste.**
-- [ ] **Loge** : retirer son propre message (`dropPost`) — absent. Nul
+- [x] **Loge** : retirer son propre message (`dropPost`) — absent. Nul
       n'efface celui d'un autre, mais chacun peut retirer le sien.
 - [ ] **Recherche IGDB et TMDb** : jamais branchée. Clés gratuites (compte
       développeur Twitch pour IGDB, compte TMDb). Elle apportera aussi les
@@ -155,7 +155,7 @@ formulaire, six gestes manquants.**
 Ce ne sont pas des défauts de code mais des **gestes manquants**. Plusieurs
 demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
 
-- [ ] **Modifier une fiche d'œuvre** (titre, année, genres, jaquette) :
+- [ ] **Modifier une fiche d'œuvre** (titre, année ; ✅ *genres et jaquette faits le 12 octobre*) :
       impossible. Le prototype permettait au moins les genres et la jaquette
       sur la fiche. ⚠️ *À décider avant d'écrire* : la description d'une
       œuvre vit **dans le fragment de chaque personne qui la porte**, et la
@@ -163,18 +163,18 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
       changerait donc rien à l'écran si quelqu'un l'a portée avant. Qui fait
       foi — le premier, le plus récent, ou une correction déclarée par un
       greffier et appliquée à la lecture, comme les alias (invariant 31) ?
-- [ ] **Supprimer une œuvre** : impossible. Dans ce modèle, c'est *retirer
+- [x] **Supprimer une œuvre** : impossible. Dans ce modèle, c'est *retirer
       son inscription* de son propre fragment ; l'œuvre reste au corpus tant
       que quelqu'un d'autre la suit (le corpus est dérivé). Le mot à
       l'écran devra le dire — « retirer de mon registre », pas « supprimer ».
-- [ ] **Ajouter une jaquette**, ni à la création ni après. Le prototype
+- [x] **Ajouter une jaquette**, ni à la création ni après. Le prototype
       avait le dépôt et le recadrage (`openCrop`). ⚠️ *À décider* : coller une
       adresse d'image est simple (on stocke l'URL) ; **importer un fichier**
       bute sur la règle « jamais d'octets d'image dans le dépôt de données »
       et sur la question ouverte des jaquettes importées (plafond, dépôt
       séparé). Avec IGDB et TMDb branchés, la plupart des jaquettes
       arriveront seules.
-- [ ] **Modifier une quête** : impossible. **La retirer existe** —
+- [x] **Modifier une quête** : impossible. **La retirer existe** —
       « Arracher cette planche », en bas de la planche, pour son auteur
       seulement — mais Nathan ne l'a pas trouvé : à rendre visible, ou à
       placer là où l'on cherche (au même endroit que « modifier »).
@@ -449,6 +449,36 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — v0.1.3, l'audit comblé
+
+- **La relecture périodique** : toutes les trente secondes et au retour
+  dans la fenêtre, conditionnelle — l'arbre et son ETag, un `304` gratuit
+  quand rien n'a bougé, et une empreinte de l'arbre qui évite même de
+  rouvrir le cache. **Son propre fragment se garde en mémoire** pendant une
+  relecture : il porte peut-être des gestes pas encore partis. Un essai
+  tient « sans changement, rien d'autre que l'arbre ».
+- **La comparaison, portée telle quelle du prototype** : « Toi et X » (en
+  commun, accord, divergence, « il y a là une conversation », « X a adoré,
+  tu n'en as rien fait »), les sommets et « Seul contre le reste » sur le
+  portrait, la grille de traits et « Ce que cet Ordre défend » dans la
+  chambre. Quatre essais — dont deux que j'avais **mal écrits** : le calcul
+  avait raison, mon attente non. Un essai qui échoue n'accuse pas toujours
+  le code.
+- **La fiche « ta position »** gagne progression, « Avec », « ＋ Refait »,
+  catégories (un sélecteur promu dans le noyau, deux usagers), jaquette par
+  adresse avec sa planche agrandie, et « Retirer de mon registre » confirmé.
+- **Un vrai défaut trouvé par un essai** : inscrire une œuvre du catalogue
+  copiait **la fiche sommée, par référence**, dans son fragment — les
+  catégories des autres y seraient tombées, et un objet partagé se
+  modifiait des deux côtés. On ne recopie plus que l'identité, et par
+  copie (invariant 37).
+- **Les Œuvres** : quatre ordres et la vue en jaquettes, la préférence
+  gardée sur la machine. **La Loge** : retirer son propre message ; une
+  réponse qui le citait dit « message retiré ». **Les quêtes** :
+  « Retoucher cette planche », à côté d'« Arracher ».
+- Balayage des cibles : **aucune sous 44 px, aucun débordement**, à 1 280 et
+  à 375 px, sur les dix routes et tous leurs volets.
 
 ### 12 octobre 2026 — v0.1.2, les premiers retours de Nathan
 

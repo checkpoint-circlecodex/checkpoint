@@ -3,13 +3,13 @@
      la chambre, où la couleur baigne la page en halo flou — la deuxième des
      quatre exceptions au noir et blanc. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { CIRCLES, STATUS, circle, dec, roman } from "#core/model/lexicon.ts";
-  import { Face } from "#core/ui/index.ts";
+  import { CIRCLES, KINDS, STATUS, circle, dec, roman } from "#core/model/lexicon.ts";
+  import { Banner, Face, Traits } from "#core/ui/index.ts";
   import { burst } from "#core/ui/burst.ts";
   import { weave } from "#core/ui/weave.ts";
   import { Panes } from "#core/ui/index.ts";
   import Loge from "./Loge.svelte";
-  import { avgOf, logeOf, magnum, membersOf, questsInCircle, register, speaksIn, titleOf } from "#core/selectors/index.ts";
+  import { avgOf, logeOf, magnum, membersOf, partisan, pct, questsInCircle, register, signed, speaksIn, temper, titleOf } from "#core/selectors/index.ts";
   import { inCircle } from "#core/model/world.ts";
   import type { CircleId } from "#core/model/schema.ts";
 
@@ -20,6 +20,21 @@
   const c = $derived(cid ? circle(cid) : null);
   const members = $derived(cid ? membersOf(w, cid) : []);
   const rows = $derived(cid ? w.rows.filter(inCircle(w, cid)) : []);
+  /* **Le caractère d'un Ordre**, face aux autres : ce qui le distingue, pas
+     ce qu'il a en commun avec tout le monde. */
+  const tp = $derived(cid ? temper(w, rows) : null);
+  const ctraits = $derived(tp ? [
+    tp.sev === null ? null : { k: "Sévérité", v: signed(tp.sev),
+      d: Math.abs(tp.sev) < .25 ? "juge comme l'ensemble"
+        : tp.sev < 0 ? "juge plus durement que les autres Ordres" : "juge plus généreusement que les autres Ordres" },
+    { k: "Achèvement", v: pct(tp.rate), d: `contre ${pct(tp.grate)} pour l'ensemble — ${tp.rate >= tp.grate ? "cet Ordre va au bout" : "cet Ordre se lasse"}` },
+    tp.pref ? { k: "Prédilection", v: KINDS[tp.pref as keyof typeof KINDS], d: `${pct(tp.prefShare)} de ce qui est inscrit` } : null,
+    { k: "Renoncements", v: roman(rows.filter(r => r.status === "dropped").length),
+      d: rows.some(r => r.status === "dropped") ? "œuvres laissées en chemin" : "ne lâche jamais rien" },
+    { k: "Jugement moyen", v: (a => a === null ? "—" : dec(a))(avgOf(rows)), d: `sur ${roman(rows.filter(r => typeof r.rating === "number").length)} jugements` },
+    { k: "Heures", v: roman(rows.reduce((h, r) => h + (r.progress?.unit === "hours" ? r.progress.value : 0), 0)), d: "consacrées, jeux seulement" },
+  ] : []);
+  const par = $derived(cid ? partisan(w, cid) : null);
   const annals = $derived(cid ? register(w, inCircle(w, cid)).slice(0, 12) : []);
   const opus = $derived(cid ? magnum(w, cid, pref) : []);
   const cquests = $derived(cid ? questsInCircle(w, cid) : []);
@@ -87,6 +102,13 @@
         {#snippet children(k)}
           {#if k === "chamber"}
             <section class="pane-b">
+              <Traits traits={ctraits} />
+              {#if par}
+                <Banner href="#/fiche/{par.id}" k="Ce que cet Ordre défend" t={titleOf(w, par.id, registre.titlePref)}
+                        d="{dec(par.mine)} ici, contre {dec(par.theirs)} ailleurs. Un écart de {dec(par.d)}." />
+              {/if}
+            </section>
+            <section class="pane-b">
               <h2>Les membres</h2>
               <div class="troop">
                 {#each members as p (p.id)}
@@ -97,10 +119,6 @@
                   </a>
                 {/each}
               </div>
-              <p class="temper">
-                Jugement moyen de l'Ordre : <b>{(a => a === null ? "—" : dec(a))(avgOf(rows))}</b>
-                sur {roman(rows.length)} inscriptions.
-              </p>
             </section>
 
           {:else if k === "annals"}
@@ -235,7 +253,6 @@
   .hold { display: flex; gap: 3px; }
   .st { font-size: 11px; font-weight: 600; color: var(--ink2); }
   .sc { font-family: var(--fs); font-size: 17px; text-align: right; font-variant-numeric: tabular-nums; }
-  .temper { margin-top: 26px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 12px; color: var(--dim); }
 
   @media (max-width: 860px) {
     .wrap { padding: 22px 18px 80px; }

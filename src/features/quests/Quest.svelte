@@ -1,6 +1,8 @@
 <script lang="ts">
   import { registre } from "#core/model/store.svelte.ts";
-  import { Face } from "#core/ui/index.ts";
+  import { Face, pile } from "#core/ui/index.ts";
+  import Builder from "./Builder.svelte";
+  import type { Quest } from "#core/model/schema.ts";
   import { KIND, STATUS, dateShort, roman } from "#core/model/lexicon.ts";
   import { questById, questHolders, questScore, reached, rung, titleOf } from "#core/selectors/index.ts";
   import { arracherQuete } from "#core/model/acts.ts";
@@ -17,6 +19,12 @@
   const pref = $derived(registre.titlePref);
   const me = $derived(registre.me ?? "");
   const q = $derived(questById(w, id));
+  /* La planche telle qu'elle est rangée, **champ par champ** : la vue porte
+     aussi son auteur, qui n'a rien à faire dans le fichier (invariant 34). */
+  const questOf = (x: Quest): Quest => ({
+    id: x.id, at: x.at, title: x.title, line: x.line,
+    trials: x.trials.map(t => ({ rung: t.rung, media: [...t.media] })),
+  });
   const by = $derived(q ? w.people[q.personId] : null);
   const score = $derived(q ? questScore(w, q, me) : null);
   const holders = $derived(q ? questHolders(w, q) : []);
@@ -82,6 +90,9 @@
     {#if q.personId === registre.me}
       <section class="sect tear">
         {#if !sure}
+          <!-- Retoucher et arracher, côte à côte : on cherche l'un là où est
+               l'autre. -->
+          <button class="btn" onclick={() => pile.open("panneau", "Retoucher la planche", Builder, { quest: questOf(q) })}>Retoucher cette planche</button>
           <button class="btn" onclick={() => (sure = true)}>Arracher cette planche</button>
         {:else}
           <!-- Un geste qui retire quelque chose à tout le monde se confirme. -->
