@@ -7,7 +7,7 @@
    Et chacun ne touche **que le fragment de celui qui agit**. Il n'y a pas
    d'acte qui écrive ailleurs, et il ne peut pas y en avoir. */
 
-import { FAV_MAX, type Act, type Entry, type Shard, type Status, type User, type Work } from "./schema.ts";
+import { FAV_MAX, type Act, type Entry, type Frame, type Shard, type Status, type User, type Work } from "./schema.ts";
 import type { Mutation } from "./write.ts";
 
 const now = () => new Date().toISOString();
@@ -175,7 +175,7 @@ export const consigner = (kind: Act["kind"], what: string, note?: string): Mutat
 /** **Corriger une fiche** — un geste de greffier. La correction part dans
     son propre fragment, et une ligne au journal dit ce qui a changé : rien
     n'est en coulisse, tout le monde lit le même dépôt. */
-export const corriger = (id: string, fields: { title?: string; titleFr?: string; year?: number }, note: string): Mutation => ({
+export const corriger = (id: string, fields: { title?: string; titleFr?: string; year?: number; genres?: string[]; cover?: string }, note: string): Mutation => ({
   label: "corrige une fiche",
   apply: s => {
     const at = now();
@@ -256,14 +256,20 @@ export const refaire = (mediaId: string): Mutation => ({
     autre. */
 export const categoriser = (mediaId: string, genres: string[], base?: Work): Mutation => ({
   label: "range une œuvre",
-  apply: s => { const w = carry(s, mediaId, base); if (w) w.genres = [...new Set(genres)]; },
+  apply: s => { const w = carry(s, mediaId, base); if (w) { w.genres = [...new Set(genres)]; w.genresAt = now(); } },
 });
 
 /** **Poser une jaquette** — son adresse, jamais ses octets. Datée : la plus
     récente l'emporte pour tout le monde. Une adresse vide la retire. */
-export const poserJaquette = (mediaId: string, url: string, base?: Work): Mutation => ({
+export const poserJaquette = (mediaId: string, url: string, base?: Work, frame?: Frame | null): Mutation => ({
   label: url ? "pose une jaquette" : "retire une jaquette",
-  apply: s => { const w = carry(s, mediaId, base); if (w) { w.cover = url.trim(); w.coverAt = now(); } },
+  apply: s => {
+    const w = carry(s, mediaId, base);
+    if (!w) return;
+    w.cover = url.trim();
+    w.coverAt = now();
+    if (url.trim() && frame) w.coverFrame = { x: frame.x, y: frame.y, w: frame.w }; else delete w.coverFrame;
+  },
 });
 
 /** **Retirer de son registre.** Sa ligne, sa copie de l'œuvre, sa

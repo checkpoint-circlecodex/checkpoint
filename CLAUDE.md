@@ -292,6 +292,16 @@ pas contourner.
    une ligne au journal. Même grammaire que l'alias (invariant 31) — le
    fichier de qui a mal saisi n'est jamais touché. La porte « Corriger la
    fiche » n'existe que pour qui tient la charge (invariant 32).
+   ⚠️ *Précisé le 13 octobre* : **un greffier peut réassigner les
+   catégories** — sa correction remet à zéro tout ce qui précède, et seules
+   s'y ajoutent les catégories posées après (`genresAt`) ; c'est la seule
+   façon de retirer une catégorie fausse. **La jaquette et les catégories se
+   posent depuis le haut de la fiche, par tout le monde, inscrit ou non** —
+   au bas de « Ta position » elles étaient absentes pour qui ne suivait pas
+   l'œuvre. Et puisqu'on ne garde pas l'image, **on ne la recadre pas : on
+   dit quelle part en montrer** (`coverFrame`, `{x, y, w}` en fractions de
+   l'image), rendu partout par le même style (`core/ui/frame.ts`) — exact,
+   en CSS seul, sans connaître la taille de l'image.
 
 *(La numérotation est en ajout seul, comme les champs du schéma : des documents
 citent ces numéros, on n'en renumérote aucun.)*

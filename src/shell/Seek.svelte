@@ -37,7 +37,7 @@
     <div class="jqs">
       {#each works as id (id)}
         {@const m = w.catalog[id]}
-        <Cover href="#/fiche/{id}" title={titleOf(w, id, pref)} sub="{KIND[m.mediaType]} · {m.year}" cover={m.cover ?? null} {onpick} />
+        <Cover href="#/fiche/{id}" title={titleOf(w, id, pref)} sub="{KIND[m.mediaType]} · {m.year}" cover={m.cover ?? null} frame={m.coverFrame ?? null} {onpick} />
       {/each}
     </div>
   {:else if !people.length}

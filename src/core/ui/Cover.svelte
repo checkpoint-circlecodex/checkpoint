@@ -4,14 +4,17 @@
      jaquette, le cadre porte son titre** : un rectangle vide ne dirait rien,
      une image inventée mentirait. */
 
-  let { href, title, sub = "", cover = null, onpick = () => {} }:
-    { href: string; title: string; sub?: string; cover?: string | null; onpick?: () => void } = $props();
+  import type { Frame } from "../model/schema.ts";
+  import { frameStyle } from "./frame.ts";
+
+  let { href, title, sub = "", cover = null, frame = null, onpick = () => {} }:
+    { href: string; title: string; sub?: string; cover?: string | null; frame?: Frame | null; onpick?: () => void } = $props();
 </script>
 
 <a class="cv" {href} onclick={onpick}>
   <span class="frame">
     {#if cover}
-      <img src={cover} alt="" loading="lazy" />
+      <img src={cover} alt="" loading="lazy" style={frameStyle(frame)} />
     {:else}
       <span class="tt">{title}</span>
     {/if}
@@ -22,7 +25,7 @@
 <style>
   .cv { display: grid; gap: 7px; min-width: 0; }
   .frame {
-    display: grid; place-items: center; aspect-ratio: 2 / 3; overflow: hidden;
+    position: relative; display: grid; place-items: center; aspect-ratio: 2 / 3; overflow: hidden;
     border: 1px solid var(--rule2); background: var(--raise);
   }
   img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05);

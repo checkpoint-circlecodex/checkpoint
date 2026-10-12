@@ -5,10 +5,12 @@
      ne se colore pas. */
   import { registre } from "#core/model/store.svelte.ts";
   import { Face, pile } from "#core/ui/index.ts";
+  import { frameStyle } from "#core/ui/frame.ts";
   import { KIND, STATUS, UNIT, UNIT_LBL, UNIT_OF, dec, roman, ago } from "#core/model/lexicon.ts";
   import Plate from "./Plate.svelte";
   import Ranger from "./Ranger.svelte";
   import Corriger from "./Corriger.svelte";
+  import Jaquette from "./Jaquette.svelte";
   import { avgOf, favsOf, otherTitle, progressOf, rowsFor, titleOf } from "#core/selectors/index.ts";
   import {
     accompagner, avancer, changerStatut, chroniquer, distinguer, identity, inscrire, juger,
@@ -70,21 +72,13 @@
   const openRanger = () => pile.open("panneau", "Ranger cette œuvre", Ranger,
     { id, work: m, mine: registre.myWork(id)?.genres ?? [] });
 
-  /* **La jaquette : son adresse, jamais ses octets.** Git n'efface jamais un
-     binaire remplacé, et chacun le retéléchargerait à chaque clone. */
-  let coverUrl = $state("");
-  let coverBad = $state(false);
-  /* Sa propre copie ne se lit pas par une rune : on dépend du monde, qui est
-     refusionné à chaque geste — c'est lui qui dit quand relire. */
-  const myCover = $derived.by(() => { void w; return registre.myWork(id)?.cover || ""; });
-  const okUrl = (u: string) => /^https:\/\/[^\s]+$/i.test(u.trim());
-  const saveCover = () => {
-    if (!okUrl(coverUrl)) { coverBad = true; return; }
-    registre.act(poserJaquette(id, coverUrl, m));
-    coverUrl = ""; coverBad = false;
-  };
+  /* **La jaquette se pose depuis son cadre**, en haut de la fiche — ouvert à
+     tous, inscrit ou non : c'est une contribution à la fiche, pas un fait
+     sur soi. Elle était au bas de « Ta position », donc absente pour qui ne
+     suivait pas l'œuvre : Nathan ne la trouvait pas (13 octobre). */
+  const openJaquette = () => pile.open("panneau", "Poser une jaquette", Jaquette, { id, work: m });
   const openPlate = () => m?.cover && pile.open("panneau", titleOf(w, id, pref), Plate,
-    { src: m.cover, title: titleOf(w, id, pref), sub: `${KIND[m.mediaType]} · ${m.year}` });
+    { src: m.cover, frame: m.coverFrame ?? null, title: titleOf(w, id, pref), sub: `${KIND[m.mediaType]} · ${m.year}` });
 
   /* Retirer : **un geste qui se confirme**, et qui ne retire que ce qui est
      à soi — l'œuvre reste au corpus tant qu'un autre la suit. */
@@ -121,14 +115,19 @@
       <!-- **La planche** : en noir et blanc, elle reprend sa couleur au
            survol, et s'agrandit au clic. Sans jaquette, le cadre porte le
            titre — et rien ne s'agrandit. -->
-      <button class="plate" onclick={openPlate} disabled={!m.cover} aria-label={m.cover ? "Agrandir la jaquette" : "Pas de jaquette"}>
-        {#if m.cover}<img src={m.cover} alt="" />{:else}<span>{titleOf(w, id, pref)}</span>{/if}
-      </button>
+      <div class="plate-col">
+        <button class="plate" onclick={m.cover ? openPlate : openJaquette} aria-label={m.cover ? "Agrandir la jaquette" : "Poser une jaquette"}>
+          {#if m.cover}<img src={m.cover} alt="" style={frameStyle(m.coverFrame)} />{:else}<span>{titleOf(w, id, pref)}</span><i>＋ Poser une jaquette</i>{/if}
+        </button>
+        {#if m.cover}<button class="plate-lk" onclick={openJaquette}>Changer la jaquette</button>{/if}
+      </div>
       <button class="back" onclick={() => history.back()}>← Retour</button>
       <span class="eyebrow">{KIND[m.mediaType]} · {m.year}</span>
       <h1>{titleOf(w, id, pref)}</h1>
       {#if otherTitle(w, id, pref)}<span class="alt">{otherTitle(w, id, pref)}</span>{/if}
-      <span class="gn">{m.genres?.length ? m.genres.join(" · ") : "sans genre consigné"}</span>
+      <!-- Ranger : ouvert à tous, à côté de ce qu'on range. -->
+      <span class="gn">{m.genres?.length ? m.genres.join(" · ") : "sans genre consigné"}
+        <button class="gn-lk" onclick={openRanger}>Ranger</button></span>
 
       <div class="meas">
         <div><span class="k">Jugement moyen</span><span class="v">{avg === null ? "—" : dec(avg)}</span></div>
@@ -320,30 +319,6 @@
           </div>
         {/if}
 
-        <div class="m-l">
-          <span class="k">Catégories</span>
-          <div class="row">
-            <span class="why inline">{m.genres?.length ? m.genres.join(" · ") : "Aucune encore."}</span>
-            <button class="btn" onclick={openRanger}>La ranger</button>
-          </div>
-        </div>
-
-        <div class="m-l">
-          <span class="k">Jaquette <em>— l'adresse d'une image, jamais le fichier</em></span>
-          <form onsubmit={e => { e.preventDefault(); saveCover(); }}>
-            <input bind:value={coverUrl} oninput={() => (coverBad = false)} inputmode="url"
-                   placeholder="https://… (clic droit sur une image › Copier l'adresse de l'image)" aria-label="Adresse de la jaquette" />
-            <button class="btn" disabled={!coverUrl.trim()}>Poser</button>
-          </form>
-          {#if coverBad}<span class="why">Il faut une adresse qui commence par https://</span>{/if}
-          {#if myCover}
-            <div class="row">
-              <span class="why inline">Tu en as posé une ; la plus récente l'emporte, pour tout le monde.</span>
-              <button class="btn" onclick={() => registre.act(poserJaquette(id, "", m))}>Retirer la mienne</button>
-            </div>
-          {/if}
-        </div>
-
         <div class="m-l leave">
           {#if !leaving}
             <button class="btn" onclick={() => (leaving = true)}>Retirer de mon registre</button>
@@ -386,12 +361,21 @@
             letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
   .greffe:hover { color: var(--ink); }
   /* La planche, à droite du titre. */
-  .plate { float: right; width: 132px; aspect-ratio: 2 / 3; margin: 0 0 12px 22px; display: grid; place-items: center;
+  .plate-col { float: right; width: 132px; margin: 0 0 12px 22px; display: grid; justify-items: center; }
+  .plate { position: relative; width: 100%; aspect-ratio: 2 / 3; display: grid; place-items: center; align-content: center; gap: 8px;
            overflow: hidden; border: 1px solid var(--rule2); background: var(--raise); }
+  .plate i { font-style: normal; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+             color: var(--faint); padding: 0 8px; text-align: center; }
+  .plate:hover i { color: var(--ink); }
+  .plate:hover { border-color: var(--ink); }
+  .plate-lk, .gn-lk { min-height: 44px; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+                      color: var(--faint); text-decoration: underline; text-underline-offset: 3px; }
+  .plate-lk:hover, .gn-lk:hover { color: var(--ink); }
+  .gn-lk { margin-left: 10px; min-height: 0; padding: 12px 0; margin-top: -12px; margin-bottom: -12px; }
   .plate img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.04);
                transition: filter 460ms var(--e); }
   .plate:hover img, .plate:focus-visible img { filter: none; }
-  .plate:not(:disabled) { cursor: zoom-in; }
+  .plate:has(img) { cursor: zoom-in; }
   .plate span { padding: 10px; text-align: center; font-family: var(--fs); font-size: 16px; line-height: 1.15; color: var(--ink2); }
   .m-l .k em { font-style: normal; text-transform: none; letter-spacing: .02em; font-weight: 400; }
   .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -404,7 +388,7 @@
   .wth:hover { color: var(--ink); border-color: var(--ink); }
   .wth.on { color: var(--ink); border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
   .leave { margin-top: 22px !important; padding-top: 14px; border-top: 1px solid var(--rule); }
-  @media (max-width: 560px) { .plate { width: 96px; margin-left: 14px; } }
+  @media (max-width: 560px) { .plate-col { width: 96px; margin-left: 14px; } }
 
   .back { font-size: 11px; color: var(--dim); min-height: 44px; display: inline-flex; align-items: center; }
   .back:hover { color: var(--ink); }

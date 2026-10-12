@@ -32,6 +32,13 @@ export type Entry = {
   review?: Review;
 };
 
+/** **Le cadrage d'une jaquette** — on ne stocke jamais l'image, donc on ne
+    la recadre pas : on dit **quelle part en montrer**. `x`, `y` : le coin
+    haut-gauche de la fenêtre, en fraction de l'image ; `w` : sa largeur, en
+    fraction de l'image (le zoom est `1 / w`). La hauteur suit, par le format
+    deux sur trois du cadre. */
+export type Frame = { x: number; y: number; w: number };
+
 /** Ce qu'une personne apporte au catalogue commun. L'identité d'une œuvre est
     son identifiant de source, jamais son titre (invariant 9). */
 export type Work = {
@@ -45,6 +52,12 @@ export type Work = {
   /** Quand cette jaquette a été posée. Chacun porte la sienne dans son
       fragment ; **la plus récente l'emporte**, pour tout le monde. */
   coverAt?: string;
+  /** Le cadrage de cette jaquette. Il voyage avec elle : poser une jaquette,
+      c'est poser une image **et** sa façon d'être montrée. */
+  coverFrame?: Frame;
+  /** Quand ces catégories ont été posées : une correction de greffier les
+      remet à zéro, et seules celles posées **après** s'y ajoutent. */
+  genresAt?: string;
   genres?: string[];
   platforms?: string[];
   /** Inscrite à la main faute d'avoir été trouvée — candidate à un doublon. */
@@ -82,7 +95,15 @@ export type Alias = { from: string; to: string; at: string };
     chez le greffier qui la fait, appliquée à la lecture, pour tout le monde.
     La plus récente l'emporte, champ par champ. Même grammaire que l'alias
     (invariant 31) : rien n'est réécrit dans le fichier d'un autre. */
-export type Correction = { id: string; at: string; title?: string; titleFr?: string; year?: number };
+export type Correction = {
+  id: string; at: string; title?: string; titleFr?: string; year?: number;
+  /** Les catégories **réassignées** : elles remplacent tout ce qui avait été
+      posé avant — c'est la seule façon de retirer une catégorie fausse. */
+  genres?: string[];
+  /** Une jaquette posée par le greffier : elle concourt avec les autres, la
+      plus récente l'emporte. */
+  cover?: string;
+};
 
 /** Une ligne du journal du Greffe, **rangée chez le greffier qui a agi** et
     sommée à la lecture. Rien ne s'y efface : un acte défait est un acte de

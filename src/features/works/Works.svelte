@@ -76,7 +76,7 @@
     <div class="jqs">
       {#each sorted as id (id)}
         {@const m = w.catalog[id]}
-        <Cover href="#/fiche/{id}" title={titleOf(w, id, pref)} sub="{KIND[m.mediaType]} · {m.year}" cover={m.cover ?? null} />
+        <Cover href="#/fiche/{id}" title={titleOf(w, id, pref)} sub="{KIND[m.mediaType]} · {m.year}" cover={m.cover ?? null} frame={m.coverFrame ?? null} />
       {/each}
     </div>
     <p class="legend">Faute de jaquette, le cadre porte le titre. La couleur revient au survol.</p>

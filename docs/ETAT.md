@@ -2,7 +2,7 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 13 octobre 2026 (v0.1.4 — signaler, corriger)
+**Dernière mise à jour :** 13 octobre 2026 (v0.1.5 — la jaquette, cadrée)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
@@ -453,6 +453,29 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 13 octobre 2026 — v0.1.5, la jaquette cadrée
+
+- Nathan : « je ne peux pas réassigner des genres, et je ne vois pas
+  comment ajouter la cover ». **Les deux étaient au bas de « Ta position »**,
+  donc absents pour qui ne suivait pas l'œuvre — et une catégorie fausse ne
+  pouvait pas s'en aller, puisque celles de chacun s'additionnent.
+- **La jaquette se pose depuis son cadre**, en haut de la fiche (cadre vide :
+  « ＋ Poser une jaquette » ; sinon « Changer la jaquette »), et
+  **« Ranger »** est à côté des catégories. Ouverts à tous, inscrits ou non.
+- **Le recadrage, demandé en cours de route.** On ne garde que l'adresse de
+  l'image, donc on ne la découpe pas : on enregistre **quelle part en
+  montrer** — `{x, y, w}` en fractions de l'image. Rendu en CSS seul :
+  l'image fait `1/w` du cadre, et recule de `x`, `y` *en pourcentage
+  d'elle-même* (`translate`). On glisse, on zoome autour du centre, au
+  clavier aussi. **Vérifié au pixel** : le style posé dans l'éditeur est
+  identique sur la fiche, dans la grille et à la réouverture. Un cadrage
+  absurde lu dans un fichier est ignoré (essai).
+- **« Corriger la fiche »** (greffier) réassigne les catégories : sa
+  correction efface tout ce qui précède, ce qui est posé après s'ajoute.
+- Un faux pas de test : mon glisser tombait **à côté** du cadre — les
+  coordonnées de la capture n'étaient pas à l'échelle. Le code n'y était
+  pour rien ; c'est la mesure qu'il fallait refaire.
 
 ### 13 octobre 2026 — v0.1.4, signaler et corriger
 
