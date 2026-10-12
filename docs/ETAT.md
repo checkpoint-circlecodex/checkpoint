@@ -87,6 +87,35 @@ compte développeur Twitch avec la double authentification.
   chargement réel, elle ne l'allonge pas — si le registre est prêt avant,
   elle finit son geste ; s'il ne l'est pas, elle attend sans boucler.
 
+### Ce qu'on ne peut pas encore faire — signalé le 12 octobre
+
+Ce ne sont pas des défauts de code mais des **gestes manquants**. Plusieurs
+demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
+
+- [ ] **Modifier une fiche d'œuvre** (titre, année, genres, jaquette) :
+      impossible. Le prototype permettait au moins les genres et la jaquette
+      sur la fiche. ⚠️ *À décider avant d'écrire* : la description d'une
+      œuvre vit **dans le fragment de chaque personne qui la porte**, et la
+      fusion retient la première contribution. Corriger sa propre copie ne
+      changerait donc rien à l'écran si quelqu'un l'a portée avant. Qui fait
+      foi — le premier, le plus récent, ou une correction déclarée par un
+      greffier et appliquée à la lecture, comme les alias (invariant 31) ?
+- [ ] **Supprimer une œuvre** : impossible. Dans ce modèle, c'est *retirer
+      son inscription* de son propre fragment ; l'œuvre reste au corpus tant
+      que quelqu'un d'autre la suit (le corpus est dérivé). Le mot à
+      l'écran devra le dire — « retirer de mon registre », pas « supprimer ».
+- [ ] **Ajouter une jaquette**, ni à la création ni après. Le prototype
+      avait le dépôt et le recadrage (`openCrop`). ⚠️ *À décider* : coller une
+      adresse d'image est simple (on stocke l'URL) ; **importer un fichier**
+      bute sur la règle « jamais d'octets d'image dans le dépôt de données »
+      et sur la question ouverte des jaquettes importées (plafond, dépôt
+      séparé). Avec IGDB et TMDb branchés, la plupart des jaquettes
+      arriveront seules.
+- [ ] **Modifier une quête** : impossible. **La retirer existe** —
+      « Arracher cette planche », en bas de la planche, pour son auteur
+      seulement — mais Nathan ne l'a pas trouvé : à rendre visible, ou à
+      placer là où l'on cherche (au même endroit que « modifier »).
+
 ### Des points flous derrière le nom — signalé le 12 octobre
 
 - [ ] Nathan voit, **dans l'application Mac**, de gros points très flous
