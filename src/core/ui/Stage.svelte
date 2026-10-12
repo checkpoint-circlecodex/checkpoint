@@ -61,10 +61,16 @@
       setTimeout(kill, 360);              // le filet, et c'est lui qui compte
     }
 
-    live.animate(
+    const enter = live.animate(
       [{ opacity: 0, transform: `scale(${forward ? 0.965 : 1.05})`, filter: "blur(10px)" },
        { opacity: 1, transform: "scale(1)", filter: "blur(0px)" }],
       { duration: 420, easing: "cubic-bezier(.2,.75,.25,1)" });
+    /* Le même filet côté entrée. Une animation qui ne progresse pas reste
+       figée sur sa **première** image — ici opacité zéro et flou : la page
+       qu'on vient d'ouvrir serait invisible. L'annuler après sa durée rend
+       l'élément à son état naturel ; si elle a fini normalement, ça ne
+       change rien. */
+    setTimeout(() => enter.cancel(), 480);
   });
 </script>
 

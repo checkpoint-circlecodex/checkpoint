@@ -7,7 +7,7 @@
   import { Face } from "#core/ui/index.ts";
   import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
   import { avgOf, favsOf, otherTitle, progressOf, rowsFor, titleOf } from "#core/selectors/index.ts";
-  import { changerStatut, distinguer, inscrire, juger, poserCheckpoint } from "#core/model/acts.ts";
+  import { changerStatut, chroniquer, distinguer, inscrire, juger, poserCheckpoint } from "#core/model/acts.ts";
   import { STATE_ORDER } from "#core/model/lexicon.ts";
   import { FAV_MAX } from "#core/model/schema.ts";
 
@@ -39,6 +39,23 @@
   const setStatus = (st: string) => registre.act(changerStatut(id, st as never));
   const rate = (n: number) => registre.act(juger(id, mine?.rating === n ? null : n));
   const checkpoint = () => { if (!thought.trim()) return; registre.act(poserCheckpoint(id, thought)); thought = ""; };
+
+  /* La chronique : **un jugement rédigé**, une seule par personne et par
+     œuvre. On la réécrit, on n'en empile pas. Le formulaire ne s'ouvre que si
+     on le demande — une chronique ne s'écrit pas en passant. */
+  let writing = $state(false);
+  let chTitle = $state("");
+  let chBody = $state("");
+  function openChronicle() {
+    chTitle = mine?.review?.title ?? "";
+    chBody = mine?.review?.body ?? "";
+    writing = true;
+  }
+  function saveChronicle() {
+    if (!chTitle.trim() || !chBody.trim()) return;
+    registre.act(chroniquer(id, chTitle, chBody));
+    writing = false;
+  }
 </script>
 
 {#if !m}
@@ -186,6 +203,25 @@
           </form>
         </div>
 
+        <div class="m-l">
+          <span class="k">Ta chronique</span>
+          {#if !writing}
+            <div class="ch-act">
+              {#if mine.review}<span class="ch-has">« {mine.review.title} »</span>{/if}
+              <button class="btn" onclick={openChronicle}>{mine.review ? "La réécrire" : "Écrire une chronique"}</button>
+            </div>
+          {:else}
+            <form class="ch-form" onsubmit={e => { e.preventDefault(); saveChronicle(); }}>
+              <input bind:value={chTitle} placeholder="Un titre — ce qu'on en retient en une ligne" />
+              <textarea bind:value={chBody} rows="6" placeholder="Le jugement, rédigé. Un paragraphe vide sépare deux paragraphes."></textarea>
+              <div class="ch-row">
+                <button type="button" class="btn" onclick={() => (writing = false)}>Laisser</button>
+                <button class="btn btn-ink" disabled={!chTitle.trim() || !chBody.trim()}>Consigner la chronique</button>
+              </div>
+            </form>
+          {/if}
+        </div>
+
         {#if mine.reflections?.length}
           <ol class="cps">
             {#each mine.reflections.slice().reverse() as c}
@@ -280,6 +316,16 @@
   .m-l form { display: flex; gap: 8px; flex-wrap: wrap; }
   .m-l input { flex: 1; min-width: 200px; min-height: 44px; padding: 10px 12px;
                border: 1px solid var(--rule2); background: var(--paper); font-size: 13px; }
+  .ch-act { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ch-has { font-family: var(--fs); font-size: 16px; }
+  .ch-form { display: grid; gap: 8px; }
+  .ch-form input, .ch-form textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule2); background: var(--paper);
+  }
+  .ch-form input { min-height: 44px; font-family: var(--fs); font-size: 17px; }
+  .ch-form textarea { font-family: var(--fr); font-size: 14.5px; line-height: 1.65; resize: vertical; }
+  .ch-row { display: flex; gap: 8px; justify-content: flex-end; }
+  .btn-ink { border-color: var(--ink); color: var(--ink); }
   .cps { list-style: none; margin-top: 14px; border-top: 1px solid var(--rule); }
   .cps li { display: grid; grid-template-columns: 90px 1fr; gap: 12px; padding: 8px 0;
             border-bottom: 1px solid var(--rule); font-family: var(--fr); font-size: 13.5px; line-height: 1.5; }

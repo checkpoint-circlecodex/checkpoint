@@ -51,10 +51,13 @@
       out.onfinish = out.oncancel = kill;
       setTimeout(kill, 230);
     }
-    live.animate(
+    const enter = live.animate(
       [{ opacity: 0, transform: `translateX(${dir * 20}px)` },
        { opacity: 1, transform: "translateX(0)" }],
       { duration: 260, easing: "cubic-bezier(.2,.75,.25,1)" });
+    /* Une animation figée garde sa première image : opacité zéro, décalée de
+       20 px. L'annuler après sa durée rend le volet à son état de repos. */
+    setTimeout(() => enter.cancel(), 320);
   });
 </script>
 

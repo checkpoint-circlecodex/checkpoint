@@ -9,22 +9,19 @@
 
 ## Prochaine action
 
-**Les surfaces d'écriture qui restent.**
+**« Mes en cours » et ouvrir une quête** (ligne 2 du découpage).
 
-Faites : la boîte « ta position » sur la fiche, et **inscrire une œuvre** —
-dans le corpus ou hors du fonds, avec ses catégories. La barre a retrouvé sa
-section **Agir**.
+Faites (12 octobre) : **prendre la parole** dans la Loge — répondre, citer une
+œuvre, Cmd+Entrée — **surligner**, et **écrire une chronique** sur la fiche.
 
-Restent : **écrire une chronique**, **prendre la parole** dans la Loge,
-**surligner**, **ouvrir une quête**, **déclarer une parenté**, les **actes du
-Greffe**, et le panneau **« mes en cours »**. Les actes sont tous écrits dans
-`core/model/acts.ts` — il ne manque que les surfaces.
+Le découpage restant, un tour par ligne, tel que donné à Nathan :
+2 mes en cours · ouvrir une quête — 3 la lignée — 4 le Greffe — 5 le
+volet-lanceur — 6 l'accueil complet — 7 le pied de feuille et l'établi aux
+cinq clics — 8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans le groupe en
+dur — 12 la livraison ⚠️.
 
-En lecture : la **lignée**, le **Greffe**, le **volet-lanceur**, et ce qui
-manque à l'accueil (la cité en pixel art, Le Sort, l'encart du guetteur,
-Tes affaires).
-
-Ensuite : 5 l'entrée dans le groupe en dur · 6 la livraison.
+Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
+Twitch) et **la décision de signature** (99 $/an).
 
 ---
 
@@ -257,6 +254,33 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — parler, surligner, chroniquer
+
+- **Un seul commit pour deux gestes, dans l'interface réelle.** Surligner
+  puis prendre la parole dans la foulée : le SHA du fragment passe de
+  `…00000c` à `…00000d`, pas à `…00000e`. Le regroupement n'était prouvé que
+  par l'essai ; il l'est maintenant par l'usage.
+- **Citer une œuvre ne propose que ce que l'Ordre fréquente.** On cite ce
+  dont on parle ensemble, pas le catalogue entier — et la recherche
+  remplace la liste déroulante, comme partout.
+- **Les commandes du fil sont visibles et font 44 px**, avec des marges
+  négatives qui rendent à la ligne sa hauteur : *la densité est une affaire
+  de mise en page, pas de taille de cible.* Deux cibles de la passe
+  précédente — la citation (17 px) et le « en réponse à » (34 px) —
+  n'avaient jamais été mesurées. **Une vue en lecture seule a aussi des
+  cibles** ; je ne mesurais que celles que je venais d'ajouter.
+- ⚠️ **Une animation figée garde sa première image.** Fenêtre masquée :
+  l'entrée du volet restait à son image de départ — **opacité zéro**,
+  décalée de 20 px. Le fantôme avait son filet ; l'entrée n'en avait pas.
+  La Scène et les volets **annulent leur animation d'entrée après sa
+  durée** : si elle a fini, ça ne change rien ; si elle est figée, l'élément
+  retrouve son état de repos. C'est la cinquième rencontre avec ce piège,
+  et la première côté *entrée* — *un rappel d'animation anime, il ne met
+  jamais en place* vaut dans les deux sens.
+- **Une chronique se réécrit, elle ne s'empile pas** : une par personne et
+  par œuvre, et son formulaire ne s'ouvre que si on le demande — on n'écrit
+  pas un jugement en passant.
 
 ### 11 octobre 2026 — inscrire, et une garde de plus
 

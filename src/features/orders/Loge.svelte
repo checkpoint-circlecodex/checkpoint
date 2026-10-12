@@ -7,12 +7,15 @@
      se groupent sous un seul nom : **c'est ce groupement qui fait la
      différence entre un fil et un forum.**
 
-     ⚠️ Lecture seule pour l'instant — prendre la parole et surligner sont des
-     écritures, elles arrivent avec la passe des écritures. */
+     **Le cadre est cérémonieux, la parole ne l'est pas.** L'application
+     fournit le meuble — « Prendre la parole », « en réponse à » — et laisse
+     les gens écrire comme ils parlent. Un message n'engage rien et ne vaut
+     pas chronique. */
   import { registre } from "#core/model/store.svelte.ts";
   import { Face } from "#core/ui/index.ts";
   import { dayKey, dayName, hhmm, roman } from "#core/model/lexicon.ts";
-  import { groupsWith, litIn, logeOf, markers, marksOf, postById, speaksIn, titleOf } from "#core/selectors/index.ts";
+  import { groupsWith, litIn, logeOf, markers, marksOf, matchTitle, postById, speaksIn, titleOf } from "#core/selectors/index.ts";
+  import { parler, surligner } from "#core/model/acts.ts";
   import type { CircleId } from "#core/model/schema.ts";
 
   let { cid }: { cid: CircleId } = $props();
@@ -25,6 +28,28 @@
   const lit = $derived(litIn(w, cid));
 
   let folded = $state(false);
+
+  /* --- Prendre la parole --- */
+  let draft = $state("");
+  let replyTo = $state<string | null>(null);
+  let ref = $state<string | null>(null);
+  let refQ = $state("");
+  const mineMarks = $derived(marksOf(w, me));
+
+  /* Citer une œuvre : on cherche, on ne déroule pas une liste de cent
+     entrées. Et la recherche ne propose que **ce que l'Ordre fréquente** —
+     on cite ce dont on parle ensemble, pas le catalogue entier. */
+  const refHits = $derived(refQ.trim().length < 2 ? [] :
+    [...new Set(w.rows.filter(r => w.people[r.personId]?.circle === cid).map(r => r.mediaId))]
+      .filter(id => matchTitle(w, id, refQ.toLowerCase().trim()))
+      .sort((a, b) => titleOf(w, a, pref).localeCompare(titleOf(w, b, pref), "fr"))
+      .slice(0, 6));
+
+  function speak() {
+    if (!draft.trim()) return;
+    registre.act(parler(cid, draft, ref ?? undefined, replyTo ?? undefined));
+    draft = ""; replyTo = null; ref = null; refQ = "";
+  }
   let host = $state<HTMLElement | null>(null);
   /* Deux intentions se disputent le même défilement : « le fil s'ouvre en
      bas » et « rouvrir ramène à l'endroit exact d'où l'on vient ». **La
@@ -73,7 +98,7 @@
       <!-- Un signe qu'on n'a jamais lu n'est pas découvrable : les glyphes
            sont nommés une fois, en tête du fil. -->
       <span class="legend">
-        <b>✦</b> surligné — ce que quelqu'un a voulu pouvoir retrouver
+        <b>✦</b> surligner — garder un passage pour le retrouver · <b>↩</b> répondre
       </span>
       <button class="fold" onclick={() => (folded = !folded)} disabled={!lit.length}>
         {folded ? "Dérouler le fil" : `Replier sur ${roman(lit.length)} passages`}
@@ -124,12 +149,58 @@
                 <a class="ref" href="#/fiche/{m.ref}">❧ {titleOf(w, m.ref, pref)}</a>
               {/if}
             </div>
-            <span class="mk" class:on={mk.length > 0} title={mk.length ? mk.map(x => x.firstName).join(", ") : ""}>
-              {#if mk.length}✦ {mk.length > 1 ? mk.length : ""}{/if}
+            <!-- **Les commandes restent visibles.** Dans un fil dense la
+                 tentation du survol est à son maximum, et c'est là qu'il faut
+                 y résister (invariant 19). -->
+            <span class="cmds">
+              <button class="mk" class:on={mk.length > 0} class:mine={mineMarks.includes(m.id)}
+                      onclick={() => registre.act(surligner(m.id))}
+                      aria-pressed={mineMarks.includes(m.id)}
+                      aria-label={mineMarks.includes(m.id) ? "Retirer ma marque" : "Surligner"}>
+                ✦{#if mk.length > 1}<i>{mk.length}</i>{/if}
+              </button>
+              <button class="rp" onclick={() => (replyTo = m.id)} aria-label="Répondre">↩</button>
             </span>
           </div>
         {/each}
       </div>
+    {/if}
+
+    {#if !folded}
+      <form class="say" onsubmit={e => { e.preventDefault(); speak(); }}>
+        {#if replyTo}
+          {@const r = postById(w, replyTo)}
+          {#if r}
+            <div class="chip">
+              <span>en réponse à {w.people[r.personId]?.firstName} — « {r.body.slice(0, 50)}… »</span>
+              <button type="button" onclick={() => (replyTo = null)} aria-label="Ne plus répondre">×</button>
+            </div>
+          {/if}
+        {/if}
+        {#if ref}
+          <div class="chip">
+            <span>❧ {titleOf(w, ref, pref)}</span>
+            <button type="button" onclick={() => (ref = null)} aria-label="Retirer la citation">×</button>
+          </div>
+        {/if}
+
+        <textarea bind:value={draft} rows="2" placeholder="Prendre la parole…"
+                  onkeydown={e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); speak(); } }}></textarea>
+
+        <div class="row">
+          {#if !ref}
+            <input class="cite" bind:value={refQ} placeholder="Citer une œuvre…" autocomplete="off" />
+          {/if}
+          <button class="send" disabled={!draft.trim()}>Prendre la parole</button>
+        </div>
+        {#if refHits.length && !ref}
+          <div class="hits">
+            {#each refHits as id (id)}
+              <button type="button" onclick={() => { ref = id; refQ = ""; }}>❧ {titleOf(w, id, pref)}</button>
+            {/each}
+          </div>
+        {/if}
+      </form>
     {/if}
 
     <p class="price">
@@ -172,17 +243,53 @@
   .hd b { font-size: 12px; font-weight: 600; }
   .hd i { font-style: normal; font-size: 10px; color: var(--faint); font-variant-numeric: tabular-nums; }
   .bd p { font-family: var(--fr); font-size: 14px; line-height: 1.55; color: var(--ink); }
+  /* La cible fait 44 px ; la ligne, elle, garde sa hauteur de citation. */
   .quote {
-    display: block; text-align: left; font-size: 11px; color: var(--dim);
-    border-left: 2px solid var(--rule2); padding: 1px 0 1px 8px; margin: 2px 0 3px;
+    display: flex; align-items: center; min-height: 44px; margin: -10px 0 -9px;
+    text-align: left; font-size: 11px; color: var(--dim);
+    background: linear-gradient(var(--rule2), var(--rule2)) left center / 2px 18px no-repeat;
+    padding: 0 0 0 10px;
   }
-  .quote:hover { color: var(--ink); border-color: var(--ink); }
-  .ref { display: inline-block; margin-top: 3px; font-size: 11px; color: var(--dim); border-bottom: 1px solid var(--rule2); }
-  .ref:hover { color: var(--ink); border-color: var(--ink); }
+  .quote:hover { color: var(--ink); }
+  .ref { display: inline-flex; align-items: center; min-height: 44px; margin: -12px 0 -14px;
+         font-size: 11px; color: var(--dim);
+         text-decoration: underline; text-decoration-color: var(--rule2); text-underline-offset: 3px; }
+  .ref:hover { color: var(--ink); text-decoration-color: var(--ink); }
   /* Les commandes restent visibles : dans un fil dense la tentation du survol
      est à son maximum, et c'est là qu'il faut y résister. */
-  .mk { font-size: 11px; color: var(--rule2); text-align: right; }
-  .mk.on { color: var(--ink); }
+  .msg { grid-template-columns: 22px minmax(0,1fr) auto; }
+  .cmds { display: flex; align-items: flex-start; gap: 2px; }
+  /* 44 px de cible même dans un fil dense (invariant 20). Les marges
+     négatives rendent à la ligne la hauteur qu'elle aurait eue : la densité
+     est une affaire de mise en page, pas de taille de cible. */
+  .mk, .rp {
+    display: grid; place-items: center; min-width: 44px; height: 44px; margin: -8px 0;
+    font-size: 12px; color: var(--rule2); letter-spacing: 0; line-height: 1;
+  }
+  .mk i { font-style: normal; font-size: 9.5px; margin-left: 2px; }
+  .mk.on { color: var(--dim); }
+  .mk.mine { color: var(--ink); }
+  .mk:hover, .rp:hover { color: var(--ink); }
+
+  .say { display: grid; gap: 8px; margin-top: 12px; }
+  .say textarea, .cite {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule2); background: var(--paper);
+    font-family: var(--fr); font-size: 14px; line-height: 1.5; resize: vertical;
+  }
+  .cite { font-family: var(--fu); font-size: 12px; min-height: 44px; flex: 1; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .send {
+    margin-left: auto; min-height: 44px; padding: 9px 14px; border: 1px solid var(--ink);
+    font-size: 9.5px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+  }
+  .send:disabled { opacity: .35; cursor: default; }
+  .chip { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--dim);
+          border-left: 2px solid var(--ink); padding-left: 8px; }
+  .chip span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chip button { display: grid; place-items: center; width: 44px; height: 44px; margin: -8px 0; letter-spacing: 0; line-height: 1; }
+  .hits { display: flex; flex-wrap: wrap; gap: 4px; }
+  .hits button { min-height: 44px; padding: 6px 10px; border: 1px solid var(--rule); font-size: 11.5px; }
+  .hits button:hover { border-color: var(--ink); }
   :global(.msg.flash) { background: var(--raise); box-shadow: inset 2px 0 0 var(--ink); }
 
   .kept { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
