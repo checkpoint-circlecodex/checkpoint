@@ -10,11 +10,12 @@
 ## Prochaine action
 
 **Livrer la v0.1.0 — deux gestes de Nathan, puis le premier arrivant réel.**
-1. Poser la clé de mise à jour comme secret du dépôt public
-   (`TAURI_SIGNING_PRIVATE_KEY`, contenu de `~/.tauri/checkpoint.key`) — et
-   **la sauvegarder ailleurs** : perdue, plus aucune mise à jour possible.
-2. Pousser l'étiquette `v0.1.0` ; GitHub construit les trois systèmes et
-   prépare un brouillon. **Publier le brouillon** d'un clic.
+1. ~~Poser la clé comme secret du dépôt~~ ✅ fait le 12 octobre, avec
+   l'accord de Nathan. ⚠️ **Reste à la sauvegarder ailleurs**
+   (`~/.tauri/checkpoint.key`) : perdue, plus aucune mise à jour possible.
+2. ~~Pousser `v0.1.0`~~ ✅ — le brouillon porte les trois systèmes et un
+   `latest.json` qui les couvre tous. **Reste à le publier**, d'un clic,
+   sur la page des versions.
 3. Nathan ouvre l'application : déjà membre, dépôt vide — il passe par
    « La porte est ouverte », se compose un visage, entre **le premier**.
 4. Le premier arrivant extérieur tranche la seule chose non essayée :
@@ -300,6 +301,13 @@ Aucune ne bloque le spike.
   la barre latérale, qui n'existe pas en étroit. Le second demandait qu'un
   bloc offre un geste d'un autre : **`core/ui/gestes.ts`**, un registre que
   la coque remplit et que les blocs appellent sans savoir qui répond.
+- **La première construction Windows a échoué, et c'était mon script.** La
+  vérification des couches découpait les chemins sur `/` ; sous Windows ils
+  ont des `\`, et chaque importation passait pour une faute. Mac et Linux
+  ne pouvaient pas le voir. Corrigé à la racine (une seule forme de chemin),
+  et **un job Windows vérifie désormais à chaque poussée** — on mesure là
+  où l'on construira, pas le jour d'une version. L'étiquette a été déplacée
+  sur la correction ; le brouillon n'avait jamais été visible.
 - **La barre basse est rentrée dans le flux.** Fixée, on soustrayait sa
   hauteur à la main, avec 10 px de retard : la dernière ligne de chaque page
   passait dessous. Dans une colonne, le débordement est impossible par
