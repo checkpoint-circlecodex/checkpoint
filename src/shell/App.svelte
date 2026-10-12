@@ -8,6 +8,7 @@
   import { lanceur } from "./launcher.svelte.ts";
   import Deck from "./Deck.svelte";
   import SeekSheet from "./SeekSheet.svelte";
+  import { Entry, porte } from "#features/entry/index.ts";
 
   let hash = $state(location.hash || "#/");
 
@@ -38,6 +39,7 @@
      chose, en vue — un geste qui n'existerait qu'au clavier serait aussi
      peu découvrable qu'un survol (invariants 19 et 32). */
   const onKey = (e: KeyboardEvent) => {
+    if (porte.door !== "dedans") return;   // l'entrée n'a pas de lanceur
     if (e.key === "Escape" && lanceur.open && !pile.depth) { lanceur.chose(); return; }
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); lanceur.seek(); }
   };
@@ -46,16 +48,32 @@
     return () => removeEventListener("keydown", onKey);
   });
 
-  /* `untrack` n'est pas un détail : un effet Svelte suit tout ce qu'on lit
+  /* **La porte d'abord.** On ne lit pas le dépôt avant de savoir si on y a
+     droit : c'est la porte qui l'ouvre, une fois l'adhésion établie.
+
+     `untrack` n'est pas un détail : un effet Svelte suit tout ce qu'on lit
      pendant qu'il s'exécute. Sans lui, l'ouverture lisait `phase`, que
      l'ouverture modifie — elle se relançait elle-même, plusieurs fois, en
-     parallèle, et l'encart du guetteur restait vide sans un message. */
-  $effect(() => { untrack(() => registre.open(platform().storage, platform().cache, platform().org)); });
+     parallèle, et l'encart du guetteur restait vide sans un message
+     (invariant 35). */
+  $effect(() => { untrack(() => porte.start(platform())); });
 
   const current = $derived(route(hash));
-  const tabs = $derived([HOME, ...REGISTRY.filter(v => !v.bench && !v.hold && (!v.only || v.only()))]);
+  const tabs = $derived([HOME, ...REGISTRY.filter(v => !v.hold && (!v.only || v.only()))]);
 </script>
 
+{#if porte.door === "examen"}
+  <!-- On ne sait pas encore de quel côté de la porte on est : rien plutôt
+       qu'un écran qui sauterait. Sauf si ça échoue — alors on le dit. -->
+  <div class="wait">
+    {#if porte.error}
+      <p>GitHub ne répond pas : {porte.error}</p>
+      <button class="retry" onclick={() => porte.start(platform())}>Réessayer</button>
+    {/if}
+  </div>
+{:else if porte.door !== "dedans"}
+  <Entry />
+{:else}
 <div class="app">
   <Rail {hash} />
 
@@ -106,6 +124,7 @@
     <s.comp {...(s.props ?? {})} close={() => pile.close(s.id)} />
   </Surface>
 {/each}
+{/if}
 
 <style>
   .app { display: flex; height: 100%; }
@@ -113,7 +132,9 @@
   .focus { height: 100%; transition: filter var(--t3) var(--e), transform var(--t3) var(--e); }
   .dim .focus { filter: blur(13px); transform: scale(1.015); pointer-events: none; }
   .mob-seek { display: none; }
-  .wait { display: grid; place-content: center; height: 100%; color: var(--dim); font-size: 12.5px; }
+  .wait { display: grid; place-content: center; justify-items: center; gap: 10px; height: 100%; color: var(--dim); font-size: 12.5px; }
+  .retry { min-height: 44px; padding: 0 16px; border: 1px solid var(--rule2); font-size: 10.5px; font-weight: 700;
+           letter-spacing: .17em; text-transform: uppercase; color: var(--ink); }
 
   .mob, .tabs { display: none; }
 

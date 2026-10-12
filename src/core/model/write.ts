@@ -129,9 +129,9 @@ export function makeScribe(opts: {
   };
 }
 
-/** Le fragment d'une personne qui n'en a pas encore : créé vide, au moment où
-    elle inscrit sa première chose. On ne le crée pas à l'admission — un
-    fichier vide qui attend n'apprend rien à personne. */
+/** Le fragment d'une personne qui n'en a pas encore. Il naît **à l'entrée**,
+    avec l'identité qu'elle s'est composée (`fonder`) — jamais à
+    l'admission : un fichier vide qui attend n'apprend rien à personne. */
 export function blankShard(me: string, user: Shard["user"]): Shard {
   return {
     schemaVersion: SCHEMA_VERSION,

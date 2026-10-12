@@ -7,7 +7,7 @@
    Et chacun ne touche **que le fragment de celui qui agit**. Il n'y a pas
    d'acte qui écrive ailleurs, et il ne peut pas y en avoir. */
 
-import { FAV_MAX, type Act, type Entry, type Shard, type Status, type Work } from "./schema.ts";
+import { FAV_MAX, type Act, type Entry, type Shard, type Status, type User, type Work } from "./schema.ts";
 import type { Mutation } from "./write.ts";
 
 const now = () => new Date().toISOString();
@@ -160,6 +160,17 @@ export const defaire = (from: string): Mutation => ({
 
 /** La dernière visite, écrite à la fermeture : c'est elle qui donne son sens
     à l'encart du guetteur, qui ne décrit que l'écart avec la précédente. */
+/** **Entrer.** Le premier acte d'une personne, et le seul qui pose son
+    identité : on ne pouvait pas l'écrire avant l'admission, faute de droits
+    sur le dépôt. `user` arrive **champ par champ** depuis l'écran d'entrée —
+    jamais un objet de vue répandu, qui ferait tomber un dérivé dans le
+    fichier (invariant 34). La visite est datée du même geste : une personne
+    qui arrive n'a rien manqué, l'encart du guetteur n'a rien à lui dire. */
+export const fonder = (user: User): Mutation => ({
+  label: "entre dans le registre",
+  apply: s => { s.user = { ...user }; s.seenAt = now(); },
+});
+
 export const marquerVisite = (): Mutation => ({
   label: "referme le registre",
   apply: s => { s.seenAt = now(); },

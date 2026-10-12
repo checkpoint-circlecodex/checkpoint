@@ -1,3 +1,5 @@
+import type { KnockFields } from "./knock.ts";
+
 /* La couche du bas, derrière une interface. Deux de ces adaptateurs changent
    entre le bureau et Android ; aucun bloc au-dessus ne doit le savoir. */
 
@@ -19,9 +21,6 @@ export interface Storage {
   /** `sha` est celui qu'on croit remplacer, `null` pour une création.
       S'il a bougé : ConflictError — mesuré, GitHub rend 409. */
   write(path: string, text: string, sha: string | null, message: string): Promise<TreeEntry>;
-
-  /** Le seul geste qu'un compte hors de l'organisation puisse faire. */
-  openIssue(title: string, body: string): Promise<{ number: number; url: string }>;
 
   /** Le rôle, lu dans l'organisation — jamais une liste maison (invariant 10). */
   roleOf(login: string): Promise<"admin" | "member" | null>;
@@ -85,6 +84,10 @@ export type Knock = {
   url: string;
 };
 
+/** **Sa propre** demande, telle que GitHub la rend. Refermée, elle dit une
+    issue : `completed` pour une admission, `not_planned` pour un écart. */
+export type MyKnock = Knock & { state: "open" | "closed"; reason: string | null };
+
 /** Ce que l'organisation sait faire pour qui tient le greffe. Chaque geste
     est un appel GitHub : l'application n'a pas d'autorité à elle, elle
     demande (invariant 10). */
@@ -98,6 +101,27 @@ export interface Org {
   setRole(login: string, role: "admin" | "member"): Promise<void>;
   /** Qui tient la charge — lu dans l'organisation, jamais dans un fichier. */
   admins(): Promise<string[]>;
+
+  /* --- Ce que fait celui qui attend à la porte. --- */
+
+  /** **Le seul geste qu'un compte hors de l'organisation puisse faire** :
+      ouvrir une issue sur le dépôt public. Le format est celui de `knock.ts`. */
+  knock(login: string, f: KnockFields): Promise<MyKnock>;
+  /** Sa dernière demande, ouverte ou refermée — `null` s'il n'y en a pas. */
+  myKnock(login: string): Promise<MyKnock | null>;
+  /** **Sa propre** adhésion : `pending` tant qu'une invitation attend,
+      `active` une fois entré, `null` sinon. */
+  membership(): Promise<"active" | "pending" | null>;
+  /** Accepter l'invitation **à la place de la personne**. Sans ça, le critère
+      de la V1 tombe sur un courriel de GitHub qu'il faudrait savoir lire. */
+  accept(): Promise<void>;
+  /** Où GitHub montre l'invitation, pour le cas où on n'a pas pu l'accepter d'ici. */
+  invitationUrl(): Promise<string>;
 }
 
-export type Platform = { storage: Storage; cache: Cache; session: Session; org: Org };
+export type Platform = {
+  storage: Storage; cache: Cache; session: Session; org: Org;
+  /** Ouvrir une page **de GitHub** dans le navigateur de la personne. Le natif
+      refuse tout autre hôte : la page ne peut envoyer personne ailleurs. */
+  open(url: string): Promise<void>;
+};

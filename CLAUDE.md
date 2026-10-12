@@ -354,9 +354,29 @@ formulaire.*
   écarté : *couvrir, c'est fermer une porte ; traverser, c'est en ouvrir une.*
   C'est le seul écran de la séquence qui porte une couleur, et c'est ce qui en
   fait un aboutissement.
-- ⚠️ **Le banc d'essai (`V.onboard`, `openOnboarding`, onglet « Onboarding »)
-  est temporaire.** À retirer au portage : la vraie séquence se joue avant que
-  l'application ait la moindre donnée.
+- ~~⚠️ **Le banc d'essai (`V.onboard`, `openOnboarding`, onglet « Onboarding »)
+  est temporaire.** À retirer au portage~~ — ✅ **Il n'a pas été porté**
+  (12 octobre). La vraie séquence (`features/entry`) se joue avant que
+  l'application ait la moindre donnée, et **rien dans la barre n'y mène**.
+  Pour la voir en développement, l'adresse **`?dehors`** joue quelqu'un du
+  dehors sur le faux — hors de la coque, jamais dans le binaire. Le
+  prototype garde son onglet : il est la référence, pas l'application.
+- **L'attente accepte l'invitation à la place de la personne.** Admettre
+  envoie une *invitation* GitHub ; un inconnu ne sait pas qu'un courriel
+  l'attend, et le critère de la V1 tomberait dessus. L'écran regarde toutes
+  les trente secondes et à chaque retour dans la fenêtre, et accepte dès
+  qu'elle paraît. **Si GitHub refuse que l'application accepte**, ou si
+  l'invitation a expiré (sept jours), l'écran le dit et ouvre la page de
+  l'invitation — il ne boucle pas en silence. ⚠️ *Le cas « invité mais pas
+  encore entré » n'a pas pu être essayé contre le vrai GitHub : il faudrait
+  inviter une vraie personne. Le premier arrivant réel est l'essai.*
+- **Le fragment naît à l'entrée, pas à l'admission** — avec l'identité qu'on
+  s'est composée, champ par champ, et la visite datée du même geste : un
+  arrivant n'a rien manqué, l'encart du guetteur n'a rien à lui dire.
+  L'onde ne part **qu'une fois l'écriture faite** : on ne salue pas
+  quelqu'un dont le fichier n'existe pas.
+- **Une panne n'est pas une déconnexion.** Seul un `401` fait oublier le
+  jeton ; toute autre erreur de GitHub se dit et propose de réessayer.
 
 ## Hors périmètre — refuser, ne pas discuter
 

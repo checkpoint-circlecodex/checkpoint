@@ -3,9 +3,9 @@
      d'un cran : aucun flou, aucun zoom — on se déplace à profondeur égale, et
      le sens du glissement dit seulement de quel côté on va.
 
-     Comme pour la Scène, **le retrait du volet sortant ne dépend pas de
-     l'animation** : un clone, et un minuteur qui l'emporte quoi qu'il arrive. */
+     Le geste lui-même vit dans `slide.ts` : l'entrée s'en sert aussi. */
   import type { Snippet } from "svelte";
+  import { slide } from "./slide.ts";
 
   type Tab = { k: string; l: string; n?: number };
   let { tabs, active = $bindable(), children }:
@@ -16,9 +16,6 @@
   let ghost: HTMLElement | null = null;
   let dir = 1;
   let seen: string | null = null;
-
-  const REDUCE = () => typeof matchMedia !== "undefined"
-    && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function pick(k: string) {
     if (k === active) return;
@@ -37,27 +34,8 @@
     const first = seen === null;
     seen = k;
     const g = ghost; ghost = null;
-    if (first || !host || !live) return;
-    if (REDUCE()) { g?.remove(); return; }
-
-    if (g) {
-      g.classList.add("ghost");
-      host.appendChild(g);
-      const out = g.animate(
-        [{ opacity: 1, transform: "translateX(0)" },
-         { opacity: 0, transform: `translateX(${dir * -18}px)` }],
-        { duration: 180, easing: "cubic-bezier(.6,0,.25,1)", fill: "forwards" });
-      const kill = () => g.remove();
-      out.onfinish = out.oncancel = kill;
-      setTimeout(kill, 230);
-    }
-    const enter = live.animate(
-      [{ opacity: 0, transform: `translateX(${dir * 20}px)` },
-       { opacity: 1, transform: "translateX(0)" }],
-      { duration: 260, easing: "cubic-bezier(.2,.75,.25,1)" });
-    /* Une animation figée garde sa première image : opacité zéro, décalée de
-       20 px. L'annuler après sa durée rend le volet à son état de repos. */
-    setTimeout(() => enter.cancel(), 320);
+    if (first || !host || !live) { g?.remove(); return; }
+    slide(host, live, g, dir);
   });
 </script>
 
@@ -85,10 +63,9 @@
   .tabs button:hover { color: var(--ink); }
   .tabs button.on { color: var(--ink); box-shadow: inset 0 -1.5px 0 var(--ink); }
   .n { font-size: 9.5px; color: var(--faint); font-variant-numeric: tabular-nums; }
+  /* Positionné : le volet sortant s'y pose en absolu, hors de la mise en
+     page — il ne doit pas pousser la page pendant qu'il s'efface. */
   .panes { position: relative; }
-  /* Le volet sortant est retiré de la mise en page : il ne doit pas pousser
-     la page pendant qu'il s'efface. */
-  :global(.panes .ghost) { position: absolute; inset: 0; pointer-events: none; }
 
   @media (max-width: 860px) {
     .tabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }

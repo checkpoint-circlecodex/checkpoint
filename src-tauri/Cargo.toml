@@ -23,6 +23,9 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.12.3", features = [] }
 tauri-plugin-log = "2"
+# Ouvrir le navigateur de la personne — appelé depuis Rust seulement, jamais
+# exposé à l'interface : la page ne peut désigner aucun hôte (voir browse.rs).
+tauri-plugin-opener = "2"
 # rustls plutôt qu'OpenSSL : aucune dépendance système à installer sur les trois
 # OS, et la compilation croisée reste simple.
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "gzip"] }

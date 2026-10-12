@@ -27,6 +27,4 @@ export type ViewEntry = {
   only?: () => boolean;
   /** Ce qu'on *tient* plutôt que ce qu'on parcourt : le Greffe. */
   hold?: boolean;
-  /** ⚠️ Banc d'essai, à retirer au portage. */
-  bench?: boolean;
 };

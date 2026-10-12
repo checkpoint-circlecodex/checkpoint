@@ -2,32 +2,27 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 11 octobre 2026 (23e passe — le Greffe)
+**Dernière mise à jour :** 12 octobre 2026 (l'entrée dans le groupe, en dur)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
 
 ## Prochaine action
 
-**L'entrée dans le groupe en dur** (lignes 10-11 du découpage) : les quatre
-tuiles, le vrai device flow, la vraie demande, l'écran d'attente qui accepte
-l'invitation pour la personne — et le retrait des bancs d'essai.
+**La livraison** (ligne 12, la dernière du découpage) : les binaires des
+trois OS construits par GitHub Actions, la mise à jour de Tauri, et le
+bandeau « nouvelle version disponible ». **Sans signature payante** — Nathan
+l'a tranché le 12 octobre : la page de téléchargement doit dire comment
+passer l'avertissement du premier lancement, sur Mac et sur Windows.
 
-Fait (12 octobre) : **la cité en pixel art**, en tête du Registre —
-**identique au pixel près au prototype**, en une seule passe au lieu des deux
-prévues.
+Fait (12 octobre) : **l'entrée dans le groupe, en dur** (lignes 10-11) — les
+quatre tuiles, le vrai device flow, la vraie demande, l'attente qui accepte
+l'invitation pour la personne, le premier fragment écrit à l'entrée.
+**Le banc d'essai n'a pas été porté** ; `?dehors` joue un arrivant sur le
+faux, en développement seulement.
 
-Le découpage restant : 10-11 l'entrée dans le groupe en dur — 12 la
-livraison ⚠️.
-
-⚠️ **Pour l'étape 5** : une admission envoie une *invitation* GitHub, que la
-personne doit accepter. L'écran d'attente devra l'accepter pour elle
-(`PATCH /user/memberships/orgs/{org}`) — sinon le critère de la V1 tombe sur
-un courriel de GitHub. Le format de la demande est déjà écrit
-(`platform/knock.ts`) ; la cité est prête pour passer en contrebas des tuiles.
-
-Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
-Twitch) et **la décision de signature** (99 $/an).
+Ce que Nathan seul peut débloquer : **la clé IGDB** — gratuite, il faut un
+compte développeur Twitch avec la double authentification.
 
 ---
 
@@ -232,7 +227,7 @@ Détail et justification dans la spec, §4.
 | **D21** | **Les Quêtes.** Un nom et des **épreuves** — un palier atteint sur un groupe d'œuvres. Rangées dans le fragment de qui les ouvre ; **l'accomplissement se recalcule, jamais ne se stocke**. Paliers **monotones** : `convoiter < entreprendre < achever`, renoncer ou accomplir valent entrepris, accompli vaut achevé. ⚠️ *« Suspendu » n'est pas un palier — on en sort, et une quête qui se désaccomplit serait cruelle* |
 | **D22** | **Une porte par pièce.** « Ma Feuille » quitte la barre latérale : le visage en bas y mène déjà. La barre sépare **agir** (inscrire, en cours, ouvrir une quête) de **parcourir** (Ordres, Œuvres, Quêtes). En étroit le visage passe dans l'en-tête, la barre basse reste à quatre entrées |
 | **D19** | **La Loge est un fil fermé.** On n'y entre que si on est de l'Ordre ; les autres trouvent porte close. ⚠️ *Règle d'usage, pas clôture : tout le monde lit le même dépôt. Une vraie clôture demanderait un dépôt par Ordre, ce qui briserait « un fichier par personne ».* Surligner est une marque personnelle (`marks[]`) ; replié, le fil ne garde que les surlignés |
-| **D20** | **Git reste la plateforme**, la Loge ne la remet pas en cause. Deux règles de client suffisent : **grouper les écritures** (jamais un commit par message) et **relire par requêtes conditionnelles**. ⚠️ *Corrigé le 10 octobre par la mesure : un `304` **décompte** du quota. L'argument porte sur le budget — 180 appels/h sur 5 000, soit 3,6 % — et non sur une gratuité.* Le seul coût réel est la latence — quinze à trente secondes, plancher indépassable. Si le direct devenait nécessaire : un canal de réveil qui ne stocke rien, jamais une base temps réel hébergée |
+| **D20** | **Git reste la plateforme**, la Loge ne la remet pas en cause. Deux règles de client suffisent : **grouper les écritures** (jamais un commit par message) et **relire par requêtes conditionnelles**. ⚠️ *Corrigé le 10 octobre par la mesure : un `304` **décompte** du quota. L'argument porte sur le budget — 180 appels/h sur 5 000, soit 3,6 % — et non sur une gratuité.* ⚠️⚠️ ***Recorrigé le 11 octobre** — la mesure du 10 était faite sans jeton ; authentifié, **un `304` ne décompte pas** (invariant 27, tenu par un essai d'intégration). Le budget de 3,6 % reste le plafond si la gratuité disparaissait.* Le seul coût réel est la latence — quinze à trente secondes, plancher indépassable. Si le direct devenait nécessaire : un canal de réveil qui ne stocke rien, jamais une base temps réel hébergée |
 | **D18** | **La Grande Loge entre au périmètre** — un message board par Ordre, `loge[]` dans le fragment de l'auteur. ⚠️ *Révise la ligne « commentaires et fils de discussion » du hors-périmètre : ce qui les excluait était le conflit d'écriture et la modération, or un seul écrivain par fichier règle le premier et rend la seconde non représentable. Restent exclus les fils arborescents, les commentaires attachés à une œuvre, et toute notification* |
 
 ## Questions ouvertes
@@ -246,7 +241,7 @@ Aucune ne bloque le spike.
 | UX / UI | Cahier des charges attendu de Nathan. | Avant la V0 |
 | Catalogue | IGDB dès la V0, ou saisie manuelle pour commencer ? | V0 |
 | Classes | Tank / Guerrier / Mage — liste ouverte ou figée ? | V2 |
-| Signature | Compte développeur Apple à 99 $/an ? Plus difficile à éviter dès qu'on distribue à des inconnus. | Avant la V1 |
+| Signature | ~~Compte développeur Apple à 99 $/an ?~~ **Non** — Nathan ne paie pas. Conséquence assumée : un avertissement au premier lancement sur Mac (« Ouvrir quand même » dans Réglages › Confidentialité et sécurité) et sur Windows (SmartScreen › « Exécuter quand même »). La page de téléchargement le dit ; la mise à jour intégrée, elle, a sa propre signature, gratuite | ✅ 12 oct. |
 | Jaquettes importées | Plafond de taille et de poids, et faut-il un dépôt séparé pour les images ? Git n'efface jamais un binaire remplacé. | ⚠️ *Était « cahier des charges » — à trancher dans une passe, il n'y aura pas de cahier* |
 | Barre basse | Quatre entrées maximum en étroit — lesquelles ? **Tranché par l'usage :** Registre, Ordres, Œuvres, Quêtes ; le visage passe dans l'en-tête, et le Greffe aussi | ✅ 11 oct. |
 | Nom | « Checkpoint » est un nom de travail. | Sans urgence |
@@ -260,6 +255,55 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — l'entrée dans le groupe, en dur
+
+- **Les quatre tuiles, portées du prototype, et branchées sur le vrai.** Le
+  seuil lance le device flow (code en grand, page de GitHub ouverte par le
+  natif) ; l'atelier frappe — une issue publique au format de `knock.ts` —
+  puis attend ; l'Ordre ; l'entrée écrit le premier fragment, et l'onde
+  passe **après** l'écriture. Parcourue de bout en bout dans le navigateur
+  sur le faux, et en neuf essais du seuil au fragment.
+- **La logique de la porte est pure** (`entry/door.ts`), sans une rune :
+  c'est ce qui permet aux essais de la franchir comme une personne. Les
+  runes ne tiennent que l'état d'écran (`gate.svelte.ts`).
+- **Le natif n'ouvre que GitHub.** `open_github` analyse l'adresse et refuse
+  tout autre hôte — `github.com.ailleurs.net` compris, essai à l'appui. La
+  page ne peut envoyer personne ailleurs, comme `gh` ne peut appeler
+  qu'`api.github.com`.
+- **Une panne n'est plus une déconnexion.** `me()` rendait `null` sur toute
+  réponse autre que 200 : un soir d'incident chez GitHub aurait fait oublier
+  le jeton de tout le monde. Seul un `401` fait oublier ; le reste se dit,
+  avec « Réessayer ».
+- **Le faux n'agit pas sur le vrai** : il note ce qu'il aurait ouvert au lieu
+  de lancer des onglets vers GitHub, et un compte qui n'est pas membre n'y
+  lit pas le dépôt — exactement comme le 404 de GitHub.
+- **Un bug ancien, révélé par l'arrivant.** `#app` n'avait pas de hauteur :
+  l'application prenait celle de sa barre latérale. Pour qui tient le
+  Greffe la barre est longue et rien ne se voyait ; pour un arrivant, sans
+  Greffe, l'accueil se coupait à 584 px sur 820. *Un défaut de mise en page
+  peut dépendre de qui regarde* — d'où l'intérêt d'avoir regardé avec les
+  yeux d'un autre.
+- **Ce que l'image a trouvé et que le code ne disait pas** : « Sachade la
+  Forge ». En tête d'un bloc `{#if}`, Svelte retire l'espace nue ; il faut
+  `{" "}`.
+- **Le prototype nommait une animation qu'il ne définissait pas** (`rise`,
+  sur les cartes du défilé) : elles y paraissent sans entrée. C'est ce qui a
+  été vu et validé, c'est donc ce qui a été gardé.
+- **Le glissement latéral est promu** dans `core/ui/slide.ts` : les volets
+  et les tuiles en sont les deux usagers (invariant 13). Le fantôme se pose
+  par `offset*`, à l'endroit exact de l'ancien.
+- **Un essai d'intégration a échoué, puis passé neuf fois seul.** Celui qui
+  tient « un 304 ne décompte pas » : en série, le décompte *des requêtes de
+  l'essai précédent* tombait pendant la mesure. On laisse le compteur
+  retomber trois secondes avant de mesurer — **l'assertion n'a pas été
+  assouplie**, elle exige toujours zéro. Deux essais nouveaux tiennent ce
+  dont l'attente dépend : lire sa propre adhésion et retrouver sa demande
+  avec un jeton d'application.
+- ⚠️ **Ce qui n'a pas pu être essayé** : accepter une invitation *en
+  attente* avec le jeton d'une GitHub App. Il faudrait inviter une vraie
+  personne. Si GitHub refuse, l'écran le dit et ouvre la page de
+  l'invitation — le premier arrivant réel tranchera.
 
 ### 12 octobre 2026 — la cité, au pixel près
 

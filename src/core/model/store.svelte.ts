@@ -10,7 +10,8 @@ import { makeScribe, parseShard, type Mutation, type Scribe, type WriteState } f
 import { blankShard } from "./write.ts";
 import { shardPath, type Shard } from "./schema.ts";
 import type { Cache, Knock, Org, Storage } from "#platform/index.ts";
-import { consigner, marquerVisite } from "./acts.ts";
+import { consigner, fonder, marquerVisite } from "./acts.ts";
+import type { User } from "./schema.ts";
 
 type Phase = "vide" | "ouverture" | "prêt" | "fermé";
 
@@ -57,7 +58,7 @@ class Registre {
   async admit(k: Knock) {
     if (!this.#org) return;
     try {
-      await this.#org.admit(k, `Admis au registre par @${this.me}. Une invitation est partie dans l'organisation : il suffit de l'accepter.`);
+      await this.#org.admit(k, `Admis au registre par @${this.me}. L'invitation est partie dans l'organisation ; l'application l'acceptera d'elle-même à la prochaine ouverture.`);
       this.act(consigner("admission", k.login, k.firstName ? `${k.firstName}` : undefined));
       this.knocks = this.knocks.filter(x => x.issue !== k.issue);
       this.orgError = null;
@@ -103,6 +104,18 @@ class Registre {
   }
 
   async flush() { await this.#scribe?.flush(); }
+
+  /** **Entrer dans le registre** : écrire son premier fragment, et attendre
+      qu'il soit parti. C'est le seul acte qu'on n'abandonne pas au rythme du
+      scribe — l'écran d'entrée ne doit pas saluer quelqu'un dont le fichier
+      n'existe pas. Rend l'erreur, ou `null`. */
+  async found(user: User): Promise<string | null> {
+    if (!this.#scribe || !this.me || user.id !== this.me)
+      return "On ne sait pas encore qui tu es : le registre n'est pas ouvert.";
+    this.act(fonder(user));
+    await this.flush();
+    return this.writeError;
+  }
 
   /** Relire le dépôt. **On vide d'abord la file d'écriture** : relire avant
       que ses propres gestes soient partis ferait croire qu'ils sont perdus. */

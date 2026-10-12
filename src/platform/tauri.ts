@@ -6,9 +6,9 @@ import { invoke } from "@tauri-apps/api/core";
 import { fromB64, toB64 } from "./b64.ts";
 import {
   AuthError, ConflictError,
-  type Cache, type Knock, type Org, type Platform, type Session, type Storage, type TreeEntry,
+  type Cache, type Knock, type MyKnock, type Org, type Platform, type Session, type Storage, type TreeEntry,
 } from "./types.ts";
-import { parseKnock } from "./knock.ts";
+import { knockBody, knockTitle, parseKnock } from "./knock.ts";
 
 type Reply = { status: number; body: string; etag: string | null; remaining: number | null };
 
@@ -22,6 +22,17 @@ async function gh(method: string, path: string, body?: unknown): Promise<Reply> 
   if (r.status === 401) throw new AuthError();
   return r;
 }
+
+type Issue = {
+  number: number; user: { login: string }; created_at: string; body: string; html_url: string;
+  state: "open" | "closed"; state_reason: string | null; pull_request?: unknown;
+};
+/** Une issue de GitHub devenue demande — ou `null` si ce n'en est pas une. */
+const toKnock = (i: Issue): MyKnock | null => {
+  const f = i.pull_request ? null : parseKnock(i.body);
+  return f ? { issue: i.number, login: i.user.login, at: i.created_at, url: i.html_url,
+               state: i.state, reason: i.state_reason ?? null, ...f } : null;
+};
 
 const json = (r: Reply) => { try { return JSON.parse(r.body); } catch { return null; } };
 const fail = (what: string, r: Reply) => {
@@ -38,8 +49,12 @@ export function tauriPlatform(): Platform {
   const storage: Storage = {
     async me() {
       if (!(await invoke<boolean>("gh_has_token"))) return null;
+      /* Un 401 lève `AuthError` — le jeton a été révoqué, on l'oubliera. Tout
+         autre échec **lève aussi** : rendre `null` sur une panne de GitHub
+         ferait oublier le jeton de tout le monde un soir d'incident. */
       const r = await gh("GET", "/user");
-      return r.status === 200 ? (json(r)?.login ?? null) : null;
+      if (r.status !== 200) throw fail("lecture du compte", r);
+      return json(r)?.login ?? null;
     },
 
     async list() {
@@ -76,13 +91,6 @@ export function tauriPlatform(): Platform {
       if (r.status === 409 || (r.status === 422 && /sha/i.test(r.body))) throw new ConflictError(path);
       if (r.status !== 200 && r.status !== 201) throw fail(`écriture de ${path}`, r);
       return { path, sha: json(r)?.content?.sha ?? "" };
-    },
-
-    async openIssue(title, body) {
-      const { public_repo } = await where();
-      const r = await gh("POST", `/repos/${public_repo}/issues`, { title, body });
-      if (r.status !== 201) throw fail("ouverture de l'issue", r);
-      return { number: json(r).number, url: json(r).html_url };
     },
 
     remaining: () => lastRemaining,
@@ -128,13 +136,7 @@ export function tauriPlatform(): Platform {
          aussi des issues pour l'API : on les écarte. */
       const r = await gh("GET", `/repos/${public_repo}/issues?state=open&per_page=100`);
       if (r.status !== 200) throw fail("lecture des demandes", r);
-      return (json(r) ?? [])
-        .filter((i: { pull_request?: unknown }) => !i.pull_request)
-        .map((i: { number: number; user: { login: string }; created_at: string; body: string; html_url: string }) => {
-          const f = parseKnock(i.body);
-          return f ? { issue: i.number, login: i.user.login, at: i.created_at, url: i.html_url, ...f } : null;
-        })
-        .filter(Boolean) as Knock[];
+      return ((json(r) ?? []) as Issue[]).map(toKnock).filter(Boolean) as Knock[];
     },
 
     async admit(k, note) {
@@ -164,9 +166,53 @@ export function tauriPlatform(): Platform {
       const r = await gh("PUT", `/orgs/${o}/memberships/${login}`, { role });
       if (r.status !== 200) throw fail("changement de rôle", r);
     },
+
+    async knock(login, f) {
+      const { public_repo } = await where();
+      const r = await gh("POST", `/repos/${public_repo}/issues`, { title: knockTitle(login), body: knockBody(f) });
+      if (r.status !== 201) throw fail("ouverture de la demande", r);
+      const k = toKnock(json(r));
+      if (!k) throw new Error("La demande est partie, mais GitHub la rend sans son marqueur.");
+      return k;
+    },
+
+    async myKnock(login) {
+      const { public_repo } = await where();
+      /* Toutes, ouvertes ou refermées, les plus récentes d'abord : une
+         demande refermée dit justement ce qu'on veut savoir. */
+      const r = await gh("GET", `/repos/${public_repo}/issues?creator=${encodeURIComponent(login)}&state=all&per_page=30`);
+      if (r.status !== 200) throw fail("lecture de sa demande", r);
+      for (const i of (json(r) ?? []) as Issue[]) { const k = toKnock(i); if (k) return k; }
+      return null;
+    },
+
+    async membership() {
+      const { org: o } = await where();
+      const r = await gh("GET", `/user/memberships/orgs/${o}`);
+      /* 404 : ni membre ni invité. 403 : le jeton n'a pas le droit de
+         regarder — on ne sait pas, et ici ça revient au même : on attend. */
+      if (r.status === 404 || r.status === 403) return null;
+      if (r.status !== 200) throw fail("lecture de l'adhésion", r);
+      const s = json(r)?.state;
+      return s === "active" || s === "pending" ? s : null;
+    },
+
+    async accept() {
+      const { org: o } = await where();
+      const r = await gh("PATCH", `/user/memberships/orgs/${o}`, { state: "active" });
+      if (r.status !== 200) throw fail("acceptation de l'invitation", r);
+    },
+
+    async invitationUrl() {
+      const { org: o } = await where();
+      return `https://github.com/orgs/${o}/invitation`;
+    },
   };
 
-  return { storage, cache, session, org };
+  /* Le natif vérifie l'hôte : c'est lui qui refuse, pas cette ligne. */
+  const open = (url: string) => invoke<void>("open_github", { url });
+
+  return { storage, cache, session, org, open };
 }
 
 /** Vrai quand on tourne dans la coque. Hors coque — un navigateur ouvert sur

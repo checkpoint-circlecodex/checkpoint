@@ -97,6 +97,12 @@ async fn le_role_se_lit_dans_l_organisation() {
 async fn un_304_ne_decompte_pas_du_quota_authentifie() {
     let Some(t) = token() else { return eprintln!("· pas de jeton, essai sauté") };
     let path = format!("/repos/{ORG}/{REPO}/git/trees/HEAD");
+    /* ⚠️ Le compteur de GitHub n'est pas instantané : un décompte dû aux
+       requêtes **de l'essai précédent** peut tomber pendant celui-ci. C'est
+       arrivé le 12 octobre — échec en série, succès seul, neuf fois sur neuf.
+       On laisse donc retomber le compteur avant de mesurer. **On n'a pas
+       assoupli l'assertion** : elle exige toujours zéro décompte. */
+    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
     let first = github::request(&t, "GET", &path, None, None).await.expect("première lecture");
     let etag = first.etag.clone().expect("GitHub doit rendre un ETag");
 
@@ -144,4 +150,40 @@ async fn les_demandes_se_lisent_sur_le_depot_public() {
         .filter(|i| i["body"].as_str().unwrap_or("").contains("<!-- checkpoint:knock v1 -->"))
         .count();
     eprintln!("  ✓ issues ouvertes : {}, dont {} demande(s)", v.as_array().unwrap().len(), n);
+}
+
+/// L'écran d'attente demande à GitHub « où en est mon adhésion ? » avec le
+/// jeton d'une GitHub App. Le jour où ce jeton n'aurait plus le droit de lire
+/// sa propre adhésion, l'attente ne finirait jamais — c'est ce qu'on tient ici.
+/// ⚠️ On ne peut vérifier que le cas « active » : un compte invité mais pas
+/// encore entré, il faudrait le créer, et on n'invite personne dans un essai.
+#[tokio::test]
+async fn sa_propre_adhesion_se_lit_avec_un_jeton_d_application() {
+    let Some(t) = token() else { return eprintln!("· pas de jeton, essai sauté") };
+    let r = github::request(&t, "GET", &format!("/user/memberships/orgs/{ORG}"), None, None)
+        .await
+        .expect("requête");
+    assert_eq!(r.status, 200, "{}", r.body);
+    let v: serde_json::Value = serde_json::from_str(&r.body).unwrap();
+    assert_eq!(v["state"], "active", "{}", r.body);
+    eprintln!("  ✓ adhésion : {} ({})", v["state"], v["role"]);
+}
+
+/// Retrouver **sa** demande parmi les issues du dépôt public : par auteur,
+/// toutes, ouvertes ou refermées — une demande refermée dit un refus ou une
+/// admission, et c'est justement ce qu'on veut savoir.
+#[tokio::test]
+async fn ses_demandes_se_retrouvent_par_auteur() {
+    let Some(t) = token() else { return eprintln!("· pas de jeton, essai sauté") };
+    let me = github::request(&t, "GET", "/user", None, None).await.expect("requête");
+    let login = serde_json::from_str::<serde_json::Value>(&me.body).unwrap()["login"]
+        .as_str().unwrap().to_string();
+    let r = github::request(&t, "GET",
+        &format!("/repos/{ORG}/checkpoint/issues?creator={login}&state=all&per_page=20"), None, None)
+        .await
+        .expect("requête");
+    assert_eq!(r.status, 200, "{}", r.body);
+    let v: serde_json::Value = serde_json::from_str(&r.body).unwrap();
+    assert!(v.is_array());
+    eprintln!("  ✓ demandes de @{login} : {} issue(s)", v.as_array().unwrap().len());
 }

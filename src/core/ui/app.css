@@ -21,7 +21,11 @@
   --t1:120ms; --t2:220ms; --t3:380ms;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
+/* `#app` aussi : sans hauteur, l'application prenait celle de son plus haut
+   enfant — la barre latérale — et la page se coupait au ras de la barre.
+   Invisible pour qui tient le Greffe (sa barre est plus longue), flagrant
+   pour un arrivant : c'est l'entrée qui l'a révélé, le 12 octobre. */
+html,body,#app{height:100%;}
 body{background:var(--paper);color:var(--ink);font-family:var(--fu);font-size:13px;
   line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden;
   font-variant-numeric:tabular-nums;}
@@ -46,4 +50,34 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;op
   animation:cp-burst var(--ms) var(--e) forwards;
 }
 @keyframes cp-burst{ to{ transform:translate(-50%,-50%) scale(var(--to)); opacity:0; } }
-@media (prefers-reduced-motion:reduce){ .cp-burst{ display:none; } }
+/* L'onde de l'entrée : la même, plus ample et plus lente — reprise telle
+   quelle du prototype. Elle reste translucide d'un bout à l'autre : on voit
+   l'accueil se former au travers. */
+.cp-burst.cp-wave{
+  width:190px;height:190px;z-index:500;filter:blur(44px);
+  transform:translate(-50%,-50%) scale(.55);opacity:0;
+  animation:cp-wave 1900ms cubic-bezier(.24,.68,.18,1) forwards;
+}
+@keyframes cp-wave{
+  0%  {transform:translate(-50%,-50%) scale(.55);opacity:0;}
+  9%  {opacity:.9;}
+  62% {opacity:.8;}
+  100%{transform:translate(-50%,-50%) scale(25);opacity:0;}
+}
+/* Le mot que porte l'onde : **« BIENVENUE DANS LE CODEX »**, en capitales et
+   sans un mot de plus. Il naît avec elle et meurt avec elle — jamais un
+   écran de plus. Global parce qu'il survit à l'écran qui l'a lancé. */
+.cp-hail{position:fixed;inset:0;z-index:501;display:grid;place-content:center;
+  text-align:center;pointer-events:none;color:var(--paper);
+  animation:cp-hail 1900ms cubic-bezier(.24,.68,.18,1) forwards;}
+.cp-hail b{display:block;max-width:min(880px,86vw);margin:0 auto;
+  font-family:var(--fs);font-weight:400;text-transform:uppercase;
+  font-size:clamp(22px,4.6vw,46px);line-height:1.12;letter-spacing:.16em;
+  text-indent:.16em;}
+@keyframes cp-hail{
+  0%  {opacity:0;transform:scale(.96);}
+  22% {opacity:1;transform:scale(1);}
+  62% {opacity:1;transform:scale(1.015);}
+  100%{opacity:0;transform:scale(1.04);}
+}
+@media (prefers-reduced-motion:reduce){ .cp-burst{ display:none; } .cp-hail{ animation:none; opacity:0; } }
