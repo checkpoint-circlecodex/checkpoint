@@ -3,11 +3,13 @@
      réduite** — touchée par lui, sans être la chambre : la quatrième des
      quatre exceptions au noir et blanc. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { Face, Panes } from "#core/ui/index.ts";
+  import { Face, Panes, pile } from "#core/ui/index.ts";
+  import Lignee from "./Lignee.svelte";
+  import KinDeclare from "./KinDeclare.svelte";
   import { weave } from "#core/ui/weave.ts";
   import { KIND, STATUS, UNIT, dec, roman, ago } from "#core/model/lexicon.ts";
   import {
-    favsOf, figures, household, progressOf, questsDoneBy, rowsBy, soulLine, titleOf,
+    KIN, favsOf, figures, household, kinAsked, progressOf, questsDoneBy, rowsBy, soulLine, titleOf,
   } from "#core/selectors/index.ts";
 
   let { id }: { id: string } = $props();
@@ -21,6 +23,12 @@
   const rows = $derived(p ? rowsBy(w, id) : []);
   const done = $derived(p ? questsDoneBy(w, id) : []);
   const house = $derived(p ? household(w, id) : null);
+  /* Ce que d'autres ont déclaré à ton sujet et que tu n'as pas rendu. Ça ne
+     se voit que sur ta propre feuille — c'est à toi de répondre, à personne
+     d'autre de le savoir. */
+  const asked = $derived(self ? kinAsked(w, id) : []);
+  const openLignee = () => pile.open("panneau", "La maisonnée", Lignee, { pid: id });
+  const openDeclare = () => pile.open("panneau", "Parenté", KinDeclare);
 
   let tab = $state("portrait");
   const tabs = $derived([
@@ -49,10 +57,18 @@
               <!-- **Le point de la lignée est neutre, et il doit l'être** : les
                    membres d'une maisonnée ne sont pas du même Ordre, une marque
                    colorée obligerait à en trahir un. -->
-              <a class="kin" href="#/maisonnee/{p.id}" title="Sa maisonnée">✳ {roman(house.size)}</a>
+              <button class="kin" onclick={openLignee} aria-label="La maisonnée, {roman(house.size)} âmes">⁂ {roman(house.size)}</button>
+            {/if}
+            {#if self}
+              <button class="kin" onclick={openDeclare}>Parenté</button>
             {/if}
           </div>
           <p class="line">{soulLine(w, id)}</p>
+          {#each asked as a (a.from)}
+            <button class="asked" onclick={openDeclare}>
+              <b>{w.people[a.from]?.firstName}</b> te déclare <i>{KIN[a.rel].l}</i> — répondre
+            </button>
+          {/each}
         </div>
         {#if favs.length}
           <a class="opus" href="#/fiche/{favs[0]}">
@@ -154,13 +170,21 @@
   .eyebrow { display: block; font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
   h1 { font-family: var(--fs); font-weight: 400; font-size: 40px; line-height: 1; margin-top: 2px; }
   .meta { font-size: 11.5px; color: var(--dim); margin-top: 5px; }
-  .meta a { color: var(--ink); font-weight: 600; border-bottom: 1px solid var(--rule2); }
-  .kin { margin-left: 8px; border-bottom: none !important; color: var(--dim) !important; font-weight: 400 !important; }
-  .kin:hover { color: var(--ink) !important; }
+  .meta a { display: inline-flex; align-items: center; min-height: 44px; margin: -14px 0;
+            color: var(--ink); font-weight: 600;
+            text-decoration: underline; text-decoration-color: var(--rule2); text-underline-offset: 3px; }
+  .kin { display: inline-flex; align-items: center; min-height: 44px; margin: -14px 0 -14px 8px;
+         padding: 0 4px; font-size: 11.5px; color: var(--dim); }
+  .kin:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  /* Neutre, comme le point : une parenté en attente n'est pas une alerte. */
+  .asked { display: flex; align-items: center; gap: 5px; min-height: 44px; margin-top: 6px;
+           padding: 0 12px; border: 1px solid var(--rule2); font-size: 12px; color: var(--ink2); }
+  .asked b { font-family: var(--fs); font-weight: 400; font-size: 15px; }
+  .asked:hover { border-color: var(--ink); }
   /* Pas de pronom : on ne connaît pas le genre, et on n'a pas à le demander. */
   .line { font-family: var(--fr); font-style: italic; font-size: 15px; line-height: 1.55;
           color: var(--ink2); margin-top: 9px; max-width: 58ch; }
-  .opus { display: grid; gap: 2px; max-width: 190px; text-align: right; }
+  .opus { display: grid; gap: 2px; max-width: 190px; min-height: 44px; align-content: center; text-align: right; }
   .opus .k { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
   .opus .t { font-family: var(--fs); font-size: 19px; line-height: 1.1; }
 

@@ -123,6 +123,13 @@ export const declarerParente = (id: string, rel: string): Mutation => ({
   },
 });
 
+/** Une déclaration se retire. Le lien disparaît pour les deux — la parenté
+    n'existait que tant que les deux la tenaient. */
+export const retirerParente = (id: string): Mutation => ({
+  label: "retire une parenté",
+  apply: s => { s.kin = (s.kin ?? []).filter(k => k.id !== id); },
+});
+
 /** Fondre un doublon : un alias **déclaré chez soi**, appliqué à la lecture. */
 export const fondre = (from: string, to: string): Mutation => ({
   label: "fond un doublon",

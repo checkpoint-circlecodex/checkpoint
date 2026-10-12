@@ -9,16 +9,15 @@
 
 ## Prochaine action
 
-**La lignée, et déclarer une parenté** (ligne 3 du découpage).
+**Le Greffe et ses actes** (ligne 4 du découpage).
 
-Faites (12 octobre) : le panneau **« mes en cours »** — mettre de côté,
-reprendre, achever, renoncer, poser un checkpoint d'un geste — et le
-**bâtisseur de quête**, jusqu'à la planche plantée puis arrachée.
+Faites (12 octobre) : **la lignée** — maisonnée, courbes, halos, la phrase
+en romain, ce qu'ils ont tous mené au bout, là où ils se divisent — et
+**déclarer une parenté**, y compris **répondre à une déclaration reçue**.
 
-Le découpage restant : 3 la lignée — 4 le Greffe — 5 le volet-lanceur — 6
-l'accueil complet — 7 le pied de feuille et l'établi aux cinq clics — 8-9 la
-cité en pixel art ⚠️ — 10-11 l'entrée dans le groupe en dur — 12 la
-livraison ⚠️.
+Le découpage restant : 4 le Greffe — 5 le volet-lanceur — 6 l'accueil
+complet — 7 le pied de feuille et l'établi aux cinq clics — 8-9 la cité en
+pixel art ⚠️ — 10-11 l'entrée dans le groupe en dur — 12 la livraison ⚠️.
 
 Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
 Twitch) et **la décision de signature** (99 $/an).
@@ -254,6 +253,38 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — la lignée, et répondre à une parenté
+
+- **Le prototype n'avait aucun moyen de déclarer une parenté** : les liens du
+  jeu d'essai étaient écrits à la main. Conçu dans la grammaire existante —
+  chacun déclare chez soi — avec une pièce que le modèle rendait
+  obligatoire : **ce que les autres ont déclaré à ton sujet et que tu n'as
+  pas rendu**. *Une déclaration qu'on ne voit pas ne peut pas être rendue* :
+  sans cette liste, une parenté posée d'un seul côté n'existerait jamais.
+  Elle paraît sur ta propre feuille seulement — c'est à toi de répondre, à
+  personne d'autre de le savoir.
+- **On répond avec son propre mot, pris dans le bon sens.** « Mon fils »
+  appelle « mon père », « ma mère » ou « mon parent » : la surface ne
+  propose que les mots qui répondent, et range les autres par ce qu'ils
+  disent de la place de l'autre — au-dessus, à côté, au-dessous.
+- ⚠️ **Le dessin inventait une parenté.** Le prototype tirait une courbe vers
+  chaque personne de la génération suivante : dans une maisonnée où Marion
+  est la sœur de Nathan et Sam le père de Nathan seul, Sam devenait le père
+  de Marion. Une courbe ne relie plus que ce qui est déclaré. *Le dessin ne
+  doit pas inventer ce que les données refusent* — c'est l'invariant 29
+  appliqué à l'image.
+- Vérifié de bout en bout, sur le faux dépôt : Nathan déclare Marion
+  « sœur », Marion le déclare « frère » — le lien se confirme seul ; Sam
+  déclare Nathan « fils », la demande paraît, Nathan répond « père », et la
+  maisonnée se recompose en *Sam, Marion et Nathan*. La maisonnée Faure se
+  lit mot pour mot comme dans le prototype : *« XIII œuvres fréquentées sous
+  ce toit, CCLXXXVIII heures de jeu, IV chroniques. »*
+- **Quatre passes d'affilée ont trouvé une cible oubliée par la précédente.**
+  Le balayage est maintenant un outil du dépôt (`scripts/cibles.js`) : toutes
+  les routes, tous les volets, en large et en étroit. Passé ce soir : aucune
+  cible sous 44 px, aucun débordement. *Ce qui dépend de ma mémoire finit
+  par manquer ; ce qui vit dans le dépôt se relance.*
 
 ### 12 octobre 2026 — mes en cours, et planter une quête
 

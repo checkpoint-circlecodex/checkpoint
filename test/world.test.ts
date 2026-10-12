@@ -164,3 +164,36 @@ test("un fragment plus récent que l'application se refuse au lieu de s'amputer"
   assert.throws(() => migrate({ schemaVersion: SCHEMA_VERSION + 1, user: {}, works: {}, entries: {} }),
     (e: Error) => e instanceof SchemaTooNew);
 });
+
+import { kinAsked, kinWaiting, answersTo, kinTitle } from "../src/core/selectors/kin.ts";
+
+test("une parenté déclarée par l'autre se voit chez celui qui doit y répondre", () => {
+  const w = merge([
+    shard("jules", { kin: [{ id: "eliot", rel: "fils" }] }),
+    shard("eliot"),
+  ]);
+  assert.deepEqual(kinAsked(w, "eliot"), [{ from: "jules", rel: "fils" }],
+    "Éliot doit voir que Jules le déclare comme son fils");
+  assert.deepEqual(kinWaiting(w, "jules").map(k => k.id), ["eliot"], "et Jules, que ça attend");
+  assert.deepEqual(answersTo("fils").sort(), ["mere", "parent", "pere"], "le sens est contraint, le mot libre");
+});
+
+test("une fois rendue, la déclaration ne demande plus rien", () => {
+  const w = merge([
+    shard("jules", { kin: [{ id: "eliot", rel: "fils" }] }),
+    shard("eliot", { kin: [{ id: "jules", rel: "pere" }] }),
+  ]);
+  assert.equal(kinAsked(w, "eliot").length, 0);
+  assert.equal(kinWaiting(w, "jules").length, 0);
+});
+
+test("le mot est celui de l'autre : on lit « père de », jamais « mon fils »", () => {
+  const w = merge([
+    shard("jules", { kin: [{ id: "eliot", rel: "fils" }, { id: "nina", rel: "fille" }] }),
+    shard("eliot", { kin: [{ id: "jules", rel: "pere" }] }),
+    shard("nina",  { kin: [{ id: "jules", rel: "pere" }] }),
+  ]);
+  const h = household(w, "eliot");
+  assert.equal(kinTitle(w, h, "jules"), "père d'Eliot et Nina");
+  assert.equal(kinTitle(w, h, "nina"), "fille de Jules");
+});
