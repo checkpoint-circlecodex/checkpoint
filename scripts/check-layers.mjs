@@ -8,7 +8,7 @@
    le projet n'embarque pas une chaîne de lint entière pour ça. */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -47,13 +47,20 @@ const files = [];
    une chaîne qui ressemble à un chemin dans un commentaire n'est pas un import. */
 const IMPORTS = /(?:^|[\s;}])(?:import|export)\s[^;]*?from\s*["']([^"']+)["']|import\s*\(\s*["']([^"']+)["']\s*\)/gm;
 
+/* **Toujours la forme à barres obliques.** `relative()` rend des `\` sous
+   Windows : découpé sur `/`, chaque chemin y devenait une couche à lui seul,
+   et toutes les importations passaient pour des fautes. Mac et Linux ne
+   pouvaient pas le voir — c'est la construction Windows de la v0.1.0 qui
+   l'a dit, le 12 octobre. */
+const rel = abs => relative(SRC, abs).split(sep).join("/");
+
 const layerOf = abs => {
-  const r = relative(SRC, abs);
+  const r = rel(abs);
   if (r.startsWith("..")) return null;
   return r.split("/")[0];
 };
 const featureOf = abs => {
-  const r = relative(SRC, abs);
+  const r = rel(abs);
   return r.startsWith("features/") ? r.split("/")[1] : null;
 };
 
@@ -87,7 +94,7 @@ for (const file of files){
        `features/<x>/index.ts`, et rien de ce qu'il y a derrière. Sans cette
        règle, « trois couches » redevient « tout le monde connaît tout ». */
     if (!fault && from === "shell" && to === "features"){
-      const inside = relative(SRC, target).split("/").slice(2).join("/");
+      const inside = rel(target).split("/").slice(2).join("/");
       if (inside && !/^index\.(ts|js)$/.test(inside)) fault = "shell→interne";
     }
 

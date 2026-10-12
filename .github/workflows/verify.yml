@@ -28,6 +28,22 @@ jobs:
       - name: Construction
         run: npx vite build
 
+  # Les paquets se construisent aussi sous Windows, et la construction passe
+  # par la vérification des couches. Le 12 octobre, elle y a échoué — des
+  # chemins à barres inverses — alors que Mac et Linux passaient : on vérifie
+  # donc là où l'on construira, à chaque poussée, et pas le jour d'une version.
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: "26", cache: npm }
+      - run: npm ci
+      - name: Dépendances entre couches
+        run: npm run check:layers
+      - name: Essais du noyau
+        run: npm test
+
   natif:
     runs-on: ubuntu-latest
     steps:
