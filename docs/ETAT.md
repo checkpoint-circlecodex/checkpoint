@@ -116,6 +116,13 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
       seulement — mais Nathan ne l'a pas trouvé : à rendre visible, ou à
       placer là où l'on cherche (au même endroit que « modifier »).
 
+### Le bandeau de version ne regarde qu'au lancement — relevé le 12 octobre
+
+- [ ] Il vérifie au démarrage puis toutes les six heures : une application
+      restée ouverte ne voit pas une version publiée entre-temps. Ajouter
+      une vérification **au retour dans la fenêtre** (un appel, comme la
+      porte le fait déjà pendant l'attente).
+
 ### Des points flous derrière le nom — signalé le 12 octobre
 
 - [ ] Nathan voit, **dans l'application Mac**, de gros points très flous
@@ -379,6 +386,20 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — la première mise à jour, pour de vrai
+
+- **Nathan a publié la v0.1.1, le bandeau l'a proposée, l'installation et
+  la relance ont marché** sur son Mac. La chaîne entière est donc éprouvée
+  hors du banc d'essai : signature de la clé du projet, `latest.json`,
+  greffon de mise à jour, relance.
+- La première fois, rien n'est apparu : **les deux versions étaient encore
+  des brouillons**, et le bandeau ne lit que la dernière version *publiée*
+  (GitHub rend 404 sinon — vérifié avec le jeton de l'application). Le
+  silence était juste ; il ne disait pas pourquoi.
+- À faire, déposé : vérifier aussi **au retour dans la fenêtre**, pas
+  seulement au lancement et toutes les six heures — une application restée
+  ouverte ne voyait pas la version publiée entre-temps.
 
 ### 12 octobre 2026 — le fonds
 
