@@ -370,18 +370,18 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 <div class="page">
 
 <header class="masthead">
-  <p class="eyebrow">Document de conception · v17 · 11 octobre 2026</p>
+  <p class="eyebrow">Document de conception · v18 · 12 octobre 2026</p>
   <h1>Checkpoint</h1>
   <p class="deck">Un tracker de jeux partagé au sein d'un groupe d'une vingtaine de personnes. Une application de bureau — Mac, Windows, Linux — distribuée librement, dont l'accès aux données passe par une adhésion validée. Pas de serveur, pas de base à administrer.</p>
-  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v16</span> ou <span class="rev">révisé v16</span> ont bougé depuis la version précédente.</p>
+  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v18</span> ou <span class="rev">révisé v18</span> ont bougé depuis la version précédente&nbsp;: la livraison (D28), l'entrée dans le groupe telle qu'elle est construite, et la signature tranchée.</p>
   <dl class="factbar">
     <div class="fact"><dt>Nom</dt><dd>Provisoire</dd></div>
     <div class="fact"><dt>Forme</dt><dd>Application de bureau, Tauri</dd></div>
     <div class="fact"><dt>Stockage</dt><dd>GitHub, dépôt privé</dd></div>
     <div class="fact"><dt>Groupe visé</dt><dd>~20 personnes</dd></div>
-    <div class="fact"><dt>Décisions actées</dt><dd>10 ici, 27 au total</dd></div>
+    <div class="fact"><dt>Décisions actées</dt><dd>11 ici, 28 au total</dd></div>
     <div class="fact"><dt>Document lié</dt><dd><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience</a></dd></div>
-    <div class="fact"><dt>Prochaine étape</dt><dd>Portage Svelte — le spike est fini</dd></div>
+    <div class="fact"><dt>Prochaine étape</dt><dd>Première version publiée — <code>v0.1.0</code></dd></div>
   </dl>
 </header>
 
@@ -412,7 +412,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
       <tbody>
         <tr><td>Plus aucune contrainte CORS</td><td>Les requêtes partent du code natif, pas du navigateur</td></tr>
         <tr><td>Le <em>device flow</em> GitHub redevient possible</td><td>L'onboarding passe de six écrans à trois. Plus aucun jeton à copier-coller</td></tr>
-        <tr><td>Trousseau du système</td><td>Le jeton va dans le Keychain ou le Credential Manager, plus dans le navigateur</td></tr>
+        <tr><td>Un endroit à soi pour le jeton</td><td><span class="dead">Le jeton va dans le Keychain ou le Credential Manager, plus dans le navigateur</span> <span class="rev">révisé v18</span> Le jeton va dans un fichier réservé à la personne, côté natif, et ne traverse jamais vers l'interface. <strong>Pas le trousseau</strong>&nbsp;: il n'existe pas sur Android (I9)</td></tr>
         <tr><td>Vrai système de fichiers</td><td>Cache local, mode hors ligne quasi gratuit, export réel</td></tr>
         <tr><td>N'importe quelle API</td><td>Y compris IGDB, qui exige un secret et était hors de portée</td></tr>
         <tr><td>Installateurs et mise à jour automatique</td><td><code>.dmg</code>, <code>.msi</code>, <code>.AppImage</code></td></tr>
@@ -423,7 +423,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 
     <h3>Le coût, sans le maquiller</h3>
     <ul class="plain">
-      <li><strong>Signature de code.</strong> Sans compte développeur Apple (99 $/an), le premier lancement affichera un avertissement Gatekeeper, contournable par un clic droit → Ouvrir. Windows affichera un avertissement SmartScreen sans certificat. Acceptable entre amis, à condition de le dire d'avance.</li>
+      <li><strong>Signature de code.</strong> Sans compte développeur Apple (99 $/an), le premier lancement affichera un avertissement Gatekeeper<span class="dead">, contournable par un clic droit → Ouvrir</span>. Windows affichera un avertissement SmartScreen sans certificat. Acceptable entre amis, à condition de le dire d'avance. <span class="rev">révisé v18</span> <strong>Tranché le 12 octobre&nbsp;: pas de compte payant</strong> — voir D28. Et le contournement a changé&nbsp;: les macOS récents ne l'offrent plus au clic droit, il passe par <em>Réglages › Confidentialité et sécurité › Ouvrir quand même</em>.</li>
       <li><strong>Compilation par plateforme.</strong> Trois binaires à produire. GitHub Actions le fait gratuitement, sur les trois OS.</li>
       <li><strong>Chaîne Rust.</strong> Nécessaire pour compiler. La part native du projet reste petite — quelques commandes exposées au frontend.</li>
     </ul>
@@ -461,7 +461,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
     <div class="tw"><table>
       <thead><tr><th>Réf</th><th>Ce qui en découle</th><th>Traitement</th></tr></thead>
       <tbody>
-        <tr><td class="tag">I1</td><td>Le binaire est distribuable, donc inspectable</td><td>Chaque personne s'authentifie avec son propre jeton, gardé dans le trousseau du système</td></tr>
+        <tr><td class="tag">I1</td><td>Le binaire est distribuable, donc inspectable</td><td>Chaque personne s'authentifie avec son propre jeton, gardé <span class="dead">dans le trousseau du système</span> <span class="rev">révisé v18</span> côté natif, dans un fichier qui n'est lisible que par elle (I9)</td></tr>
         <tr><td class="tag">I2</td><td>Pas de transaction : deux sauvegardes simultanées effacent des données, en silence</td><td>Un fichier par personne — voir §5</td></tr>
         <tr><td class="tag">I3</td><td>Personne pour migrer les anciens fichiers</td><td><code>schemaVersion</code> dès le jour 1, migrations côté client</td></tr>
         <tr><td class="tag">I4</td><td class="dead">file:// casse OAuth et une partie de fetch</td><td><strong>Caduque.</strong> La coque native supprime la contrainte</td></tr>
@@ -483,7 +483,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 <section class="sec">
   <div class="num">§4</div>
   <div class="body">
-    <h2>Décisions actées <span class="rev">révisé v16</span></h2>
+    <h2>Décisions actées <span class="rev">révisé v18</span></h2>
     <p class="subhead">Les choix structurants. Revenir en arrière coûtera cher ; les tenir ne coûte rien.</p>
     <p>⚠️ <strong>D9 à D25 ne figurent pas ici</strong> mais dans le journal de bord (<code>docs/ETAT.md</code>)&nbsp;: ce sont des décisions d'interface et de lexique, qui relèvent du prototype. Ce document ne porte que celles qui engagent l'architecture ou le modèle.</p>
 
@@ -595,6 +595,19 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
             <dt>La forme</dt><dd>Le greffier déclare <code>{ from, to }</code> <strong>dans son propre fragment</strong>, et la fusion applique le repli <strong>à la lecture</strong>. Rien n'est réécrit, rien n'est supprimé, et <strong>l'alias se retire</strong> — la seule garantie qui tienne quand on s'est trompé.</dd>
             <dt>Cas limite</dt><dd>Si une même personne tenait les deux entrées, la fusion n'en garde qu'une&nbsp;: la plus récente.</dd>
             <dt>Portée</dt><dd>C'est la même grammaire que les favoris, les surlignages et les quêtes&nbsp;: <em>une déclaration rangée chez soi, sommée à la lecture.</em> Tout fait collectif à venir prendra cette forme — c'est ce qu'impose le modèle, pas un choix de style.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="adr-row">
+        <div class="adr-id">D28</div>
+        <div class="adr-body">
+          <h4>La livraison&nbsp;: sans signature payante, mises à jour signées, publication à la main <span class="rev new">nouveau v18</span></h4>
+          <dl>
+            <dt>Décidé</dt><dd>Par Nathan, le 12 octobre&nbsp;: <strong>pas de compte développeur Apple</strong>, pas de certificat Windows. Le Mac est signé <em>ad hoc</em> — gratuit, et c'est ce qui évite «&nbsp;l'application est endommagée&nbsp;» sur Apple Silicon.</dd>
+            <dt>Ce que ça coûte</dt><dd>Un avertissement au premier lancement, sur Mac et sur Windows. <strong>C'est la page des versions qui le dit</strong>, pas l'application&nbsp;: on parle à quelqu'un qui n'a encore rien ouvert.</dd>
+            <dt>Les mises à jour</dt><dd>La mise à jour de Tauri porte <strong>sa propre signature</strong>, gratuite et vérifiée avant toute installation&nbsp;: un paquet qui ne la porte pas est refusé. ⚠️ <strong>Perdre la clé privée, c'est ne plus pouvoir mettre à jour personne</strong> — chacun devrait réinstaller à la main. Elle ne vit jamais dans le dépôt&nbsp;; elle se sauvegarde ailleurs.</dd>
+            <dt>Le bandeau</dt><dd>Il lit la dernière version <em>publiée</em> sur le dépôt public et propose «&nbsp;Installer et relancer&nbsp;» là où la mise à jour existe, la page de la version ailleurs (Android). Il vide la file d'écriture avant de relancer.</dd>
+            <dt>Publier</dt><dd>Pousser l'étiquette <code>vX.Y.Z</code> construit les trois systèmes sur GitHub Actions et prépare un <strong>brouillon</strong>&nbsp;; c'est un humain qui publie. <code>package.json</code> est la seule source de version, et l'intégration continue refuse une étiquette qui ne la dit pas.</dd>
           </dl>
         </div>
       </div>
@@ -710,7 +723,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
         <text class="band-lbl" x="36" y="224">PLATEFORME — DERRIÈRE UNE INTERFACE</text>
         <g>
           <rect class="chip" x="36" y="236" width="118" height="24" rx="2"></rect><text class="chip-lbl" x="95" y="252" text-anchor="middle">stockage GitHub</text>
-          <rect class="chip" x="162" y="236" width="80" height="24" rx="2"></rect><text class="chip-lbl" x="202" y="252" text-anchor="middle">trousseau</text>
+          <rect class="chip" x="162" y="236" width="80" height="24" rx="2"></rect><text class="chip-lbl" x="202" y="252" text-anchor="middle">secrets</text>
           <rect class="chip" x="250" y="236" width="62" height="24" rx="2"></rect><text class="chip-lbl" x="281" y="252" text-anchor="middle">cache</text>
           <rect class="chip" x="320" y="236" width="62" height="24" rx="2"></rect><text class="chip-lbl" x="351" y="252" text-anchor="middle">HTTP</text>
         </g>
@@ -983,17 +996,24 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 <section class="sec">
   <div class="num">§8</div>
   <div class="body">
-    <h2>Entrer dans le groupe <span class="rev">révisé v3</span></h2>
+    <h2>Entrer dans le groupe <span class="rev">révisé v18</span></h2>
     <p class="subhead">Le parcours détaillé vit dans le document de parcours. Ici, seulement ce qui a des conséquences techniques.</p>
 
     <p>L'application se distribue librement&nbsp;: quelqu'un peut l'installer sans connaître personne. Il faut donc un chemin d'entrée pour un inconnu, et un humain qui décide au bout. Quatre étapes.</p>
 
     <ol class="steps">
-      <li><strong>Compte GitHub</strong><span>Se connecter, ou en créer un. Le <em>device flow</em> affiche un code court&nbsp;; la personne l'autorise sur github.com et revient. Le jeton part directement dans le trousseau du système. Aucun jeton à copier-coller.</span></li>
+      <li><strong>Compte GitHub</strong><span>Se connecter, ou en créer un. Le <em>device flow</em> affiche un code court&nbsp;; la personne l'autorise sur github.com et revient. Le jeton part directement <span class="dead">dans le trousseau du système</span> dans le fichier réservé du natif. Aucun jeton à copier-coller.</span></li>
       <li><strong>Demande d'adhésion</strong><span>L'application ouvre une <em>issue</em> sur le dépôt de code public, avec un corps structuré. N'importe quel compte GitHub peut le faire — c'est ce qui rend le parcours possible pour un inconnu.</span></li>
       <li><strong>Validation par un administrateur</strong><span>Un administrateur voit la demande dans l'application et l'accepte&nbsp;: appel à l'API d'adhésion à l'organisation, puis fermeture de l'issue. Est administrateur qui possède ce rôle dans l'organisation GitHub — pas de liste maison.</span></li>
       <li><strong>Profil</strong><span>Prénom, pseudo, classe, couleur, Discord en optionnel. Création de <code>data/&lt;compte-github&gt;.json</code>. L'application est utilisable.</span></li>
     </ol>
+
+    <div class="callout">
+      <span class="lbl">Tel que construit — 12 octobre 2026 <span class="rev new">nouveau v18</span></span>
+      <p><strong>Le profil se compose pendant l'attente</strong> et s'écrit à l'entrée&nbsp;: il ne peut pas s'écrire avant l'admission, faute de droits sur le dépôt. D'où quatre tuiles — seuil, atelier, Ordre, entrée — et un brouillon gardé sur la machine jusque-là. <strong>Le fragment naît à l'entrée</strong>, avec l'identité composée champ par champ&nbsp;; ce qu'on a dit à la porte («&nbsp;qui vous connaît&nbsp;») reste dans la demande et n'entre pas dans le profil.</p>
+      <p><strong>L'admission est une invitation</strong>, et un inconnu ne sait pas qu'un courriel l'attend&nbsp;: <strong>l'écran d'attente l'accepte à sa place</strong> (<code>PATCH /user/memberships/orgs/…</code>), en regardant toutes les trente secondes et à chaque retour dans la fenêtre. Si GitHub refuse que l'application accepte, ou si l'invitation a expiré au bout de sept jours, l'écran le dit et ouvre la page de l'invitation. ⚠️ <em>Ce cas n'a pas pu être essayé contre le vrai GitHub&nbsp;: il faudrait inviter une vraie personne. Le premier arrivant réel est l'essai.</em></p>
+      <p><strong>Une panne n'est pas une déconnexion</strong>&nbsp;: seul un <code>401</code> fait oublier le jeton.</p>
+    </div>
 
     <div class="callout">
       <span class="lbl">Entre l'étape 2 et l'étape 3, il ne se passe rien</span>
@@ -1093,7 +1113,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 <section class="sec">
   <div class="num">§12</div>
   <div class="body">
-    <h2>Points ouverts <span class="rev">révisé v16</span></h2>
+    <h2>Points ouverts <span class="rev">révisé v18</span></h2>
     <p class="subhead">Le spike est fini. Ce qui reste ne bloque plus rien.</p>
     <div class="tw"><table>
       <thead><tr><th>Sujet</th><th>Question</th><th>Quand trancher</th></tr></thead>
@@ -1105,7 +1125,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
         <tr><td>Classes</td><td>Tank, Guerrier, Mage — décoratives en V1. Ouvrir la liste, ou la figer&nbsp;?</td><td>V2</td></tr>
         <tr><td>Android</td><td>Aucune décision à prendre&nbsp;: D8 garde la porte ouverte, on décide le jour où l'envie vient.</td><td>Sur un coup de tête</td></tr>
         <tr><td>Catalogue</td><td>IGDB dès la V0, ou saisie manuelle pour commencer&nbsp;?</td><td>V0</td></tr>
-        <tr><td>Signature</td><td>Compte développeur Apple à 99&nbsp;$/an&nbsp;? Devient plus difficile à éviter dès qu'on distribue à des inconnus.</td><td>Avant la V1</td></tr>
+        <tr><td>Signature</td><td><strong>Tranché&nbsp;: non.</strong> <span class="dead">Compte développeur Apple à 99&nbsp;$/an&nbsp;? Devient plus difficile à éviter dès qu'on distribue à des inconnus.</span> Nathan ne paie pas&nbsp;; l'avertissement du premier lancement se dit sur la page des versions — voir D28.</td><td>✅ 12 oct.</td></tr>
         <tr><td>Nom</td><td>«&nbsp;Checkpoint&nbsp;» est un nom de travail.</td><td>Sans urgence</td></tr>
       </tbody>
     </table></div>
@@ -1113,8 +1133,8 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 </section>
 
 <footer>
-  <span>Checkpoint — document de conception v17</span>
-  <span>11 octobre 2026</span>
+  <span>Checkpoint — document de conception v18</span>
+  <span>12 octobre 2026</span>
   <span><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience →</a></span>
 </footer>
 

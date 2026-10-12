@@ -12,6 +12,28 @@ Le tracker solo existe déjà. **La valeur ajoutée est entièrement collective*
 savoir qui a fini quoi, sur quoi on n'est pas d'accord, ce qu'un ami a adoré et
 qui traîne dans ta liste d'envies.
 
+## Installer
+
+Les paquets sont sur la [page des versions](https://github.com/checkpoint-circlecodex/checkpoint/releases/latest).
+
+- **Mac** — le `.dmg`, un seul pour Intel et Apple Silicon. Glisser
+  Checkpoint dans Applications, puis l'ouvrir : **macOS refuse la première
+  fois**, parce que l'application n'est pas signée par Apple. Ouvrir alors
+  *Réglages Système › Confidentialité et sécurité*, et cliquer
+  **Ouvrir quand même** en bas de la page. Une seule fois.
+- **Windows** — le `-setup.exe`. Windows affiche « Windows a protégé votre
+  ordinateur » : *Informations complémentaires*, puis **Exécuter quand
+  même**. Une seule fois, et sans droit d'administrateur.
+- **Linux** — l'`.AppImage` (à rendre exécutable), ou le `.deb`.
+
+Pourquoi ces avertissements : la signature d'Apple coûte 99 $ par an, et
+le projet ne la paie pas. **Les mises à jour, elles, sont signées** — par
+une clé propre au projet, vérifiée par l'application avant d'installer quoi
+que ce soit. Elles se proposent d'elles-mêmes, dans un bandeau.
+
+Ensuite, il faut un compte GitHub : l'application vous fait frapper à la
+porte, et un administrateur du groupe vous admet. Rien d'autre à savoir.
+
 ## Comment ça tient debout
 
 - **Un fichier par personne, un seul écrivain par fichier.** Le conflit
@@ -43,11 +65,24 @@ cd docs && python3 -m http.server 8731
 ## Pile
 
 Tauri 2 · Svelte · TypeScript · Vite · Rust pour la surface native
-(HTTP, trousseau, cache fichier).
+(HTTP, jeton, cache fichier, ouverture des pages de GitHub).
+
+Pour travailler dessus :
+
+```bash
+npm ci && npm run dev
+```
+
+Le serveur de développement tourne sur un **faux dépôt** garni d'un jeu
+d'essai ; `?dehors` y joue quelqu'un qui arrive, `?maj=9.9.9` une version
+publiée. `npm run verify` vérifie les couches, les types et les essais ;
+`npm run tauri dev` lance la vraie coque, sur le vrai dépôt.
 
 ## État
 
-En cours de portage depuis le prototype. Rien n'est encore livrable.
+Porté depuis le prototype, entrée dans le groupe comprise. Une version se
+livre en poussant une étiquette `vX.Y.Z` : GitHub construit les trois
+systèmes et prépare un brouillon de version, qu'un humain publie.
 
 ## Droits
 

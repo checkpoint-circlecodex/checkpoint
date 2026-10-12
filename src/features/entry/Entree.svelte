@@ -48,7 +48,13 @@
   <span class="oath">{c ? c.order : "Sans Ordre"}</span>
   {#if draft.discord.trim()}<span class="dsc">{draft.discord.trim()} sur Discord</span>{/if}
 </div>
-<p class="onb-p">Le corpus est déjà plein : <b>{roman(corpus)} œuvres</b> y ont été portées avant vous. Vous n'arrivez pas devant une bibliothèque vide — <b>vous arrivez au milieu d'une conversation.</b></p>
+{#if corpus > 1}
+  <p class="onb-p">Le corpus est déjà plein : <b>{roman(corpus)} œuvres</b> y ont été portées avant vous. Vous n'arrivez pas devant une bibliothèque vide — <b>vous arrivez au milieu d'une conversation.</b></p>
+{:else}
+  <!-- Le premier arrivant ne peut pas arriver au milieu d'une conversation :
+       il la commence. Lui dire que le corpus est plein serait mentir. -->
+  <p class="onb-p">Le corpus est encore vide : <b>vous êtes parmi les premiers.</b> Ce que vous y porterez, les suivants le trouveront en arrivant — <b>c'est vous qui ouvrez la conversation.</b></p>
+{/if}
 <div class="onb-act center">
   <button class="btn-main enter" onclick={enter} disabled={porte.busy || !c}>
     {porte.busy ? "On vous inscrit…" : "Entrer dans le Registre"}</button>

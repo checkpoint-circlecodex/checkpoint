@@ -39,8 +39,16 @@
   const knock = () => porte.sendKnock(knockFields(draft));
 </script>
 
-<h2 class="onb-t">Vous frappez à la porte</h2>
-<p class="onb-p">Les données du groupe sont fermées. <b>L'application est ouverte, ce qu'elle lit ne l'est pas.</b> Votre demande ouvre une issue sur le dépôt public.</p>
+{#if vasistas}
+  <h2 class="onb-t">Vous frappez à la porte</h2>
+  <p class="onb-p">Les données du groupe sont fermées. <b>L'application est ouverte, ce qu'elle lit ne l'est pas.</b> Votre demande ouvre une issue sur le dépôt public.</p>
+{:else}
+  <!-- Déjà de l'organisation — le premier greffier, ou quelqu'un qu'on a
+       fait entrer à la main : il n'y a rien à demander, et l'écran ne doit
+       pas annoncer une demande qui ne partira jamais. -->
+  <h2 class="onb-t">La porte est ouverte</h2>
+  <p class="onb-p">Vous êtes déjà de l'organisation : <b>il n'y a rien à demander.</b> Il reste à vous composer un visage, puis à choisir votre Ordre.</p>
+{/if}
 <p class="acct">Compte GitHub : <b>@{porte.login}</b>
   <button class="lk" onclick={() => porte.leave()}>Changer de compte</button></p>
 

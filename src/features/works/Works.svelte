@@ -3,6 +3,7 @@
      registre dense sans aucune image, et une grille de jaquettes en noir et
      blanc. Quand une œuvre n'a pas de jaquette, le cadre porte son titre. */
   import { registre } from "#core/model/store.svelte.ts";
+  import { gestes } from "#core/ui/index.ts";
   import { KIND, KINDS, STATUS, dec, roman } from "#core/model/lexicon.ts";
   import { avgOf, rowsFor, titleOf, tracked } from "#core/selectors/index.ts";
   import type { MediaType } from "#core/model/schema.ts";
@@ -19,11 +20,16 @@
 
 <div class="wrap">
   <div class="eyebrow">{kind ? KINDS[kind] : "Les Œuvres"}</div>
-  <h1>{roman(ids.length)} au corpus</h1>
+  <h1>{ids.length ? `${roman(ids.length)} au corpus` : "Le corpus est vide"}</h1>
   <p class="lede">
     Une œuvre est au corpus parce qu'<strong>au moins une personne la suit</strong>.
     Le catalogue n'est pas tenu, il est dérivé.
   </p>
+  <!-- La barre n'existe pas en étroit : inscrire doit se trouver ici aussi,
+       là où l'on regarde le corpus. -->
+  {#if gestes.inscrire}
+    <div class="acts"><button class="add" onclick={() => gestes.inscrire?.()}>＋ Inscrire une œuvre</button></div>
+  {/if}
 
   <div class="reg">
     {#each ids as id (id)}
@@ -49,6 +55,12 @@
   .eyebrow { font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
   h1 { font-family: var(--fs); font-weight: 400; font-size: 34px; line-height: 1.05; margin-top: 8px; }
   .lede { font-family: var(--fr); font-size: 14.5px; line-height: 1.6; color: var(--ink2); max-width: 62ch; margin: 8px 0 22px; }
+  .acts { margin: -10px 0 14px; }
+  /* « Inscrire » hors de la barre : un mot d'instrument, pas un bouton plein. */
+  .add { display: inline-flex; align-items: center; min-height: 44px; font-size: 10.5px; font-weight: 700;
+         letter-spacing: .14em; text-transform: uppercase; color: var(--ink); border-bottom: 1.5px solid var(--ink); }
+  .add:hover { color: var(--ink2); }
+
 
   .reg { border-top: 1px solid var(--rule); }
   .r {

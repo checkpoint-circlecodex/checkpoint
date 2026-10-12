@@ -15,6 +15,8 @@ export type FakeOptions = {
   outside?: boolean;
   /** Si posé, un greffier imaginaire admet la demande après ce délai. */
   admitAfterMs?: number;
+  /** Une version « publiée », pour voir le bandeau en développement. */
+  release?: string;
 };
 
 export function fakePlatform(
@@ -136,5 +138,15 @@ export function fakePlatform(
      serait un faux qui agit sur le vrai. */
   const open = async (url: string) => { console.info("[faux] ouvrirait", url); };
 
-  return { storage, cache, session, org, open };
+  const updates = {
+    async latest() {
+      return opts.release
+        ? { version: opts.release, url: `https://github.com/checkpoint-circlecodex/checkpoint/releases/tag/v${opts.release}` }
+        : null;
+    },
+    /* Le faux n'installe rien : il dit qu'il ne sait pas, comme Android. */
+    async install() { return false; },
+  };
+
+  return { storage, cache, session, org, open, updates };
 }

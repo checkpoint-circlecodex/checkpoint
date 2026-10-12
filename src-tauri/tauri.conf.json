@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Checkpoint",
-  "version": "0.1.0",
+  "version": "../package.json",
   "identifier": "com.circlecodex.checkpoint",
   "build": {
     "frontendDist": "../dist",
@@ -37,6 +37,32 @@
     ],
     "android": {
       "debugApplicationIdSuffix": ".debug"
+    },
+    "createUpdaterArtifacts": true,
+    "publisher": "Checkpoint circlecodex",
+    "copyright": "Tous droits réservés",
+    "category": "Entertainment",
+    "shortDescription": "Un registre d'œuvres tenu à plusieurs",
+    "longDescription": "Checkpoint note ce que l'on joue, regarde et lit — et surtout ce que les autres en ont fait. Les données vivent dans un dépôt GitHub que le groupe possède.",
+    "macOS": {
+      "signingIdentity": "-",
+      "minimumSystemVersion": "11.0"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMyREUxNEQzM0IyNjVBNjUKUldSbFdpWTcweFRlTWxWRm02MXl2Mm1lWXJ0VDcreXg3cTRkUnBpbUlLOEpZcHNlY3ZvQnZ2MUsK",
+      "endpoints": [
+        "https://github.com/checkpoint-circlecodex/checkpoint/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { fromB64, toB64 } from "./b64.ts";
 import {
   AuthError, ConflictError,
-  type Cache, type Knock, type MyKnock, type Org, type Platform, type Session, type Storage, type TreeEntry,
+  type Cache, type Knock, type MyKnock, type Org, type Platform, type Session, type Storage, type TreeEntry, type Updates,
 } from "./types.ts";
 import { knockBody, knockTitle, parseKnock } from "./knock.ts";
 
@@ -212,7 +212,34 @@ export function tauriPlatform(): Platform {
   /* Le natif vérifie l'hôte : c'est lui qui refuse, pas cette ligne. */
   const open = (url: string) => invoke<void>("open_github", { url });
 
-  return { storage, cache, session, org, open };
+  const updates: Updates = {
+    async latest() {
+      const { public_repo } = await where();
+      /* `latest` ignore les brouillons et les préversions : une version
+         n'existe pour le bandeau qu'une fois publiée à la main. */
+      const r = await gh("GET", `/repos/${public_repo}/releases/latest`);
+      if (r.status === 404) return null;
+      if (r.status !== 200) throw fail("lecture des versions", r);
+      const j = json(r);
+      return { version: String(j?.tag_name ?? "").replace(/^v/, ""), url: j?.html_url ?? "" };
+    },
+    async install() {
+      /* Android n'a pas la mise à jour intégrée : le bandeau renverra vers
+         la page de la version. */
+      if (/android|iphone|ipad/i.test(navigator.userAgent)) return false;
+      const { check } = await import("@tauri-apps/plugin-updater");
+      const u = await check();
+      if (!u) return false;
+      /* La signature est vérifiée par le greffon contre la clé publique de
+         `tauri.conf.json` : un paquet qui ne la porte pas est refusé. */
+      await u.downloadAndInstall();
+      const { relaunch } = await import("@tauri-apps/plugin-process");
+      await relaunch();
+      return true;
+    },
+  };
+
+  return { storage, cache, session, org, open, updates };
 }
 
 /** Vrai quand on tourne dans la coque. Hors coque — un navigateur ouvert sur

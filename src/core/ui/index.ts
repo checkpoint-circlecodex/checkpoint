@@ -8,3 +8,4 @@ export { default as Panes } from "./Panes.svelte";
    autrement que par le noyau. */
 export { default as Cover } from "./Cover.svelte";
 export * from "./surfaces.svelte.ts";
+export { gestes } from "./gestes.ts";

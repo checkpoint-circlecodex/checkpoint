@@ -7,7 +7,7 @@
 
      On sépare comme le ferait du papier, pas comme le ferait un écran. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { Face } from "#core/ui/index.ts";
+  import { Face, gestes } from "#core/ui/index.ts";
   import { KIND, STATUS, VERB, ago, roman } from "#core/model/lexicon.ts";
   import { chronicles, covetedDoneByOthers, myUnderway, progressOf, register, titleOf, watchItems } from "#core/selectors/index.ts";
   import { UNIT } from "#core/model/lexicon.ts";
@@ -115,6 +115,12 @@
         </a>
       {/each}
     </div>
+    {#if !acts.length}
+      <!-- Le tout premier arrivant : il n'arrive pas au milieu d'une
+           conversation, il l'ouvre. On le lui dit, et on lui tend le geste. -->
+      <p class="none">Personne n'a encore rien inscrit. La première œuvre portée ici sera la tienne.</p>
+      {#if gestes.inscrire}<button class="add" onclick={() => gestes.inscrire?.()}>＋ Inscrire une œuvre</button>{/if}
+    {/if}
     {#if acts.length > shown}
       <button class="more" onclick={() => (shown += 20)}>
         Dérouler les {acts.length - shown} inscriptions antérieures
@@ -226,6 +232,11 @@
   .stack { display: flex; gap: 2px; }
   .note { font-size: 11.5px; color: var(--dim); margin: 18px 0 8px; font-style: italic; }
   .none { font-size: 12.5px; color: var(--dim); font-style: italic; }
+  /* « Inscrire » hors de la barre : un mot d'instrument, pas un bouton plein. */
+  .add { display: inline-flex; align-items: center; min-height: 44px; font-size: 10.5px; font-weight: 700;
+         letter-spacing: .14em; text-transform: uppercase; color: var(--ink); border-bottom: 1.5px solid var(--ink); }
+  .add:hover { color: var(--ink2); }
+
 
   /* L'encart du guetteur : un filet de couleur, un fond à peine teinté. Ce
      n'est pas une notification — il ne se ferme pas, ne se compte pas, et

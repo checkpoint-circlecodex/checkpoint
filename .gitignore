@@ -12,6 +12,10 @@ spike/spike.config.json
 .env
 .env.*
 !.env.example
+# La clé qui signe les mises à jour vit dans ~/.tauri, jamais ici — et si
+# quelqu'un l'y copiait, elle ne partirait pas.
+*.key
+*.key.pub
 
 # Système
 .DS_Store

@@ -2,13 +2,19 @@
   import { untrack } from "svelte";
   import { registre } from "#core/model/store.svelte.ts";
   import { platform } from "#platform/index.ts";
-  import { Stage, Surface, pile } from "#core/ui/index.ts";
+  import { Face, Stage, Surface, gestes, pile } from "#core/ui/index.ts";
+  import { Inscribe } from "#features/inscribe/index.ts";
   import Rail from "./Rail.svelte";
   import { HOME, REGISTRY, route } from "./routes.ts";
   import { lanceur } from "./launcher.svelte.ts";
   import Deck from "./Deck.svelte";
   import SeekSheet from "./SeekSheet.svelte";
   import { Entry, porte } from "#features/entry/index.ts";
+  import Release from "./Release.svelte";
+
+  /* La coque est la seule à connaître tous les blocs : c'est elle qui dit
+     ce que fait « inscrire », pour tous ceux qui l'offrent. */
+  gestes.inscrire = () => pile.open("panneau", "Inscrire une œuvre", Inscribe);
 
   let hash = $state(location.hash || "#/");
 
@@ -72,8 +78,11 @@
     {/if}
   </div>
 {:else if porte.door !== "dedans"}
+  <Release />
   <Entry />
 {:else}
+<div class="shell">
+<Release />
 <div class="app">
   <Rail {hash} />
 
@@ -92,6 +101,11 @@
     {#each REGISTRY.filter(v => v.hold && (!v.only || v.only())) as v (v.id)}
       <a class="mob-hold" class:on={hash.startsWith(v.href)} href={v.href} aria-label={v.label}>{v.gl}</a>
     {/each}
+    <!-- **Le visage passe dans l'en-tête** : sans lui, en étroit, personne
+         n'atteignait sa propre feuille — ni ses titres, ni « se déconnecter ». -->
+    {#if registre.moi}
+      <a class="mob-me" href="#/profil" aria-label="Ma feuille"><Face who={registre.moi} size="m" /></a>
+    {/if}
   </header>
 
   <!-- Volet déplié : **le contenu passe au flou et le volet prend la main**.
@@ -118,6 +132,7 @@
     {/each}
   </nav>
 </div>
+</div>
 
 {#each pile.stack as s, i (s.id)}
   <Surface surface={s} index={i}>
@@ -127,7 +142,9 @@
 {/if}
 
 <style>
-  .app { display: flex; height: 100%; }
+  /* Une colonne : le bandeau de version, s'il y en a un, puis l'application. */
+  .shell { display: flex; flex-direction: column; height: 100%; }
+  .app { display: flex; flex: 1; min-height: 0; }
   main { flex: 1; min-width: 0; position: relative; }
   .focus { height: 100%; transition: filter var(--t3) var(--e), transform var(--t3) var(--e); }
   .dim .focus { filter: blur(13px); transform: scale(1.015); pointer-events: none; }
@@ -139,7 +156,11 @@
   .mob, .tabs { display: none; }
 
   @media (max-width: 860px) {
-    .app { display: block; }
+    /* Une colonne : l'en-tête, la page, la barre basse. **La barre basse est
+       dans le flux**, pas fixée : fixée, il fallait soustraire sa hauteur à
+       la main, et la soustraction avait 10 px de retard sur sa vraie
+       hauteur — la dernière ligne de chaque page passait dessous. */
+    .app { flex-direction: column; }
     .mob {
       display: flex; align-items: center; gap: 12px;
       padding: 10px 16px; border-bottom: 1px solid var(--rule);
@@ -161,10 +182,11 @@
     .mob-hold { display: grid; place-items: center; width: 44px; height: 44px; margin: -7px -8px -7px 0;
                 font-family: var(--fs); font-size: 17px; color: var(--dim); letter-spacing: 0; line-height: 1; }
     .mob-hold.on { color: var(--ink); box-shadow: inset 0 -1.5px 0 var(--ink); }
-    main { height: calc(100% - 47px - 54px); }
+    .mob-me { flex: none; display: grid; place-items: center; width: 44px; height: 44px; margin: -7px -8px -7px 0; }
+    .mob { flex: none; }
+    main { flex: 1; min-height: 0; }
     .tabs {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+      display: grid; grid-template-columns: repeat(4, 1fr); flex: none; z-index: 30;
       background: var(--paper); border-top: 1px solid var(--rule);
       padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
     }

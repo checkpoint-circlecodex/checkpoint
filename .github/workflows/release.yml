@@ -1,0 +1,91 @@
+name: Livrer
+
+# Une version se livre en poussant une étiquette — `v0.2.0` pour la version
+# 0.2.0 de package.json. Les trois systèmes se construisent ici, et la
+# version sort en BROUILLON : c'est un humain qui la publie, d'un clic, sur
+# la page des versions. Tant qu'elle n'est pas publiée, ni le bandeau ni la
+# mise à jour intégrée ne la voient.
+#
+# Aucune signature payante (décidé le 12 octobre). Le Mac est signé « ad
+# hoc » — gratuit, et c'est ce qui évite le message « l'application est
+# endommagée » sur Apple Silicon. La mise à jour intégrée, elle, porte sa
+# propre signature, gratuite : la clé privée est le secret
+# TAURI_SIGNING_PRIVATE_KEY, la clé publique est dans tauri.conf.json.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  paquets:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Un seul paquet Mac pour Intel et Apple Silicon : personne n'a à
+          # savoir quelle puce il a.
+          - os: macos-latest
+            args: --target universal-apple-darwin
+            rust: aarch64-apple-darwin,x86_64-apple-darwin
+          - os: ubuntu-22.04
+            args: ""
+            rust: ""
+          - os: windows-latest
+            args: ""
+            rust: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # Une étiquette qui ne dit pas la version du paquet ferait proposer au
+      # bandeau une « nouvelle » version qui se croit l'ancienne.
+      - name: L'étiquette dit la version de package.json
+        shell: bash
+        run: |
+          want="$(node -p "require('./package.json').version")"
+          test "${GITHUB_REF_NAME#v}" = "$want" || { echo "étiquette ${GITHUB_REF_NAME}, paquet ${want}"; exit 1; }
+
+      - uses: actions/setup-node@v5
+        with: { node-version: "26", cache: npm }
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: "${{ matrix.rust }}" }
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: "src-tauri -> target" }
+
+      - name: Dépendances système de Tauri
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - run: npm ci
+
+      # On ne livre pas ce qu'on n'a pas vérifié.
+      - name: Vérifier
+        if: runner.os == 'Linux'
+        run: npm run verify
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Checkpoint ${{ github.ref_name }}"
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+          releaseBody: |
+            ## Installer
+
+            **Mac** — le fichier `.dmg`. Glisser Checkpoint dans Applications, puis l'ouvrir : macOS refuse la première fois, parce que l'application n'est pas signée par Apple. Ouvrir alors **Réglages Système › Confidentialité et sécurité**, et cliquer **Ouvrir quand même** en bas de la page. Une seule fois.
+
+            **Windows** — le fichier `-setup.exe`. Windows affiche « Windows a protégé votre ordinateur » : cliquer **Informations complémentaires**, puis **Exécuter quand même**. Une seule fois. Aucun droit d'administrateur n'est demandé.
+
+            **Linux** — le fichier `.AppImage` (le rendre exécutable), ou le `.deb`.
+
+            Les versions suivantes s'installent depuis l'application : un bandeau le propose.

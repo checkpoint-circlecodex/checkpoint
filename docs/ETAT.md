@@ -2,24 +2,27 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 12 octobre 2026 (l'entrée dans le groupe, en dur)
+**Dernière mise à jour :** 12 octobre 2026 (la livraison)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
 
 ## Prochaine action
 
-**La livraison** (ligne 12, la dernière du découpage) : les binaires des
-trois OS construits par GitHub Actions, la mise à jour de Tauri, et le
-bandeau « nouvelle version disponible ». **Sans signature payante** — Nathan
-l'a tranché le 12 octobre : la page de téléchargement doit dire comment
-passer l'avertissement du premier lancement, sur Mac et sur Windows.
+**Livrer la v0.1.0 — deux gestes de Nathan, puis le premier arrivant réel.**
+1. Poser la clé de mise à jour comme secret du dépôt public
+   (`TAURI_SIGNING_PRIVATE_KEY`, contenu de `~/.tauri/checkpoint.key`) — et
+   **la sauvegarder ailleurs** : perdue, plus aucune mise à jour possible.
+2. Pousser l'étiquette `v0.1.0` ; GitHub construit les trois systèmes et
+   prépare un brouillon. **Publier le brouillon** d'un clic.
+3. Nathan ouvre l'application : déjà membre, dépôt vide — il passe par
+   « La porte est ouverte », se compose un visage, entre **le premier**.
+4. Le premier arrivant extérieur tranche la seule chose non essayée :
+   accepter une invitation en attente avec le jeton de l'application.
 
-Fait (12 octobre) : **l'entrée dans le groupe, en dur** (lignes 10-11) — les
-quatre tuiles, le vrai device flow, la vraie demande, l'attente qui accepte
-l'invitation pour la personne, le premier fragment écrit à l'entrée.
-**Le banc d'essai n'a pas été porté** ; `?dehors` joue un arrivant sur le
-faux, en développement seulement.
+Fait (12 octobre) : **les douze lignes du découpage.** L'entrée dans le
+groupe en dur (10-11), puis **la livraison** (12) — workflow des trois
+systèmes, mise à jour signée, bandeau, icône, README d'installation.
 
 Ce que Nathan seul peut débloquer : **la clé IGDB** — gratuite, il faut un
 compte développeur Twitch avec la double authentification.
@@ -255,6 +258,52 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — la livraison
+
+- **Pas de signature payante** (Nathan, 12 octobre). Le Mac est signé
+  *ad hoc* — vérifié : `Signature=adhoc`, runtime durci —, ce qui évite
+  « l'application est endommagée » sur Apple Silicon. L'avertissement du
+  premier lancement est dit **sur la page des versions et dans le README**,
+  parce que c'est là qu'est quelqu'un qui n'a encore rien ouvert. Et le
+  contournement a changé depuis la spec : plus de clic droit › Ouvrir sur
+  les macOS récents, mais *Réglages › Confidentialité et sécurité*.
+- **La mise à jour a sa propre signature, gratuite.** Clé générée dans
+  `~/.tauri/checkpoint.key` (0600, hors du dépôt, `*.key` ignoré par Git
+  au cas où). Construction locale complète : `.dmg` de 4,9 Mo, paquet de
+  mise à jour **et sa signature**. ⚠️ La perdre, c'est ne plus pouvoir
+  mettre à jour personne.
+- **Une seule source de version** : `package.json`, que `tauri.conf.json`
+  lit. Le workflow refuse une étiquette qui ne la dit pas, vérifie tout
+  avant de construire, et sort la version **en brouillon** — un humain
+  publie.
+- **Le bandeau** lit la dernière version *publiée*, propose « Installer et
+  relancer » (après avoir vidé la file d'écriture — relancer la tuerait),
+  ou la page de la version là où la mise à jour n'existe pas. Une
+  vérification qui échoue se tait : l'absence de nouvelle n'est pas une
+  nouvelle. `?maj=0.2.0` le montre en développement.
+- **L'icône n'était pas la nôtre** : celle de Tauri, livrée par défaut.
+  Remplacée par le sceau de la barre — le C en Instrument Serif dans son
+  cadre d'encre, sur le papier —, dessiné dans le navigateur où la police
+  est chargée, toutes tailles tirées d'une seule image. Lisible à 32 px.
+- **Ce que le cas réel a appris, et que le jeu d'essai cachait.** Le dépôt
+  de données est vide : Nathan entrera **le premier**. Le dernier écran lui
+  aurait dit « le corpus est déjà plein : — œuvres » ; l'atelier lui aurait
+  fait « frapper à la porte » d'une organisation dont il est déjà
+  administrateur ; et l'accueil vide ne disait rien du tout. Trois textes
+  pour ce cas, et `?vide` pour le jouer. *Un jeu d'essai riche fait croire
+  que l'application marche ; c'est le dépôt vide qui dit si elle sait
+  commencer.*
+- **Deux trous du portage, en étroit seulement** : le visage manquait dans
+  l'en-tête (le prototype l'y mettait) — personne n'atteignait sa feuille ni
+  « se déconnecter » sur un téléphone ; et « Inscrire » n'existait que dans
+  la barre latérale, qui n'existe pas en étroit. Le second demandait qu'un
+  bloc offre un geste d'un autre : **`core/ui/gestes.ts`**, un registre que
+  la coque remplit et que les blocs appellent sans savoir qui répond.
+- **La barre basse est rentrée dans le flux.** Fixée, on soustrayait sa
+  hauteur à la main, avec 10 px de retard : la dernière ligne de chaque page
+  passait dessous. Dans une colonne, le débordement est impossible par
+  construction — mesuré au pixel, avec et sans bandeau.
 
 ### 12 octobre 2026 — l'entrée dans le groupe, en dur
 

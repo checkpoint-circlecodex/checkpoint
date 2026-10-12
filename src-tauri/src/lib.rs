@@ -13,6 +13,15 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
+            /* La mise à jour vérifie **sa propre signature**, gratuite et
+               indépendante de celle d'Apple ou de Microsoft : un binaire non
+               signé par la clé du projet n'est jamais installé. Bureau
+               seulement — Android a le bandeau. */
+            #[cfg(desktop)]
+            {
+                app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
+                app.handle().plugin(tauri_plugin_process::init())?;
+            }
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()

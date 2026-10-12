@@ -21,9 +21,12 @@ export async function bootPlatform(): Promise<Platform> {
   if (current) return current;
   if (inShell()) return (current = tauriPlatform());
   const { default: seed } = await import("./dev/seed.json");
+  const q = new URLSearchParams(location.search);
+  /* `?vide` : un dépôt sans personne — le cas du tout premier arrivant. */
   const files: Record<string, string> = {};
-  for (const sh of seed as { user: { id: string } }[])
-    files[`data/${sh.user.id}.json`] = JSON.stringify(sh);
+  if (!q.has("vide"))
+    for (const sh of seed as { user: { id: string } }[])
+      files[`data/${sh.user.id}.json`] = JSON.stringify(sh);
   /* Les quatre demandes du prototype, choisies pour leurs trois cas : un
      parrain qui se résout, un parrain qui ne désigne personne, aucun parrain. */
   const knock = (issue: number, login: string, at: string, firstName: string, vouchedName: string, vouchedAs: string, discord: string) =>
@@ -33,14 +36,16 @@ export async function bootPlatform(): Promise<Platform> {
      **C'est une adresse de développement, pas une porte** : elle n'existe
      que hors de la coque, sur le faux. Le banc d'essai du prototype, lui,
      était un onglet de la barre — c'est ce qui ne devait pas survivre. */
-  if (new URLSearchParams(location.search).has("dehors"))
-    return (current = fakePlatform(files, "nouveau-venu", [], { outside: true, admitAfterMs: 12_000 }));
+  /* `?maj=0.2.0` : une version « publiée », pour voir le bandeau. */
+  const release = q.get("maj") ?? undefined;
+  if (q.has("dehors"))
+    return (current = fakePlatform(files, "nouveau-venu", [], { outside: true, admitAfterMs: 12_000, release }));
   return (current = fakePlatform(files, "ncarmichael", [
     knock(31, "sachab",       "2026-10-09T16:42:00Z", "Sacha",   "Marion", "ami", "sacha.b"),
     knock(28, "yann-delorme", "2026-10-07T07:05:00Z", "Yann",    "Alice",  "ami", ""),
     knock(22, "gaspard-h",    "2026-10-03T21:17:00Z", "Gaspard", "Hugo",   "ami", "gasp"),
     knock(17, "un-passant",   "2026-09-30T12:33:00Z", "",        "",       "",    ""),
-  ]));
+  ], { release }));
 }
 
 export const platform = (): Platform => {

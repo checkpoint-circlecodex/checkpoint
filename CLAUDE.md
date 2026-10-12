@@ -432,6 +432,25 @@ deux se règlent par un choix fait maintenant :
 - **Mise à jour** — l'updater Tauri ne couvre pas Android. Un bandeau « nouvelle
   version disponible » le complète, et il marche partout.
 
+**Aucune signature payante** — décidé par Nathan le 12 octobre. Le Mac est
+signé *ad hoc* (gratuit ; c'est ce qui évite « l'application est
+endommagée » sur Apple Silicon), Windows ne l'est pas. Conséquence assumée :
+**un avertissement au premier lancement**, et la page des versions dit
+comment le passer — c'est elle, pas l'application, qui parle à quelqu'un qui
+n'a encore rien ouvert.
+
+**La mise à jour intégrée a sa propre signature, gratuite**, et elle est
+vérifiée avant toute installation. ⚠️ **Perdre la clé privée, c'est ne plus
+jamais pouvoir mettre à jour personne** : chacun devrait réinstaller à la
+main. Elle vit dans `~/.tauri/checkpoint.key` sur la machine de Nathan et
+dans le secret `TAURI_SIGNING_PRIVATE_KEY` du dépôt — **jamais dans le
+dépôt**, et elle se sauvegarde ailleurs.
+
+**Une version sort en brouillon.** Pousser `vX.Y.Z` construit les trois
+systèmes ; c'est un humain qui publie, d'un clic. L'étiquette doit dire la
+version de `package.json` — seule source de version, que `tauri.conf.json`
+lit — et la CI refuse sinon.
+
 Structure des dossiers : voir §6 de la spec (`src/features`, `src/core`,
 `src/platform`, `src/shell`, `src-tauri`).
 

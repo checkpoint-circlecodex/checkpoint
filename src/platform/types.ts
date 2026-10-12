@@ -119,8 +119,20 @@ export interface Org {
   invitationUrl(): Promise<string>;
 }
 
+/** Ce qui est publié, et de quoi s'y mettre. Deux chemins, et c'est voulu :
+    la mise à jour de Tauri ne couvre pas Android, **le bandeau marche
+    partout** — il lit les versions publiées sur le dépôt public. */
+export interface Updates {
+  /** La dernière version publiée — `null` s'il n'y en a aucune. */
+  latest(): Promise<{ version: string; url: string } | null>;
+  /** Télécharger, vérifier la signature du projet, installer, relancer.
+      `false` si cette plateforme ne sait pas le faire : on renvoie alors
+      vers la page de la version. */
+  install(): Promise<boolean>;
+}
+
 export type Platform = {
-  storage: Storage; cache: Cache; session: Session; org: Org;
+  storage: Storage; cache: Cache; session: Session; org: Org; updates: Updates;
   /** Ouvrir une page **de GitHub** dans le navigateur de la personne. Le natif
       refuse tout autre hôte : la page ne peut envoyer personne ailleurs. */
   open(url: string): Promise<void>;

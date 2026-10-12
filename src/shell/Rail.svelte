@@ -7,8 +7,7 @@
      portes pour la même pièce, c'est une porte de trop. */
   import { registre } from "#core/model/store.svelte.ts";
   import { Face } from "#core/ui/index.ts";
-  import { pile } from "#core/ui/index.ts";
-  import { Inscribe } from "#features/inscribe/index.ts";
+  import { gestes, pile } from "#core/ui/index.ts";
   import { Live } from "#features/live/index.ts";
   import { Builder } from "#features/quests/index.ts";
   import { HOME, REGISTRY } from "./routes.ts";
@@ -58,7 +57,7 @@
   <!-- **Une porte par pièce**, et la barre sépare ce qu'on fait de ce qu'on
        parcourt. La règle entre les deux subsiste quand la barre est repliée. -->
   <div class="lbl">Agir</div>
-  <button class="act" onclick={() => pile.open("panneau", "Inscrire une œuvre", Inscribe)}>
+  <button class="act" onclick={() => gestes.inscrire?.()}>
     <span class="gl">+</span><span class="t">Inscrire une œuvre</span>
   </button>
   <button class="act" onclick={() => pile.open("panneau", "Ce que tu mènes", Live)}>
