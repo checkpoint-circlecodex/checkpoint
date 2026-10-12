@@ -23,6 +23,7 @@
 
   const LABEL: Record<string, string> = {
     admission: "Admission", ecart: "Écarté", alias: "Doublon fondu", defait: "Alias défait", greffe: "Greffe confié",
+    correction: "Fiche corrigée",
   };
   const nameOf = (login: string) => w.people[login]?.firstName ?? `@${login}`;
 </script>
@@ -149,7 +150,7 @@
             <div class="j">
               <span class="jd">{dateShort(j.at)}</span>
               <span class="jk">{LABEL[j.kind] ?? j.kind}</span>
-              <span class="jw"><b>{j.kind === "alias" || j.kind === "defait" ? titleOf(w, j.what, pref) || j.what : nameOf(j.what)}</b>{#if j.note} <i>{j.note}</i>{/if}</span>
+              <span class="jw"><b>{j.kind === "alias" || j.kind === "defait" || j.kind === "correction" ? titleOf(w, j.what, pref) || j.what : nameOf(j.what)}</b>{#if j.note} <i>{j.note}</i>{/if}</span>
               <span class="jb">{#if by}<Face who={by} size="s" />{/if}<span>{by?.firstName ?? j.by}</span></span>
             </div>
           {/each}

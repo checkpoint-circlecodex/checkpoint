@@ -172,6 +172,18 @@ export const consigner = (kind: Act["kind"], what: string, note?: string): Mutat
   apply: s => { s.journal = [...(s.journal ?? []), { at: now(), kind, what, ...(note ? { note } : {}) }]; },
 });
 
+/** **Corriger une fiche** — un geste de greffier. La correction part dans
+    son propre fragment, et une ligne au journal dit ce qui a changé : rien
+    n'est en coulisse, tout le monde lit le même dépôt. */
+export const corriger = (id: string, fields: { title?: string; titleFr?: string; year?: number }, note: string): Mutation => ({
+  label: "corrige une fiche",
+  apply: s => {
+    const at = now();
+    s.corrections = [...(s.corrections ?? []), { id, at, ...fields }];
+    s.journal = [...(s.journal ?? []), { at, kind: "correction", what: id, ...(note ? { note } : {}) }];
+  },
+});
+
 /** Fondre un doublon : un alias **déclaré chez soi**, appliqué à la lecture. */
 export const fondre = (from: string, to: string): Mutation => ({
   label: "fond un doublon",

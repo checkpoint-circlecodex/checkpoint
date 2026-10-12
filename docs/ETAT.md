@@ -2,7 +2,7 @@
 
 > Mis à jour à la fin de chaque session. Lire `../CLAUDE.md` d'abord.
 
-**Dernière mise à jour :** 12 octobre 2026 (v0.1.3 — l'audit, comblé)
+**Dernière mise à jour :** 13 octobre 2026 (v0.1.4 — signaler, corriger)
 **Palier en cours :** V0 — identité visuelle arrêtée, pas encore portée en Svelte
 
 ---
@@ -155,7 +155,7 @@ formulaire, six gestes manquants.**
 Ce ne sont pas des défauts de code mais des **gestes manquants**. Plusieurs
 demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
 
-- [ ] **Modifier une fiche d'œuvre** (titre, année ; ✅ *genres et jaquette faits le 12 octobre*) :
+- [x] **Modifier une fiche d'œuvre** — genres et jaquette par chacun (12 octobre) ; **titre et année par un greffier** (13 octobre, `corrections[]`, invariant 37) :
       impossible. Le prototype permettait au moins les genres et la jaquette
       sur la fiche. ⚠️ *À décider avant d'écrire* : la description d'une
       œuvre vit **dans le fragment de chaque personne qui la porte**, et la
@@ -453,6 +453,22 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 13 octobre 2026 — v0.1.4, signaler et corriger
+
+- **Signaler un défaut** : ⚐ au bas de la barre, et au pied de sa feuille
+  pour l'étroit (par le registre des gestes). Une issue publique au format
+  de `report.ts`, version et système joints ; le guichet des admissions ne
+  la confond pas avec une demande (essai).
+- **Corriger une fiche** — titre, titre français, année — par un greffier
+  seulement, depuis la fiche elle-même. Déclarée dans son fragment,
+  appliquée à la lecture pour tout le monde, la plus récente l'emportant
+  champ par champ, et inscrite au journal (« Fiche corrigée »). La porte
+  n'existe pas pour les autres.
+- Proposé à Nathan, accepté d'un « continue » : c'est la grammaire de
+  l'alias, et elle a l'avantage de ne rien réécrire chez personne.
+- Reste en attente de Nathan : **les clés IGDB et TMDb** (gratuites) pour
+  la recherche et les jaquettes automatiques.
 
 ### 12 octobre 2026 — v0.1.3, l'audit comblé
 

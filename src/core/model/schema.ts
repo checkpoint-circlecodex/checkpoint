@@ -78,12 +78,18 @@ export type Kin = { id: string; rel: string };
 /** Un doublon fondu : déclaré chez le greffier, appliqué à la lecture (invariant 31). */
 export type Alias = { from: string; to: string; at: string };
 
+/** **Une correction de fiche** — titre, titre français, année — déclarée
+    chez le greffier qui la fait, appliquée à la lecture, pour tout le monde.
+    La plus récente l'emporte, champ par champ. Même grammaire que l'alias
+    (invariant 31) : rien n'est réécrit dans le fichier d'un autre. */
+export type Correction = { id: string; at: string; title?: string; titleFr?: string; year?: number };
+
 /** Une ligne du journal du Greffe, **rangée chez le greffier qui a agi** et
     sommée à la lecture. Rien ne s'y efface : un acte défait est un acte de
     plus, pas une ligne retirée. */
 export type Act = {
   at: string;
-  kind: "admission" | "ecart" | "alias" | "defait" | "greffe";
+  kind: "admission" | "ecart" | "alias" | "defait" | "greffe" | "correction";
   what: string;
   note?: string;
 };
@@ -100,6 +106,7 @@ export type Shard = {
   quests?: Quest[];
   kin?: Kin[];
   aliases?: Alias[];       // seulement chez qui tient le greffe
+  corrections?: Correction[]; // idem : les fiches corrigées par un greffier
   journal?: Act[];         // les actes de greffier, chez qui les a faits
   seenAt?: string;         // dernière visite, pour l'encart du guetteur
 };

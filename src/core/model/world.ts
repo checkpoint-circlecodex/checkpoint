@@ -3,7 +3,7 @@
    est recalculé à chaque lecture, et c'est ce qui empêche un agrégat de
    devenir faux puis irrécupérable. */
 
-import type { Act, CircleId, Entry, Fonds, Kin, Post, Quest, Shard, User, Work } from "./schema.ts";
+import type { Act, CircleId, Correction, Entry, Fonds, Kin, Post, Quest, Shard, User, Work } from "./schema.ts";
 import { type Circle, circle } from "./lexicon.ts";
 
 /** Une personne, telle que les vues la lisent. */
@@ -77,6 +77,20 @@ export function merge(shards: Shard[], fondsFiles: Fonds[] = []): World {
   for (const id of Object.keys(catalog)) {
     if (genres[id]) catalog[id].genres = [...genres[id]];
     if (covers[id]) { if (covers[id].url) catalog[id].cover = covers[id].url; else delete catalog[id].cover; }
+  }
+  /* **Les corrections de greffier**, de la plus ancienne à la plus récente :
+     la dernière l'emporte, champ par champ. Appliquées à la lecture — le
+     fichier de qui a mal saisi un titre n'est jamais touché. Un titre
+     français vide efface le titre français. */
+  const corrections: Correction[] = [];
+  for (const sh of shards) corrections.push(...(sh.corrections ?? []));
+  corrections.sort((a, b) => a.at.localeCompare(b.at));
+  for (const c of corrections) {
+    const w = catalog[c.id];
+    if (!w) continue;
+    if (c.title?.trim()) w.title = c.title.trim();
+    if (c.titleFr !== undefined) { if (c.titleFr.trim()) w.titleFr = c.titleFr.trim(); else delete w.titleFr; }
+    if (typeof c.year === "number" && Number.isFinite(c.year)) w.year = c.year;
   }
 
   const people: Record<string, Person> = {};

@@ -83,3 +83,24 @@ test("un signalement de défaut porte sa version et son système, et ne passe pa
   assert.ok(!body.includes("**Ce qui était attendu**"), "un champ vide ne laisse pas de titre orphelin");
   assert.ok(reportTitle("x".repeat(200)).length <= 80);
 });
+
+test("une correction de greffier vaut pour tout le monde, champ par champ, la plus récente l'emporte", async () => {
+  const { corriger, inscrire } = await import("../src/core/model/acts.ts");
+  const typo = shard("alice");
+  inscrire("local:film-the-thig", { status: "completed" }, { mediaType: "film", title: "The Thig", year: 1928, manual: true }).apply(typo);
+  const before = JSON.stringify(typo);
+  const g = shard("nathan");
+  corriger("local:film-the-thig", { title: "The Thing", year: 1982 }, "« The Thig » → « The Thing » · 1928 → 1982").apply(g);
+  await new Promise(r => setTimeout(r, 3));
+  corriger("local:film-the-thig", { titleFr: "The Thing" }, "").apply(g);
+  const w = merge([typo, g]);
+  assert.equal(w.catalog["local:film-the-thig"].title, "The Thing");
+  assert.equal(w.catalog["local:film-the-thig"].year, 1982, "la seconde correction n'a pas défait la première");
+  assert.equal(w.catalog["local:film-the-thig"].titleFr, "The Thing");
+  assert.equal(JSON.stringify(typo), before, "le fichier d'Alice n'est pas touché");
+  assert.equal(w.journal[0].kind, "correction");
+  /* Un titre français vide l'efface. */
+  await new Promise(r => setTimeout(r, 3));
+  corriger("local:film-the-thig", { titleFr: "" }, "").apply(g);
+  assert.equal(merge([typo, g]).catalog["local:film-the-thig"].titleFr, undefined);
+});

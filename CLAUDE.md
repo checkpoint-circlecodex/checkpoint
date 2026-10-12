@@ -286,6 +286,12 @@ pas contourner.
    (`identity`), et jamais par référence — la fiche sommée porte les
    catégories des autres, et un objet partagé se modifiait des deux côtés à
    la fois (invariant 34).
+   **Le titre et l'année, eux, ne se corrigent que par un greffier**
+   (13 octobre, accepté par Nathan) : `corrections[]` dans son fragment,
+   appliquées à la lecture, la plus récente l'emportant champ par champ, et
+   une ligne au journal. Même grammaire que l'alias (invariant 31) — le
+   fichier de qui a mal saisi n'est jamais touché. La porte « Corriger la
+   fiche » n'existe que pour qui tient la charge (invariant 32).
 
 *(La numérotation est en ajout seul, comme les champs du schéma : des documents
 citent ces numéros, on n'en renumérote aucun.)*

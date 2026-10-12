@@ -8,6 +8,7 @@
   import { KIND, STATUS, UNIT, UNIT_LBL, UNIT_OF, dec, roman, ago } from "#core/model/lexicon.ts";
   import Plate from "./Plate.svelte";
   import Ranger from "./Ranger.svelte";
+  import Corriger from "./Corriger.svelte";
   import { avgOf, favsOf, otherTitle, progressOf, rowsFor, titleOf } from "#core/selectors/index.ts";
   import {
     accompagner, avancer, changerStatut, chroniquer, distinguer, identity, inscrire, juger,
@@ -135,6 +136,13 @@
         <div><span class="k">Discorde</span><span class="v">{spread ? roman(spread) : "—"}</span></div>
       </div>
       {#if spread >= 4}<p class="disc">Les Ordres ne s'accordent pas sur cette œuvre.</p>{/if}
+      <!-- **Une porte qu'on n'a pas la charge d'ouvrir n'existe pas** : la
+           correction n'apparaît que pour qui tient le Greffe (invariant 32). -->
+      {#if registre.steward}
+        <button class="greffe" onclick={() => pile.open("panneau", "Corriger la fiche", Corriger, { id, work: m })}>
+          ✇ Corriger la fiche
+        </button>
+      {/if}
     </header>
 
     {#if rated.length > 1 && avg !== null}
@@ -374,6 +382,9 @@
     pointer-events: none;
   }
   header, .sect { position: relative; z-index: 1; }
+  .greffe { display: inline-flex; align-items: center; min-height: 44px; margin-top: 4px; font-size: 10px; font-weight: 700;
+            letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  .greffe:hover { color: var(--ink); }
   /* La planche, à droite du titre. */
   .plate { float: right; width: 132px; aspect-ratio: 2 / 3; margin: 0 0 12px 22px; display: grid; place-items: center;
            overflow: hidden; border: 1px solid var(--rule2); background: var(--raise); }
