@@ -6,9 +6,9 @@
    déclenche ici par comparaison de SHA, exactement comme GitHub le rend ; un
    faux qui accepterait toujours l'écriture ne vaudrait rien. */
 
-import { ConflictError, type Cache, type Platform, type Session, type Storage, type TreeEntry } from "./types.ts";
+import { ConflictError, type Cache, type Knock, type Org, type Platform, type Session, type Storage, type TreeEntry } from "./types.ts";
 
-export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmichael"): Platform {
+export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmichael", knocks: Knock[] = []): Platform {
   const files = new Map<string, { sha: string; text: string }>();
   const blobs = new Map<string, string>();
   let n = 0;
@@ -38,7 +38,19 @@ export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmicha
     async openIssue(title) {
       return { number: 1, url: `fake://issue/1#${encodeURIComponent(title)}` };
     },
-    async roleOf(login) { return login === "ncarmichael" ? "admin" : "member"; },
+    async roleOf(login) { return roles[login] ?? (files.has(`data/${login}.json`) ? "member" : null); },
+  };
+
+  /* Les rôles vivent ici comme ils vivraient dans l'organisation : à part
+     des fragments, et modifiables seulement par l'organisation. */
+  const roles: Record<string, "admin" | "member"> = { ncarmichael: "admin", mrossi: "admin" };
+  let open = [...knocks];
+  const org: Org = {
+    async knocks() { return [...open]; },
+    async admit(k) { open = open.filter(x => x.issue !== k.issue); roles[k.login] = "member"; },
+    async shun(k) { open = open.filter(x => x.issue !== k.issue); },
+    async setRole(login, role) { roles[login] = role; },
+    async admins() { return Object.keys(roles).filter(k => roles[k] === "admin"); },
   };
 
   const mem = new Map<string, string>();
@@ -57,5 +69,5 @@ export function fakePlatform(seed: Record<string, string> = {}, who = "ncarmicha
     async forget() {},
   };
 
-  return { storage, cache, session };
+  return { storage, cache, session, org };
 }

@@ -17,6 +17,10 @@
     { hash: string; collapsed?: boolean } = $props();
 
   const doors = $derived(REGISTRY.filter(v => !v.only || v.only()));
+  const roam = $derived(doors.filter(v => !v.hold));
+  /* Ce qu'on **tient**, sous sa propre règle : ni une action, ni une
+     promenade. Absent pour qui n'a pas la charge — pas grisé, absent. */
+  const hold = $derived(doors.filter(v => v.hold));
   const moi = $derived(registre.moi);
   let open = $state<Record<string, boolean>>({});
 </script>
@@ -51,7 +55,7 @@
     <a class="row" class:on={hash === HOME.href} href={HOME.href}>
       <span class="gl">{HOME.gl}</span><span class="t">{HOME.label}</span>
     </a>
-    {#each doors as v (v.id)}
+    {#each roam as v (v.id)}
       {@const subs = v.subs?.() ?? null}
       <div class="grp" class:open={open[v.id]}>
         <div class="row" class:on={hash.startsWith(v.href)}>
@@ -75,6 +79,16 @@
       </div>
     {/each}
   </nav>
+
+  {#if hold.length}
+    <div class="sep"></div>
+    <div class="lbl">Tenir</div>
+    {#each hold as v (v.id)}
+      <a class="act" class:here={hash.startsWith(v.href)} href={v.href} title={v.label}>
+        <span class="gl">{v.gl}</span><span class="t">{v.label}</span>
+      </a>
+    {/each}
+  {/if}
 
   <div class="foot">
     {#if moi}
@@ -131,6 +145,7 @@
              font-size: 16px; letter-spacing: 0; line-height: 1; }
   .act:hover .t { text-decoration: underline; text-underline-offset: 3px; }
   .collapsed .act { justify-content: center; }
+  .act.here { box-shadow: inset 2px 0 0 var(--ink); }
 
   nav { display: flex; flex-direction: column; }
   .row { display: flex; align-items: center; min-height: 44px; }

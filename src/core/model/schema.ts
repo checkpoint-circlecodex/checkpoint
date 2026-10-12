@@ -73,6 +73,16 @@ export type Kin = { id: string; rel: string };
 /** Un doublon fondu : déclaré chez le greffier, appliqué à la lecture (invariant 31). */
 export type Alias = { from: string; to: string; at: string };
 
+/** Une ligne du journal du Greffe, **rangée chez le greffier qui a agi** et
+    sommée à la lecture. Rien ne s'y efface : un acte défait est un acte de
+    plus, pas une ligne retirée. */
+export type Act = {
+  at: string;
+  kind: "admission" | "ecart" | "alias" | "defait" | "greffe";
+  what: string;
+  note?: string;
+};
+
 export type Shard = {
   schemaVersion: number;
   user: User;
@@ -85,6 +95,7 @@ export type Shard = {
   quests?: Quest[];
   kin?: Kin[];
   aliases?: Alias[];       // seulement chez qui tient le greffe
+  journal?: Act[];         // les actes de greffier, chez qui les a faits
   seenAt?: string;         // dernière visite, pour l'encart du guetteur
 };
 

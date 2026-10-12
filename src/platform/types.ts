@@ -67,4 +67,33 @@ export interface Session {
   forget(): Promise<void>;
 }
 
-export type Platform = { storage: Storage; cache: Cache; session: Session };
+/** Une demande d'adhésion : une issue du dépôt public. **Son auteur est celui
+    que GitHub atteste** (`login`) — jamais ce que le corps prétend. Le reste
+    est ce que la personne a écrit au vasistas, et rien ne le garantit. */
+export type Knock = {
+  issue: number;
+  login: string;
+  at: string;
+  firstName: string;
+  vouchedName: string;
+  vouchedAs: string;
+  discord: string;
+  url: string;
+};
+
+/** Ce que l'organisation sait faire pour qui tient le greffe. Chaque geste
+    est un appel GitHub : l'application n'a pas d'autorité à elle, elle
+    demande (invariant 10). */
+export interface Org {
+  knocks(): Promise<Knock[]>;
+  /** **Une invitation, pas une entrée forcée** : GitHub ne fait entrer
+      personne dans une organisation sans son accord. */
+  admit(k: Knock, note: string): Promise<void>;
+  /** Ferme l'issue avec un mot. Aucune liste noire ne s'ouvre. */
+  shun(k: Knock, note: string): Promise<void>;
+  setRole(login: string, role: "admin" | "member"): Promise<void>;
+  /** Qui tient la charge — lu dans l'organisation, jamais dans un fichier. */
+  admins(): Promise<string[]>;
+}
+
+export type Platform = { storage: Storage; cache: Cache; session: Session; org: Org };

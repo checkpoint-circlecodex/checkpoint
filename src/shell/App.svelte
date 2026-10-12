@@ -30,7 +30,7 @@
     return () => removeEventListener("hashchange", onHash);
   });
 
-  $effect(() => { registre.open(platform().storage, platform().cache); });
+  $effect(() => { registre.open(platform().storage, platform().cache, platform().org); });
 
   const current = $derived(route(hash));
   const tabs = $derived([HOME, ...REGISTRY.filter(v => !v.bench && !v.hold && (!v.only || v.only()))]);
@@ -44,6 +44,11 @@
   <header class="mob">
     <a href="#/" class="sigil">C</a>
     <span class="mark">Checkpoint</span>
+    <!-- En étroit la barre basse reste à quatre entrées : la charge passe
+         dans l'en-tête, comme le visage — et seulement pour qui la tient. -->
+    {#each REGISTRY.filter(v => v.hold && (!v.only || v.only())) as v (v.id)}
+      <a class="mob-hold" class:on={hash.startsWith(v.href)} href={v.href} aria-label={v.label}>{v.gl}</a>
+    {/each}
   </header>
 
   <main>
@@ -93,7 +98,10 @@
     .sigil::before {
       content: ""; position: absolute; width: 26px; height: 26px; border: 1.5px solid var(--ink);
     }
-    .mark { font-size: 12.5px; font-weight: 600; }
+    .mark { font-size: 12.5px; font-weight: 600; flex: 1; }
+    .mob-hold { display: grid; place-items: center; width: 44px; height: 44px; margin: -7px -8px -7px 0;
+                font-family: var(--fs); font-size: 17px; color: var(--dim); letter-spacing: 0; line-height: 1; }
+    .mob-hold.on { color: var(--ink); box-shadow: inset 0 -1.5px 0 var(--ink); }
     main { height: calc(100% - 47px - 54px); }
     .tabs {
       display: grid; grid-template-columns: repeat(4, 1fr);

@@ -10,8 +10,9 @@ import { folio } from "#features/folio/index.ts";
 import { orders } from "#features/orders/index.ts";
 import { soul } from "#features/soul/index.ts";
 import { quest, quests } from "#features/quests/index.ts";
+import { greffe } from "#features/greffe/index.ts";
 
-export const REGISTRY: ViewEntry[] = [orders, works, quests];
+export const REGISTRY: ViewEntry[] = [orders, works, quests, greffe];
 export const HOME = home;
 
 export type Route = { entry: ViewEntry; props: Record<string, unknown>; key: string; depth: number };
@@ -22,6 +23,8 @@ export type Route = { entry: ViewEntry; props: Record<string, unknown>; key: str
     produirait un geste au hasard, donc un geste qui ne veut plus rien dire. */
 export function route(hash: string): Route {
   const h = hash || "#/";
+  if (h.startsWith("#/greffe"))
+    return { entry: greffe, props: {}, key: "#/greffe", depth: 1 };
   if (h.startsWith("#/quete/"))
     return { entry: quest, props: { id: h.slice(8) }, key: h, depth: 2 };
   if (h.startsWith("#/quetes"))

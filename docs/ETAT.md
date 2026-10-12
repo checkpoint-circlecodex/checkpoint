@@ -9,15 +9,22 @@
 
 ## Prochaine action
 
-**Le Greffe et ses actes** (ligne 4 du découpage).
+**Le volet-lanceur** (ligne 5 du découpage).
 
-Faites (12 octobre) : **la lignée** — maisonnée, courbes, halos, la phrase
-en romain, ce qu'ils ont tous mené au bout, là où ils se divisent — et
-**déclarer une parenté**, y compris **répondre à une déclaration reçue**.
+Fait (12 octobre) : **le Greffe**, branché sur l'organisation réelle — les
+demandes lues sur le dépôt public, admettre par invitation, écarter, fondre
+et défaire un doublon, confier la charge, et le journal sommé depuis le
+fragment de chaque greffier.
 
-Le découpage restant : 4 le Greffe — 5 le volet-lanceur — 6 l'accueil
-complet — 7 le pied de feuille et l'établi aux cinq clics — 8-9 la cité en
-pixel art ⚠️ — 10-11 l'entrée dans le groupe en dur — 12 la livraison ⚠️.
+Le découpage restant : 5 le volet-lanceur — 6 l'accueil complet — 7 le pied
+de feuille et l'établi aux cinq clics — 8-9 la cité en pixel art ⚠️ — 10-11
+l'entrée dans le groupe en dur — 12 la livraison ⚠️.
+
+⚠️ **Pour l'étape 5** : une admission envoie une *invitation* GitHub, que la
+personne doit accepter. L'écran d'attente pourra l'accepter pour elle
+(`PATCH /user/memberships/orgs/{org}`) dès qu'elle paraît — sinon le critère
+de la V1, « entrer sans qu'on lui explique rien », tombe sur un courriel de
+GitHub.
 
 Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
 Twitch) et **la décision de signature** (99 $/an).
@@ -253,6 +260,39 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — le Greffe, sur l'organisation réelle
+
+- **Le prototype simulait tout ; il a fallu décider d'où viennent les
+  choses.** Une demande est une issue ouverte du dépôt public portant un
+  marqueur en commentaire HTML — invisible sur GitHub, sans ambiguïté pour
+  l'application. **Pas d'étiquette** : un compte extérieur n'a pas le droit
+  d'en poser. Et **l'auteur d'une demande est celui que GitHub atteste**, jamais
+  ce que le corps prétend — un essai fixe qu'aucun champ du corps ne
+  s'appelle `login`.
+- **Le format d'une demande est écrit une seule fois** (`platform/knock.ts`) :
+  l'écran d'entrée le composera, le Greffe le relit. Deux endroits qui
+  écriraient chacun leur version finiraient par diverger.
+- **Admettre, c'est inviter.** GitHub ne fait entrer personne de force dans
+  une organisation ; l'écran le dit, et l'étape 5 devra accepter l'invitation
+  pour la personne — sinon le critère de la V1 tombe sur un courriel.
+- **Le journal se déclare chez chaque greffier et se somme à la lecture**,
+  comme tout fait collectif. **Défaire un alias ajoute une ligne, n'en retire
+  aucune** : la fonte et sa défaite restent. Et un acte qui échoue côté
+  GitHub n'écrit rien au journal — *les trois, ou aucun*.
+- **Le banc d'essai du prototype n'a pas été porté** : il simulait le rôle,
+  que l'application lit maintenant dans l'organisation. La porte disparaît
+  bien de la barre quand le rôle tombe à « membre », et l'adresse tapée donne
+  la phrase.
+- **« Se réclame de Alice »** : l'élision fait partie du ton, corrigée.
+- **Vérifié contre l'organisation réelle**, en lecture seule : les greffiers
+  se lisent (Gluenathazam), les issues aussi. Pas d'admission dans un essai :
+  elle inviterait une vraie personne.
+- ⚠️ **Un débordement de 238 px observé une fois, non reproduit** — ni à 375,
+  800, 900 ou 1280 px, ni à travers toute la série d'actes, ni en rejouant la
+  bascule de rôle. 238 ≈ la largeur de la barre (236) : probablement une
+  mesure prise pendant que le volet du navigateur changeait de taille.
+  **Consigné comme tel, pas comme corrigé.**
 
 ### 12 octobre 2026 — la lignée, et répondre à une parenté
 

@@ -23,7 +23,16 @@ export async function bootPlatform(): Promise<Platform> {
   const files: Record<string, string> = {};
   for (const sh of seed as { user: { id: string } }[])
     files[`data/${sh.user.id}.json`] = JSON.stringify(sh);
-  return (current = fakePlatform(files));
+  /* Les quatre demandes du prototype, choisies pour leurs trois cas : un
+     parrain qui se résout, un parrain qui ne désigne personne, aucun parrain. */
+  const knock = (issue: number, login: string, at: string, firstName: string, vouchedName: string, vouchedAs: string, discord: string) =>
+    ({ issue, login, at, firstName, vouchedName, vouchedAs, discord, url: `https://github.com/checkpoint-circlecodex/checkpoint/issues/${issue}` });
+  return (current = fakePlatform(files, "ncarmichael", [
+    knock(31, "sachab",       "2026-10-09T16:42:00Z", "Sacha",   "Marion", "ami", "sacha.b"),
+    knock(28, "yann-delorme", "2026-10-07T07:05:00Z", "Yann",    "Alice",  "ami", ""),
+    knock(22, "gaspard-h",    "2026-10-03T21:17:00Z", "Gaspard", "Hugo",   "ami", "gasp"),
+    knock(17, "un-passant",   "2026-09-30T12:33:00Z", "",        "",       "",    ""),
+  ]));
 }
 
 export const platform = (): Platform => {

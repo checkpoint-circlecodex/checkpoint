@@ -6,8 +6,9 @@ import { invoke } from "@tauri-apps/api/core";
 import { fromB64, toB64 } from "./b64.ts";
 import {
   AuthError, ConflictError,
-  type Cache, type Platform, type Session, type Storage, type TreeEntry,
+  type Cache, type Knock, type Org, type Platform, type Session, type Storage, type TreeEntry,
 } from "./types.ts";
+import { parseKnock } from "./knock.ts";
 
 type Reply = { status: number; body: string; etag: string | null; remaining: number | null };
 
@@ -116,7 +117,54 @@ export function tauriPlatform(): Platform {
     forget: () => invoke("gh_forget"),
   };
 
-  return { storage, cache, session };
+  const org: Org = {
+    async knocks() {
+      const { public_repo } = await where();
+      /* Les issues ouvertes, toutes : on ne peut pas filtrer par étiquette,
+         un inconnu n'a pas le droit d'en poser. C'est le marqueur dans le
+         corps qui dit « ceci est une demande ». Les demandes de tirage sont
+         aussi des issues pour l'API : on les écarte. */
+      const r = await gh("GET", `/repos/${public_repo}/issues?state=open&per_page=100`);
+      if (r.status !== 200) throw fail("lecture des demandes", r);
+      return (json(r) ?? [])
+        .filter((i: { pull_request?: unknown }) => !i.pull_request)
+        .map((i: { number: number; user: { login: string }; created_at: string; body: string; html_url: string }) => {
+          const f = parseKnock(i.body);
+          return f ? { issue: i.number, login: i.user.login, at: i.created_at, url: i.html_url, ...f } : null;
+        })
+        .filter(Boolean) as Knock[];
+    },
+
+    async admit(k, note) {
+      const { org: o, public_repo } = await where();
+      const r = await gh("PUT", `/orgs/${o}/memberships/${k.login}`, { role: "member" });
+      if (r.status !== 200) throw fail("invitation dans l'organisation", r);
+      await gh("POST", `/repos/${public_repo}/issues/${k.issue}/comments`, { body: note });
+      await gh("PATCH", `/repos/${public_repo}/issues/${k.issue}`, { state: "closed", state_reason: "completed" });
+    },
+
+    async shun(k, note) {
+      const { public_repo } = await where();
+      await gh("POST", `/repos/${public_repo}/issues/${k.issue}/comments`, { body: note });
+      const r = await gh("PATCH", `/repos/${public_repo}/issues/${k.issue}`, { state: "closed", state_reason: "not_planned" });
+      if (r.status !== 200) throw fail("fermeture de la demande", r);
+    },
+
+    async admins() {
+      const { org: o } = await where();
+      const r = await gh("GET", `/orgs/${o}/members?role=admin&per_page=100`);
+      if (r.status !== 200) throw fail("lecture des greffiers", r);
+      return (json(r) ?? []).map((m: { login: string }) => m.login);
+    },
+
+    async setRole(login, role) {
+      const { org: o } = await where();
+      const r = await gh("PUT", `/orgs/${o}/memberships/${login}`, { role });
+      if (r.status !== 200) throw fail("changement de rôle", r);
+    },
+  };
+
+  return { storage, cache, session, org };
 }
 
 /** Vrai quand on tourne dans la coque. Hors coque — un navigateur ouvert sur

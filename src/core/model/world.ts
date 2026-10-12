@@ -3,7 +3,7 @@
    est recalculé à chaque lecture, et c'est ce qui empêche un agrégat de
    devenir faux puis irrécupérable. */
 
-import type { Alias, CircleId, Entry, Kin, Post, Quest, Shard, User, Work } from "./schema.ts";
+import type { Act, CircleId, Entry, Kin, Post, Quest, Shard, User, Work } from "./schema.ts";
 import { type Circle, circle } from "./lexicon.ts";
 
 /** Une personne, telle que les vues la lisent. */
@@ -20,6 +20,8 @@ export type Row = Entry & { mediaId: string; personId: string };
 
 export type Mention = Post & { personId: string };
 export type OpenQuest = Quest & { personId: string };
+/** Un acte de greffier, avec qui l'a fait. */
+export type SignedAct = Act & { by: string };
 
 export type World = {
   people: Record<string, Person>;
@@ -29,6 +31,8 @@ export type World = {
   quests: OpenQuest[];
   /** Les doublons fondus, déclarés par les greffiers (invariant 31). */
   alias: Record<string, string>;
+  /** Le journal du Greffe, sommé depuis le fragment de chaque greffier. */
+  journal: SignedAct[];
 };
 
 /** Descend la chaîne d'alias jusqu'au bout.
@@ -53,6 +57,7 @@ export function merge(shards: Shard[]): World {
   const rows: Row[] = [];
   const posts: Mention[] = [];
   const quests: OpenQuest[] = [];
+  const journal: SignedAct[] = [];
 
   for (const sh of shards) {
     people[sh.user.id] = {
@@ -80,13 +85,15 @@ export function merge(shards: Shard[]): World {
 
     for (const m of sh.loge ?? []) posts.push({ ...m, personId: sh.user.id });
     for (const q of sh.quests ?? []) quests.push({ ...q, personId: sh.user.id });
+    for (const a of sh.journal ?? []) journal.push({ ...a, by: sh.user.id });
   }
 
-  return { people, catalog, rows, posts, quests, alias };
+  journal.sort((a, b) => b.at.localeCompare(a.at));
+  return { people, catalog, rows, posts, quests, alias, journal };
 }
 
 export const emptyWorld = (): World =>
-  ({ people: {}, catalog: {}, rows: [], posts: [], quests: [], alias: {} });
+  ({ people: {}, catalog: {}, rows: [], posts: [], quests: [], alias: {}, journal: [] });
 
 /** Une œuvre fondue garde son titre dans le catalogue — on ne supprime rien —
     mais elle ne se montre plus nulle part. */

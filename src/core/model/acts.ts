@@ -7,7 +7,7 @@
    Et chacun ne touche **que le fragment de celui qui agit**. Il n'y a pas
    d'acte qui écrive ailleurs, et il ne peut pas y en avoir. */
 
-import { FAV_MAX, type Entry, type Shard, type Status, type Work } from "./schema.ts";
+import { FAV_MAX, type Act, type Entry, type Shard, type Status, type Work } from "./schema.ts";
 import type { Mutation } from "./write.ts";
 
 const now = () => new Date().toISOString();
@@ -130,15 +130,32 @@ export const retirerParente = (id: string): Mutation => ({
   apply: s => { s.kin = (s.kin ?? []).filter(k => k.id !== id); },
 });
 
+/** Une ligne au journal du Greffe. **Elle accompagne l'acte, elle ne le
+    remplace pas** : admettre se fait dans l'organisation, et le journal dit
+    qu'on l'a fait. */
+export const consigner = (kind: Act["kind"], what: string, note?: string): Mutation => ({
+  label: "tient le journal du greffe",
+  apply: s => { s.journal = [...(s.journal ?? []), { at: now(), kind, what, ...(note ? { note } : {}) }]; },
+});
+
 /** Fondre un doublon : un alias **déclaré chez soi**, appliqué à la lecture. */
 export const fondre = (from: string, to: string): Mutation => ({
   label: "fond un doublon",
-  apply: s => { s.aliases = [...(s.aliases ?? []).filter(a => a.from !== from), { from, to, at: now() }]; },
+  apply: s => {
+    s.aliases = [...(s.aliases ?? []).filter(a => a.from !== from), { from, to, at: now() }];
+    s.journal = [...(s.journal ?? []), { at: now(), kind: "alias", what: to, note: `${from} → ${to}` }];
+  },
 });
 
+/** Défaire un alias. **C'est un acte de plus, pas une ligne effacée** : le
+    journal garde la fonte et sa défaite. */
 export const defaire = (from: string): Mutation => ({
   label: "défait un alias",
-  apply: s => { s.aliases = (s.aliases ?? []).filter(a => a.from !== from); },
+  apply: s => {
+    const was = (s.aliases ?? []).find(a => a.from === from);
+    s.aliases = (s.aliases ?? []).filter(a => a.from !== from);
+    if (was) s.journal = [...(s.journal ?? []), { at: now(), kind: "defait", what: from, note: `${from} ⇸ ${was.to}` }];
+  },
 });
 
 /** La dernière visite, écrite à la fermeture : c'est elle qui donne son sens

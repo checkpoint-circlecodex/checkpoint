@@ -9,7 +9,8 @@ import { openWorld, type Problem } from "./load.ts";
 import { makeScribe, parseShard, type Mutation, type Scribe, type WriteState } from "./write.ts";
 import { blankShard } from "./write.ts";
 import { shardPath, type Shard } from "./schema.ts";
-import type { Cache, Storage } from "#platform/index.ts";
+import type { Cache, Knock, Org, Storage } from "#platform/index.ts";
+import { consigner } from "./acts.ts";
 
 type Phase = "vide" | "ouverture" | "prêt" | "fermé";
 
@@ -29,6 +30,60 @@ class Registre {
 
   #scribe: Scribe | null = null;
   #storage: Storage | null = null;
+  #org: Org | null = null;
+
+  /* --- Le Greffe. Le rôle se lit dans l'organisation (invariant 10) ; tant
+     qu'on ne l'a pas lu, on n'a pas la charge — une porte qui apparaît puis
+     disparaît serait pire qu'une porte qui tarde. --- */
+  role = $state<"admin" | "member" | null>(null);
+  stewards = $state<string[]>([]);
+  knocks = $state<Knock[]>([]);
+  orgError = $state<string | null>(null);
+
+  get steward() { return this.role === "admin"; }
+
+  async refreshGreffe() {
+    if (!this.#org || !this.steward) return;
+    try {
+      const [k, a] = await Promise.all([this.#org.knocks(), this.#org.admins()]);
+      this.knocks = k; this.stewards = a; this.orgError = null;
+    } catch (e) { this.orgError = (e as Error).message; }
+  }
+
+  /** Admettre : une invitation dans l'organisation, l'issue refermée avec un
+      mot, et une ligne au journal. **Les trois, ou aucun** — si l'invitation
+      échoue, on n'inscrit rien et on le dit. */
+  async admit(k: Knock) {
+    if (!this.#org) return;
+    try {
+      await this.#org.admit(k, `Admis au registre par @${this.me}. Une invitation est partie dans l'organisation : il suffit de l'accepter.`);
+      this.act(consigner("admission", k.login, k.firstName ? `${k.firstName}` : undefined));
+      this.knocks = this.knocks.filter(x => x.issue !== k.issue);
+      this.orgError = null;
+    } catch (e) { this.orgError = (e as Error).message; }
+  }
+
+  async shun(k: Knock) {
+    if (!this.#org) return;
+    try {
+      await this.#org.shun(k, `Demande refermée par @${this.me}. Rien n'empêche de frapper de nouveau.`);
+      this.act(consigner("ecart", k.login, k.vouchedName ? `se réclamait de « ${k.vouchedName} »` : "ne se réclamait de personne"));
+      this.knocks = this.knocks.filter(x => x.issue !== k.issue);
+      this.orgError = null;
+    } catch (e) { this.orgError = (e as Error).message; }
+  }
+
+  /** Confier la charge : **un rôle qui change dans l'organisation**. Il n'y a
+      pas d'administrateur du côté de l'application. */
+  async entrust(login: string) {
+    if (!this.#org) return;
+    try {
+      await this.#org.setRole(login, "admin");
+      this.act(consigner("greffe", login, "charge confiée"));
+      this.stewards = [...new Set([...this.stewards, login])];
+      this.orgError = null;
+    } catch (e) { this.orgError = (e as Error).message; }
+  }
 
   /** **Inscrire.** Le seul geste d'écriture offert aux vues : elles décrivent
       une intention, elles ne touchent jamais au stockage. */
@@ -68,7 +123,7 @@ class Registre {
 
   #remerge(_touched?: Shard) { this.world = merge(this.#shards); }
 
-  async open(storage: Storage, cache: Cache) {
+  async open(storage: Storage, cache: Cache, org?: Org) {
     this.phase = "ouverture";
     const t0 = performance.now();
     this.me = await storage.me();
@@ -78,6 +133,8 @@ class Registre {
     this.problems = problems;
     this.last = { fetched, fromCache, ms: Math.round(performance.now() - t0) };
     this.#storage = storage;
+    this.#org = org ?? null;
+    this.role = this.me ? await storage.roleOf(this.me).catch(() => null) : null;
 
     if (this.me) {
       const me = this.me;
@@ -99,6 +156,7 @@ class Registre {
       });
     }
     this.phase = "prêt";
+    void this.refreshGreffe();
   }
 
   /** Celui qu'on est, tel que le monde le connaît. `null` tant qu'on n'est pas

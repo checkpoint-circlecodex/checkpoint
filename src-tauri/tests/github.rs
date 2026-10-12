@@ -114,3 +114,34 @@ async fn un_304_ne_decompte_pas_du_quota_authentifie() {
     }
     eprintln!("  ✓ 304 authentifié : quota inchangé à {last} sur trois relectures");
 }
+
+/// Le Greffe lit qui tient la charge **dans l'organisation**. Lecture seule :
+/// un essai qui admettrait quelqu'un inviterait une vraie personne.
+#[tokio::test]
+async fn les_greffiers_se_lisent_dans_l_organisation() {
+    let Some(t) = token() else { return eprintln!("· pas de jeton, essai sauté") };
+    let r = github::request(&t, "GET", &format!("/orgs/{ORG}/members?role=admin&per_page=100"), None, None)
+        .await
+        .expect("requête");
+    assert_eq!(r.status, 200, "{}", r.body);
+    let v: serde_json::Value = serde_json::from_str(&r.body).unwrap();
+    let who: Vec<&str> = v.as_array().unwrap().iter().filter_map(|m| m["login"].as_str()).collect();
+    assert!(!who.is_empty(), "une organisation sans greffier ne pourrait admettre personne");
+    eprintln!("  ✓ greffiers : {}", who.join(", "));
+}
+
+/// Les demandes sont les issues ouvertes du dépôt public. La lecture doit
+/// passer avec les droits de l'application, sans étiquette ni filtre.
+#[tokio::test]
+async fn les_demandes_se_lisent_sur_le_depot_public() {
+    let Some(t) = token() else { return eprintln!("· pas de jeton, essai sauté") };
+    let r = github::request(&t, "GET", "/repos/checkpoint-circlecodex/checkpoint/issues?state=open&per_page=100", None, None)
+        .await
+        .expect("requête");
+    assert_eq!(r.status, 200, "{}", r.body);
+    let v: serde_json::Value = serde_json::from_str(&r.body).unwrap();
+    let n = v.as_array().unwrap().iter()
+        .filter(|i| i["body"].as_str().unwrap_or("").contains("<!-- checkpoint:knock v1 -->"))
+        .count();
+    eprintln!("  ✓ issues ouvertes : {}, dont {} demande(s)", v.as_array().unwrap().len(), n);
+}

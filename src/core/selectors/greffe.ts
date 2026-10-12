@@ -44,3 +44,13 @@ export function suspected(w: World): Suspicion[] {
 
 export const aliasList = (w: World) =>
   Object.entries(w.alias).map(([from, to]) => ({ from, to }));
+
+/** Le parrain d'une demande est **un nom tapé**, pas un identifiant : il
+    peut ne désigner personne. Trois cas, et c'est là qu'un greffier sert à
+    quelque chose — il se résout, il ne se résout pas, ou il est vide. */
+export function vouchedBy(w: World, name: string) {
+  const n = name.trim().toLowerCase();
+  if (!n) return null;
+  return Object.values(w.people).find(p =>
+    p.firstName.toLowerCase() === n || p.handle.toLowerCase() === n || p.id.toLowerCase() === n) ?? false;
+}
