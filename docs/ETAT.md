@@ -9,20 +9,22 @@
 
 ## Prochaine action
 
-**La cité en pixel art** (lignes 8-9 du découpage) ⚠️ — le seul morceau qui
-ne se juge qu'à l'image.
+**L'entrée dans le groupe en dur** (lignes 10-11 du découpage) : les quatre
+tuiles, le vrai device flow, la vraie demande, l'écran d'attente qui accepte
+l'invitation pour la personne — et le retrait des bancs d'essai.
 
-Fait (12 octobre) : **le pied de feuille** — préférence de titres, relire le
-dépôt, lire son fragment, se déconnecter — et **l'établi**, ouvert par les
-cinq clics.
+Fait (12 octobre) : **la cité en pixel art**, en tête du Registre —
+**identique au pixel près au prototype**, en une seule passe au lieu des deux
+prévues.
 
-Le découpage restant : 8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans le
-groupe en dur — 12 la livraison ⚠️.
+Le découpage restant : 10-11 l'entrée dans le groupe en dur — 12 la
+livraison ⚠️.
 
 ⚠️ **Pour l'étape 5** : une admission envoie une *invitation* GitHub, que la
-personne doit accepter. L'écran d'attente pourra l'accepter pour elle
+personne doit accepter. L'écran d'attente devra l'accepter pour elle
 (`PATCH /user/memberships/orgs/{org}`) — sinon le critère de la V1 tombe sur
-un courriel de GitHub.
+un courriel de GitHub. Le format de la demande est déjà écrit
+(`platform/knock.ts`) ; la cité est prête pour passer en contrebas des tuiles.
 
 Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
 Twitch) et **la décision de signature** (99 $/an).
@@ -258,6 +260,32 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — la cité, au pixel près
+
+- **J'avais annoncé cette ligne comme imprévisible, et elle ne l'était pas.**
+  Elle l'aurait été si j'avais redessiné la cité ; or elle existait, jugée à
+  l'image dans le prototype. Portée telle quelle, comme la trame et le dé.
+- **Et vérifiée au pixel près, pas à l'œil.** Le dessin statique ne dépend
+  que d'une graine fixe : j'ai dessiné la cité du prototype et la mienne sur
+  des canevas de même taille, à trois largeurs, et comparé leurs empreintes
+  SHA-256. **Identiques aux trois tailles.** Puis regardée quand même,
+  parce qu'une empreinte juste ne dit pas qu'une image est bonne — seulement
+  qu'elle n'a pas changé.
+- **Le contrôle de types est coupé pour ce seul fichier, et c'est dit en
+  tête** : trois cents lignes de primitives où chaque paramètre est un nombre
+  de points. Les annoter n'attraperait rien ; réécrire pour le vérificateur
+  reviendrait à rejuger l'image sans la regarder. La fonction exportée,
+  elle, est typée.
+- **La rampe et le générateur sont promus** dans `core/ui/pixel.ts` : la
+  cité est le deuxième dessin à en avoir besoin, après le dé (invariant 13).
+- **Elle se redessine quand la largeur change** — vérifié en passant de
+  1 280 à 375 px — et sa vie (le moulin, les lampes) passe seule par
+  l'horloge d'animation : le dessin se fait d'un coup, à l'appel.
+- La première mesure sur la page a rendu un canevas vide : **la fenêtre du
+  navigateur était repliée, `innerWidth` valait zéro**. L'action a fait ce
+  qu'elle devait — réessayer, puis abandonner proprement. Encore un artefact
+  de mesure, reconnu avant d'être pris pour un défaut.
 
 ### 12 octobre 2026 — le pied de feuille, l'établi, et un effet qui se relançait
 

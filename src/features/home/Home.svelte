@@ -12,6 +12,7 @@
   import { chronicles, covetedDoneByOthers, myUnderway, progressOf, register, titleOf, watchItems } from "#core/selectors/index.ts";
   import { UNIT } from "#core/model/lexicon.ts";
   import Lot from "./Lot.svelte";
+  import { skyline } from "#core/ui/skyline.ts";
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
@@ -42,6 +43,10 @@
        pas une trame — rien n'y a de forme, rien ne la traverse ; c'est le
        papier qui prend la lumière, et c'est ce qui l'autorise ici. -->
   <section class="plate">
+    <!-- La cité, de profil, en tête du Registre. **Elle habille, elle ne
+         remplace rien** : un décor qui existe pour lui-même, pas une
+         allégorie de l'application. -->
+    <canvas class="sky" use:skyline aria-hidden="true"></canvas>
     <div class="eyebrow">Le Registre</div>
 
     {#if lead && lead.review}
@@ -176,6 +181,9 @@
     34%      { transform: translate3d(2%,-3%,0) scale(1.06); opacity: 1;   }
     68%      { transform: translate3d(-3%,2%,0) scale(1.03); opacity: .66; }
   }
+
+  .sky { display: block; width: 100%; height: 188px; margin: -12px 0 24px; image-rendering: pixelated; }
+  @media (max-width: 860px) { .sky { height: 132px; margin-bottom: 16px; } }
 
   .eyebrow {
     font-size: 9px; font-weight: 700; letter-spacing: .2em;

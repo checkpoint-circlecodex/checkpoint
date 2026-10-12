@@ -7,9 +7,7 @@
    géométrie** — le dé « roule » en changeant le chiffre de sa face, aucune
    rotation ne tombe sur la grille. */
 
-/** La rampe : du gris moyen au gris pâle. Jamais de noir — il tamponnerait
-    le papier au lieu de le dessiner. */
-export const GREY = ["#6E6E64", "#929187", "#B2B1A7", "#D6D5CC"];
+import { GREY } from "./pixel.ts";
 
 export const DIE_FACES = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
 export function drawDie(cv: HTMLCanvasElement, face: string): void {
