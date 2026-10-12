@@ -3,7 +3,7 @@
      réduite** — touchée par lui, sans être la chambre : la quatrième des
      quatre exceptions au noir et blanc. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { Banner, Face, Panes, Traits, pile } from "#core/ui/index.ts";
+  import { Banner, Face, Panes, Traits, gestes, pile } from "#core/ui/index.ts";
   import Lignee from "./Lignee.svelte";
   import KinDeclare from "./KinDeclare.svelte";
   import Fragment from "./Fragment.svelte";
@@ -274,6 +274,14 @@
             <button class="lk" onclick={() => pile.open("panneau", "Ton fragment", Fragment)}>Lire ton fragment</button>
           </div>
 
+          <!-- En étroit, la barre n'existe pas : signaler un défaut doit se
+               trouver aussi ici, au pied de sa propre feuille. -->
+          {#if gestes.signaler}
+            <div class="fr">
+              <span class="fl">Un défaut</span>
+              <button class="lk" onclick={() => gestes.signaler?.()}>Signaler un défaut</button>
+            </div>
+          {/if}
           <div class="fr">
             <span class="fl">Le compte</span>
             {#if !leaving}

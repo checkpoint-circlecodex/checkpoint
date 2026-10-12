@@ -72,3 +72,14 @@ test("admettre retire la demande du guichet, écarter aussi", async () => {
   await P.org.shun((await P.org.knocks())[0], "");
   assert.deepEqual((await P.org.knocks()).map(x => x.login), ["c"]);
 });
+
+test("un signalement de défaut porte sa version et son système, et ne passe pas pour une demande", async () => {
+  const { reportBody, reportTitle, parseReport, REPORT_MARK } = await import("../src/platform/report.ts");
+  const body = reportBody({ what: "La barre ne se déplie pas\net c'est gênant", expected: "", where: "Accueil", version: "0.1.3", system: "macOS" });
+  assert.ok(body.startsWith(REPORT_MARK));
+  assert.deepEqual(parseReport(body), { version: "0.1.3", system: "macOS" });
+  assert.equal(parseKnock(body), null, "le guichet des admissions ne doit pas le voir");
+  assert.equal(reportTitle("La barre ne se déplie pas\net c'est gênant"), "Défaut — La barre ne se déplie pas");
+  assert.ok(!body.includes("**Ce qui était attendu**"), "un champ vide ne laisse pas de titre orphelin");
+  assert.ok(reportTitle("x".repeat(200)).length <= 80);
+});

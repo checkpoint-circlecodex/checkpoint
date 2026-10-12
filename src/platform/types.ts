@@ -1,4 +1,5 @@
 import type { KnockFields } from "./knock.ts";
+import type { ReportFields } from "./report.ts";
 
 /* La couche du bas, derrière une interface. Deux de ces adaptateurs changent
    entre le bureau et Android ; aucun bloc au-dessus ne doit le savoir. */
@@ -117,6 +118,10 @@ export interface Org {
   accept(): Promise<void>;
   /** Où GitHub montre l'invitation, pour le cas où on n'a pas pu l'accepter d'ici. */
   invitationUrl(): Promise<string>;
+
+  /** **Signaler un défaut** : une issue du dépôt public, au format de
+      `report.ts`. Publique — l'écran le dit avant l'envoi. */
+  report(f: ReportFields): Promise<{ issue: number; url: string }>;
 }
 
 /** Ce qui est publié, et de quoi s'y mettre. Deux chemins, et c'est voulu :

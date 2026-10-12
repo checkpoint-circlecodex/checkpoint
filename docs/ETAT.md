@@ -203,10 +203,14 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
 
 ## Pour ensuite — idées déposées, pas encore conçues
 
-### Signaler un défaut depuis l'application — demandé par Nathan le 12 octobre
+### ~~Signaler un défaut depuis l'application~~ — ✅ fait le 13 octobre (pour la v0.1.4)
 
-Une place dans la barre latérale qui ouvre une fenêtre pour signaler ce qui
-ne va pas. **Pas encore conçu** ; ce que l'architecture suggère déjà :
+**Fait** : le bouton ⚐ au bas de la barre, juste au-dessus du visage (et
+« Signaler un défaut » au pied de sa propre feuille, pour l'étroit). Il ouvre
+une fenêtre — ce qui ne va pas, ce qu'on attendait, où — et crée une issue
+publique au format de `platform/report.ts`, version et système joints
+d'office. L'emplacement a été choisi faute de réponse : il se déplace en une
+ligne. Ce que l'architecture suggérait, et qui a été suivi :
 
 - **Le signalement devient une issue du dépôt public**, comme une demande
   d'adhésion — c'est le seul geste d'écriture hors des fragments, il existe

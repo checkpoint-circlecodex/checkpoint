@@ -9,6 +9,7 @@ import {
   type Cache, type Knock, type MyKnock, type Org, type Platform, type Session, type Storage, type TreeEntry, type Updates,
 } from "./types.ts";
 import { knockBody, knockTitle, parseKnock } from "./knock.ts";
+import { reportBody, reportTitle } from "./report.ts";
 
 type Reply = { status: number; body: string; etag: string | null; remaining: number | null };
 
@@ -215,6 +216,14 @@ export function tauriPlatform(): Platform {
     async invitationUrl() {
       const { org: o } = await where();
       return `https://github.com/orgs/${o}/invitation`;
+    },
+
+    async report(f) {
+      const { public_repo } = await where();
+      const r = await gh("POST", `/repos/${public_repo}/issues`, { title: reportTitle(f.what), body: reportBody(f) });
+      if (r.status !== 201) throw fail("envoi du signalement", r);
+      const j = json(r);
+      return { issue: j.number, url: j.html_url };
     },
   };
 

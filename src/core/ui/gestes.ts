@@ -10,4 +10,4 @@
 
 type Geste = () => void;
 
-export const gestes: { inscrire: Geste | null } = { inscrire: null };
+export const gestes: { inscrire: Geste | null; signaler: Geste | null } = { inscrire: null, signaler: null };

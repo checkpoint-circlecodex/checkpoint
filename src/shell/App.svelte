@@ -11,10 +11,12 @@
   import SeekSheet from "./SeekSheet.svelte";
   import { Entry, porte } from "#features/entry/index.ts";
   import Release from "./Release.svelte";
+  import Report from "./Report.svelte";
 
   /* La coque est la seule à connaître tous les blocs : c'est elle qui dit
      ce que fait « inscrire », pour tous ceux qui l'offrent. */
   gestes.inscrire = () => pile.swap("panneau", "Inscrire une œuvre", Inscribe);
+  gestes.signaler = () => pile.swap("panneau", "Signaler un défaut", Report);
 
   let hash = $state(location.hash || "#/");
 

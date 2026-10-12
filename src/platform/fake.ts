@@ -107,6 +107,10 @@ export function fakePlatform(
       members[who] = "active";
     },
     async invitationUrl() { return "https://github.com/orgs/checkpoint-circlecodex/invitation"; },
+    async report() {
+      const n = 200 + issues.length;
+      return { issue: n, url: `https://github.com/checkpoint-circlecodex/checkpoint/issues/${n}` };
+    },
   };
 
   const mem = new Map<string, string>();

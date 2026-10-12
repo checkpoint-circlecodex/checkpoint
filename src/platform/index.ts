@@ -3,6 +3,7 @@
 
 export * from "./types.ts";
 export * from "./knock.ts";
+export * from "./report.ts";
 import { fakePlatform } from "./fake.ts";
 import { inShell, tauriPlatform } from "./tauri.ts";
 import type { Platform } from "./types.ts";

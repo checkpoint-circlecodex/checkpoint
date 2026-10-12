@@ -108,6 +108,13 @@
     {/each}
   {/if}
 
+  <!-- **Signaler un défaut** (demandé par Nathan le 12 octobre) : ni agir ni
+       parcourir — un mot au projet. Juste au-dessus du visage, discret mais
+       toujours là, replié compris. -->
+  <button class="act report" onclick={() => gestes.signaler?.()} title="Signaler un défaut">
+    <span class="gl">⚐</span><span class="t">Signaler un défaut</span>
+  </button>
+
   <div class="foot">
     {#if moi}
       <a href="#/profil" onclick={chose}>
@@ -209,7 +216,11 @@
   .sub a.on, .sub a:hover { color: var(--ink); }
   .sub .n { margin-left: auto; font-size: 10px; color: var(--faint); }
 
-  .foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule); }
+  /* Le signalement pousse le pied vers le bas : c'est lui qui prend
+     l'espace libre, et le visage reste collé en dessous. */
+  .report { margin-top: auto; color: var(--dim); font-weight: 500; }
+  .report:hover { color: var(--ink); }
+  .foot { padding-top: 12px; border-top: 1px solid var(--rule); }
   .foot a { display: flex; align-items: center; gap: 10px; min-height: 44px; }
   .who { display: grid; }
   .who b { font-size: 12px; }
