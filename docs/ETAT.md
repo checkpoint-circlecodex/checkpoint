@@ -9,22 +9,22 @@
 
 ## Prochaine action
 
-**Le volet-lanceur** (ligne 5 du découpage).
+**L'accueil complet** (ligne 6 du découpage) : Le Sort, Tes affaires, et
+l'encart du guetteur — la seule chose colorée de la page.
 
-Fait (12 octobre) : **le Greffe**, branché sur l'organisation réelle — les
-demandes lues sur le dépôt public, admettre par invitation, écarter, fondre
-et défaire un doublon, confier la charge, et le journal sommé depuis le
-fragment de chaque greffier.
+Fait (12 octobre) : **le volet-lanceur** — barre repliée par défaut, la
+déplier floute le contenu et fait paraître la recherche en jaquettes ;
+choisir referme sur la page atteinte. En étroit, la même recherche devient
+une feuille qui monte du bas.
 
-Le découpage restant : 5 le volet-lanceur — 6 l'accueil complet — 7 le pied
-de feuille et l'établi aux cinq clics — 8-9 la cité en pixel art ⚠️ — 10-11
-l'entrée dans le groupe en dur — 12 la livraison ⚠️.
+Le découpage restant : 6 l'accueil complet — 7 le pied de feuille et
+l'établi aux cinq clics — 8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans
+le groupe en dur — 12 la livraison ⚠️.
 
 ⚠️ **Pour l'étape 5** : une admission envoie une *invitation* GitHub, que la
 personne doit accepter. L'écran d'attente pourra l'accepter pour elle
-(`PATCH /user/memberships/orgs/{org}`) dès qu'elle paraît — sinon le critère
-de la V1, « entrer sans qu'on lui explique rien », tombe sur un courriel de
-GitHub.
+(`PATCH /user/memberships/orgs/{org}`) — sinon le critère de la V1 tombe sur
+un courriel de GitHub.
 
 Ce que Nathan seul peut débloquer : **la clé IGDB** (compte développeur
 Twitch) et **la décision de signature** (99 $/an).
@@ -260,6 +260,40 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — le volet-lanceur
+
+- **Les trois gestes, vérifiés un par un** : choisir une jaquette ou un lien
+  referme le volet sur la page atteinte ; déplier une section ne referme pas
+  — le chevron n'est pas un choix ; cliquer dans le champ ne referme pas —
+  c'est le début d'un choix. La règle tient parce que **seuls les liens
+  appellent `chose()`** : la distinction est dans le code, pas dans la
+  vigilance.
+- ⚠️ **Écart volontaire au prototype : le volet ne se retient plus.** Le
+  prototype gardait le volet ouvert d'une ouverture à l'autre ; une
+  application qui démarre floutée a fait du flou un état de repos, et
+  l'identité l'interdit. On démarre toujours replié.
+- **Ce qui subsiste à l'état replié** (invariant 16) : la loupe, les
+  actions, les trois règles — *agir*, *parcourir*, *tenir* — et le visage.
+  Vérifié, pas supposé.
+- **La loupe ouvre et donne la main au champ** : on ouvre un lanceur pour
+  chercher, pas pour le regarder. ⌘K fait de même et Échap referme — des
+  **raccourcis**, pas des portes : le bouton fait la même chose, en vue.
+- **La jaquette est une primitive du noyau dès sa première utilisation**, et
+  ce n'est pas une entorse à la règle de promotion : le lanceur vit dans la
+  coque, le Répertoire dans un bloc, et les deux ne peuvent rien partager
+  autrement que par le noyau. Sans image, **le cadre porte son titre**.
+- ⚠️ **L'animation d'entrée du lanceur partait d'une opacité nulle** — le
+  piège de la passe précédente sous une autre forme. Elle part maintenant
+  d'un décalage de 6 px, lisible même figé. *La première image d'une
+  animation doit toujours être montrable.*
+- ⚠️ **La barre n'avait jamais été mesurée.** Le balayage des cibles tournait
+  à une largeur où elle était masquée : trois liens de sections à 22 px
+  dormaient dedans. Le balayage mesure désormais la barre repliée **et**
+  dépliée, et dit quand il ne peut pas la voir. *Un contrôle qui ne voit pas
+  un élément ne dit pas qu'il est bon — il ne dit rien.*
+- Le flou lu à « 0 px » dans la fenêtre masquée était la transition figée,
+  pas l'absence de flou : la cible, lue sans transition, est bien 13 px.
 
 ### 12 octobre 2026 — le Greffe, sur l'organisation réelle
 

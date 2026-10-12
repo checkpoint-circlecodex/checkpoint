@@ -12,9 +12,17 @@
   import { Live } from "#features/live/index.ts";
   import { Builder } from "#features/quests/index.ts";
   import { HOME, REGISTRY } from "./routes.ts";
+  import { lanceur } from "./launcher.svelte.ts";
 
-  let { hash, collapsed = $bindable(false) }:
-    { hash: string; collapsed?: boolean } = $props();
+  let { hash }: { hash: string } = $props();
+  const collapsed = $derived(!lanceur.open);
+
+  /* **Trois gestes s'y distinguent, et la distinction est la règle** :
+     choisir une destination referme ; déplier une section ne referme pas —
+     le chevron n'est pas un choix ; cliquer dans le champ ne referme pas —
+     c'est le contraire d'un choix, c'est le début d'un. Les liens appellent
+     donc `chose()`, et rien d'autre ne le fait. */
+  const chose = () => lanceur.chose();
 
   const doors = $derived(REGISTRY.filter(v => !v.only || v.only()));
   const roam = $derived(doors.filter(v => !v.hold));
@@ -29,12 +37,23 @@
   <div class="top">
     <a href="#/" class="sigil" title="Le registre">C</a>
     <span class="mark"><b>Checkpoint</b></span>
-    <button class="tgl" onclick={() => (collapsed = !collapsed)}
+    <button class="tgl" onclick={() => lanceur.set(!lanceur.open)}
             aria-label={collapsed ? "Déplier la barre latérale" : "Replier la barre latérale"}>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
            stroke-width="1.6" stroke-linecap="round"><path d="M14.5 6L9 12l5.5 6" /></svg>
     </button>
   </div>
+
+  {#if collapsed}
+    <button class="find-ic" onclick={() => lanceur.seek()} aria-label="Chercher une œuvre ou quelqu'un">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="6.4" /><path d="M19.6 19.6l-3-3" /></svg>
+    </button>
+  {:else}
+    <label class="find">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="6.4" /><path d="M19.6 19.6l-3-3" /></svg>
+      <input bind:this={lanceur.field} bind:value={lanceur.query} type="search" placeholder="Œuvres, gens…" autocomplete="off" aria-label="Chercher" />
+    </label>
+  {/if}
 
   <!-- **Une porte par pièce**, et la barre sépare ce qu'on fait de ce qu'on
        parcourt. La règle entre les deux subsiste quand la barre est repliée. -->
@@ -52,14 +71,14 @@
   <div class="sep"></div>
   <div class="lbl">Parcourir</div>
   <nav>
-    <a class="row" class:on={hash === HOME.href} href={HOME.href}>
+    <a class="row" class:on={hash === HOME.href} href={HOME.href} onclick={chose}>
       <span class="gl">{HOME.gl}</span><span class="t">{HOME.label}</span>
     </a>
     {#each roam as v (v.id)}
       {@const subs = v.subs?.() ?? null}
       <div class="grp" class:open={open[v.id]}>
         <div class="row" class:on={hash.startsWith(v.href)}>
-          <a href={v.href} title={v.label}><span class="gl">{v.gl}</span><span class="t">{v.label}</span></a>
+          <a href={v.href} title={v.label} onclick={chose}><span class="gl">{v.gl}</span><span class="t">{v.label}</span></a>
           {#if subs}
             <!-- Déplier une section n'est pas choisir : ça ne referme rien. -->
             <button class="exp" aria-expanded={!!open[v.id]} aria-label="Déplier {v.label}"
@@ -72,7 +91,7 @@
         {#if subs && open[v.id]}
           <div class="sub">
             {#each subs as s (s.href)}
-              <a href={s.href} class:on={hash === s.href}>{s.label}<span class="n">{s.n}</span></a>
+              <a href={s.href} class:on={hash === s.href} onclick={chose}>{s.label}<span class="n">{s.n}</span></a>
             {/each}
           </div>
         {/if}
@@ -84,7 +103,7 @@
     <div class="sep"></div>
     <div class="lbl">Tenir</div>
     {#each hold as v (v.id)}
-      <a class="act" class:here={hash.startsWith(v.href)} href={v.href} title={v.label}>
+      <a class="act" class:here={hash.startsWith(v.href)} href={v.href} title={v.label} onclick={chose}>
         <span class="gl">{v.gl}</span><span class="t">{v.label}</span>
       </a>
     {/each}
@@ -92,7 +111,7 @@
 
   <div class="foot">
     {#if moi}
-      <a href="#/profil">
+      <a href="#/profil" onclick={chose}>
         <Face who={moi} size="m" />
         <span class="who"><b>{moi.firstName}</b><i>{moi.circleRef.one}</i></span>
       </a>
@@ -136,6 +155,12 @@
   /* La règle qui sépare agir de parcourir subsiste quand la barre est repliée. */
   .collapsed .lbl { color: transparent; border-top: 1px solid var(--rule); margin-top: 18px; }
 
+  .find { display: flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 14px; padding: 0 10px;
+          border: 1px solid var(--rule2); background: var(--paper); color: var(--dim); }
+  .find:focus-within { border-color: var(--ink); color: var(--ink); }
+  .find input { flex: 1; min-width: 0; border: none; background: none; outline: none; font-size: 12.5px; }
+  .find-ic { display: grid; place-items: center; width: 44px; height: 44px; margin: 10px auto 0; color: var(--dim); }
+  .find-ic:hover { color: var(--ink); }
   .sep { height: 1px; background: var(--rule); margin-top: 16px; }
   .act { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 44px; padding: 8px 0;
          font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
@@ -149,7 +174,9 @@
 
   nav { display: flex; flex-direction: column; }
   .row { display: flex; align-items: center; min-height: 44px; }
-  .row > a, nav > .row { flex: 1; display: flex; align-items: center; gap: 11px; }
+  /* Le lien remplit toute la hauteur de sa rangée : centré dans 44 px, il
+     n'en couvrait que 22 — la rangée avait la taille, pas la cible. */
+  .row > a, nav > .row { flex: 1; align-self: stretch; display: flex; align-items: center; gap: 11px; }
   .row .gl { width: 14px; flex: none; text-align: center; font-family: var(--fs); font-size: 15px; letter-spacing: 0; }
   .row .t { font-size: 13px; font-weight: 600; white-space: nowrap; }
   .row.on { box-shadow: inset 2px 0 0 var(--ink); }
