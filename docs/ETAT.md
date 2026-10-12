@@ -104,6 +104,25 @@ compte développeur Twitch avec la double authentification.
 
 ## Pour ensuite — idées déposées, pas encore conçues
 
+### Signaler un défaut depuis l'application — demandé par Nathan le 12 octobre
+
+Une place dans la barre latérale qui ouvre une fenêtre pour signaler ce qui
+ne va pas. **Pas encore conçu** ; ce que l'architecture suggère déjà :
+
+- **Le signalement devient une issue du dépôt public**, comme une demande
+  d'adhésion — c'est le seul geste d'écriture hors des fragments, il existe
+  déjà (`platform/knock.ts`), et un marqueur `checkpoint:defaut v1` le
+  distinguerait. Version de l'application et système joints d'office : ce
+  sont les deux choses qu'on oublie toujours de dire.
+- ⚠️ **Une issue est publique** : l'écran doit le dire avant l'envoi, comme
+  la demande d'adhésion le dit.
+- Où dans la barre : à trancher — ni *agir* ni *parcourir* ; peut-être au
+  pied, près du visage, ou sous *Tenir*. Une capture d'écran jointe serait
+  utile mais pose la question des octets d'image (jamais dans le dépôt de
+  données — une issue n'y est pas, c'est donc ouvert).
+- Les défauts déjà consignés plus haut dans ce fichier y seraient alors
+  saisis par Nathan lui-même.
+
 ### ~~Les genres, refondus sur les vraies taxonomies~~ — ✅ faite le 11 octobre
 
 Les listes sont posées : **44 catégories pour un jeu** (23 genres IGDB vérifiés
