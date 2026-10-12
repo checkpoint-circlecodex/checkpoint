@@ -9,7 +9,9 @@
   import { registre } from "#core/model/store.svelte.ts";
   import { Face } from "#core/ui/index.ts";
   import { KIND, STATUS, VERB, ago, roman } from "#core/model/lexicon.ts";
-  import { chronicles, register, titleOf } from "#core/selectors/index.ts";
+  import { chronicles, covetedDoneByOthers, myUnderway, progressOf, register, titleOf, watchItems } from "#core/selectors/index.ts";
+  import { UNIT } from "#core/model/lexicon.ts";
+  import Lot from "./Lot.svelte";
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
@@ -25,6 +27,13 @@
     : 0);
 
   let shown = $state(14);
+
+  const me = $derived(registre.me ?? "");
+  const moi = $derived(registre.moi);
+  const knocksSince = $derived(registre.steward && seen ? registre.knocks.filter(k => k.at > seen).length : 0);
+  const watch = $derived(watchItems(w, me, seen, knocksSince));
+  const under = $derived(myUnderway(w, me));
+  const coveted = $derived(covetedDoneByOthers(w, me));
 </script>
 
 <div class="wrap">
@@ -58,6 +67,29 @@
         {/if}
       </article>
     {/if}
+
+    <Lot />
+
+    <!-- **Une seule chose sur l'accueil porte une couleur : l'encart du
+         guetteur**, et c'est celle de ton Ordre. Entre Le Sort et Les
+         inscriptions — pas en tête de page, parce qu'on n'ouvre pas
+         l'application pour des annonces, mais là où le regard descend déjà. -->
+    {#if watch.length && moi}
+      <div class="watch" style="--c:{moi.circleRef.color}">
+        <span class="wk">Depuis ta dernière visite</span>
+        <div class="wl">
+          {#each watch as it (it.text)}
+            <a href={it.href}>
+              <!-- Un fanion en guise de tiret : une annonce par ligne. -->
+              <svg class="wf" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M3 1.4 V12.6" /><path d="M3.9 2.1 L11.4 4.6 L3.9 7.1 Z" class="fl" />
+              </svg>
+              <span>{it.text}</span>
+            </a>
+          {/each}
+        </div>
+      </div>
+    {/if}
   </section>
 
   <section class="sect">
@@ -82,6 +114,39 @@
       <button class="more" onclick={() => (shown += 20)}>
         Dérouler les {acts.length - shown} inscriptions antérieures
       </button>
+    {/if}
+  </section>
+
+  <section class="sect">
+    <h2>Tes affaires</h2>
+    {#if under.length}
+      <div class="reg">
+        {#each under as r (r.mediaId)}
+          {@const m = w.catalog[r.mediaId]}
+          <a class="r r-mine" href="#/fiche/{r.mediaId}">
+            <span class="line"><span class="t">{titleOf(w, r.mediaId, pref)}</span><span class="kind">{KIND[m.mediaType]}</span></span>
+            <span class="did">{progressOf(r, UNIT) ?? "—"}</span>
+            <span class="when">{ago(r.at)}</span>
+          </a>
+        {/each}
+      </div>
+    {:else}
+      <p class="none">Tu n'as rien en cours.</p>
+    {/if}
+
+    {#if coveted.length}
+      <!-- La convoitise d'hier est devenue une conversation possible. -->
+      <p class="note">Convoitées, et achevées depuis par d'autres :</p>
+      <div class="reg">
+        {#each coveted as c (c.r.mediaId)}
+          {@const m = w.catalog[c.r.mediaId]}
+          <a class="r r-mine" href="#/fiche/{c.r.mediaId}">
+            <span class="line"><span class="t">{titleOf(w, c.r.mediaId, pref)}</span><span class="kind">{KIND[m.mediaType]}</span></span>
+            <span class="stack">{#each c.by.slice(0, 4) as x (x.personId)}{@const p = w.people[x.personId]}{#if p}<Face who={p} size="s" />{/if}{/each}</span>
+            <span class="when">{roman(c.by.length)} témoin{c.by.length > 1 ? "s" : ""}</span>
+          </a>
+        {/each}
+      </div>
     {/if}
   </section>
 </div>
@@ -149,6 +214,29 @@
   .kind, .did, .st, .when { font-size: 11px; color: var(--dim); }
   .st { font-weight: 600; color: var(--ink2); }
   .when { text-align: right; color: var(--faint); }
+  .r-mine { grid-template-columns: minmax(0,1fr) auto 90px; }
+  .stack { display: flex; gap: 2px; }
+  .note { font-size: 11.5px; color: var(--dim); margin: 18px 0 8px; font-style: italic; }
+  .none { font-size: 12.5px; color: var(--dim); font-style: italic; }
+
+  /* L'encart du guetteur : un filet de couleur, un fond à peine teinté. Ce
+     n'est pas une notification — il ne se ferme pas, ne se compte pas, et
+     disparaît de lui-même à la visite suivante. */
+  .watch { margin: 22px 0 4px; padding: 6px 13px 6px;
+           background: color-mix(in srgb, var(--c) 12%, var(--paper));
+           border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+           box-shadow: inset 3px 0 0 var(--c); }
+  .wk { display: block; font-size: 8.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+        color: color-mix(in srgb, var(--c) 70%, var(--ink)); margin: 4px 0 2px; }
+  .wl { display: flex; flex-direction: column; }
+  .wl a { display: grid; grid-template-columns: 16px 1fr; gap: 7px; align-items: center; min-height: 44px;
+          font-family: var(--fr); font-weight: 300; font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+  .wl a + a { border-top: 1px solid color-mix(in srgb, var(--c) 22%, transparent); }
+  .wl a:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .wf { width: 11px; height: 11px; overflow: visible; }
+  .wf path { stroke: var(--c); stroke-width: 1.3; fill: none; stroke-linecap: round; }
+  .wf .fl { fill: var(--c); stroke-width: 1; stroke-linejoin: round; }
+
   .more {
     width: 100%; margin-top: 12px; padding: 11px 0; min-height: 44px;
     text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .18em;

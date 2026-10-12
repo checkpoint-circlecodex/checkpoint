@@ -10,7 +10,7 @@ import { makeScribe, parseShard, type Mutation, type Scribe, type WriteState } f
 import { blankShard } from "./write.ts";
 import { shardPath, type Shard } from "./schema.ts";
 import type { Cache, Knock, Org, Storage } from "#platform/index.ts";
-import { consigner } from "./acts.ts";
+import { consigner, marquerVisite } from "./acts.ts";
 
 type Phase = "vide" | "ouverture" | "prêt" | "fermé";
 
@@ -155,7 +155,12 @@ class Registre {
         onState: (s, n, err) => { this.writing = s; this.pending = n; this.writeError = err; },
       });
     }
+    this.lastVisit = this.moi?.seenAt ?? "";
     this.phase = "prêt";
+    /* Inscrire cette visite seulement si on a déjà un fragment : un compte
+       qui n'est pas encore admis n'a pas de quoi écrire, et on ne crée pas un
+       fichier pour y ranger une date. */
+    if (this.moi) this.act(marquerVisite());
     void this.refreshGreffe();
   }
 
@@ -167,9 +172,16 @@ class Registre {
       (invariant 9). Avant l'admission, le français par défaut. */
   get titlePref(): "vo" | "fr" { return this.moi?.prefs?.titles ?? "fr"; }
 
-  /** Dernière visite : ce qui donne son sens à l'encart du guetteur. Elle ne
-      décrit que **l'écart** avec la précédente, et rien d'autre. */
-  get seen(): string { return this.moi?.seenAt ?? ""; }
+  /** **La visite précédente**, retenue à l'ouverture avant d'inscrire
+      celle-ci. C'est elle qui donne son sens à l'encart du guetteur, qui ne
+      décrit que l'écart entre les deux.
+
+      ⚠️ Le prototype disait « écrite à la fermeture ». Mais une application
+      qu'on ferme peut mourir avant que l'écriture parte, et l'encart
+      raconterait alors deux fois la même chose. On date donc la visite à
+      l'**ouverture** : rien ne dépend d'une fermeture propre. */
+  lastVisit = $state("");
+  get seen(): string { return this.lastVisit; }
 }
 
 export const registre = new Registre();

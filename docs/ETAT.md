@@ -9,17 +9,15 @@
 
 ## Prochaine action
 
-**L'accueil complet** (ligne 6 du découpage) : Le Sort, Tes affaires, et
-l'encart du guetteur — la seule chose colorée de la page.
+**Le pied de feuille et l'établi aux cinq clics** (ligne 7 du découpage).
 
-Fait (12 octobre) : **le volet-lanceur** — barre repliée par défaut, la
-déplier floute le contenu et fait paraître la recherche en jaquettes ;
-choisir referme sur la page atteinte. En étroit, la même recherche devient
-une feuille qui monte du bas.
+Fait (12 octobre) : **l'accueil complet** — Le Sort et son dé, l'encart du
+guetteur dans la couleur de ton Ordre, et Tes affaires avec les convoitises
+que d'autres ont achevées depuis.
 
-Le découpage restant : 6 l'accueil complet — 7 le pied de feuille et
-l'établi aux cinq clics — 8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans
-le groupe en dur — 12 la livraison ⚠️.
+Le découpage restant : 7 le pied de feuille et l'établi aux cinq clics —
+8-9 la cité en pixel art ⚠️ — 10-11 l'entrée dans le groupe en dur — 12 la
+livraison ⚠️.
 
 ⚠️ **Pour l'étape 5** : une admission envoie une *invitation* GitHub, que la
 personne doit accepter. L'écran d'attente pourra l'accepter pour elle
@@ -260,6 +258,35 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 12 octobre 2026 — l'accueil complet
+
+- ⚠️ **La visite se date à l'ouverture, plus à la fermeture.** Le prototype
+  disait « écrite à la fermeture » ; mais une application qu'on ferme peut
+  mourir avant que l'écriture parte, et l'encart raconterait alors deux fois
+  la même chose. À l'ouverture, on **retient la visite précédente** pour
+  l'encart, puis on inscrit celle-ci. Rien ne dépend d'une fermeture propre.
+  Et un compte qui n'est pas encore admis n'écrit rien : on ne crée pas un
+  fichier pour y ranger une date.
+- **L'encart dit mot pour mot ce que disait le prototype** — *« II paroles
+  nouvelles dans ta Loge, de Marion »*, la quête scellée, celle qu'un autre a
+  accomplie, les demandes au greffe — dans le bleu des Mages, à l'intérieur
+  de la feuille posée, avant les inscriptions. Huit essais tiennent ses
+  règles : ses propres paroles ne s'annoncent pas, la Loge d'un autre Ordre
+  non plus, une quête se date par l'inscription qui l'a scellée, et **sans
+  visite précédente l'encart se tait** — il ne décrit qu'un écart.
+- **Le dé du Sort est repris tel quel**, comme la trame : jugé à l'image.
+  Mesuré : 4 364 pixels dessinés, **aucun noir** — la rampe reste claire. Il
+  roule en changeant de face, jamais par rotation.
+- **Le Sort préfère ce dont tu n'as rien dit**, et le hasard est injecté
+  dans le sélecteur pour qu'un essai puisse le fixer. Le premier tirage se
+  fait à l'arrivée et seulement lui : re-tirer à chaque mise à jour du monde
+  ferait changer l'œuvre sous les yeux de qui la lit.
+- **Une convoitise que d'autres ont achevée *depuis*** — l'essai vérifie que
+  celle achevée avant n'apparaît pas : ce n'est pas nouveau, c'est déjà su.
+- Le tirage a mis 5 s au lieu d'1,5 dans la fenêtre masquée : les minuteries
+  y sont ralenties à une par seconde. **Il est arrivé quand même** — c'est
+  pour ça qu'il tourne par minuterie et pas par image d'animation.
 
 ### 12 octobre 2026 — le volet-lanceur
 
