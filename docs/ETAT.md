@@ -87,6 +87,69 @@ compte développeur Twitch avec la double authentification.
   chargement réel, elle ne l'allonge pas — si le registre est prêt avant,
   elle finit son geste ; s'il ne l'est pas, elle attend sans boucler.
 
+### Audit du portage — 12 octobre, à la demande de Nathan
+
+Le prototype (qui fait foi) et la spec, passés au crible geste par geste
+contre l'application. **Rien n'est corrigé ici** : c'est la liste, par
+ordre d'importance proposé. Les lignes déjà consignées plus bas ne sont pas
+répétées.
+
+**1. La synchronisation — sans elle, l'application n'est pas collective au
+quotidien.**
+- [ ] **Aucune relecture automatique.** Le dépôt n'est lu qu'au lancement et
+      sur « Relire maintenant » (pied de feuille, établi). Le message d'un
+      ami dans la Loge, sa nouvelle inscription, sa demande d'adhésion au
+      Greffe : rien n'apparaît tant qu'on ne relance pas. La spec prévoit une
+      relecture **toutes les vingt à trente secondes**, conditionnelle.
+- [ ] **Les relectures ne sont pas conditionnelles** : `gh` passe toujours
+      `etag: null`. Or le `304` est gratuit (invariant 27, mesuré) — c'est
+      lui qui rend la relecture périodique sans coût. À brancher avec
+      elle.
+
+**2. La comparaison — la valeur ajoutée entière de l'application.**
+- [ ] **« Toi et X »**, l'onglet de la feuille de quelqu'un d'autre : œuvres
+      en commun, accord moyen, plus grande divergence (« Il y a là une
+      conversation »), et « X a adoré, tu n'en as rien fait ». **Absent.**
+      C'est la comparaison entre amis, le cœur du projet (`paneKin`,
+      `kinship` dans le prototype).
+- [ ] Sur le portrait : **« Ce que X tient pour le meilleur »** (ses six
+      plus hautes notes) et **« Seul contre le reste »** (l'œuvre où il
+      s'écarte le plus du groupe, `singularity`). Absents.
+- [ ] Dans la chambre d'un Ordre : la grille de traits du prototype
+      (sévérité, achèvement, prédilection, renoncements…) et l'œuvre que
+      l'Ordre défend contre les autres (`partisan`). **En partie** : une
+      ligne de tempérament existe, pas la grille.
+
+**3. La fiche « Modifier ton inscription » du prototype — un seul
+formulaire, six gestes manquants.**
+- [ ] **Progression** (heures, épisodes, pages) : affichée si elle existe,
+      **impossible à saisir**.
+- [ ] **« Avec »** (`with[]`, une œuvre faite à plusieurs) : absent.
+- [ ] **« ＋ Refait »** (compteur `plays`) : affiché, impossible à incrémenter.
+- [ ] **Catégories après coup** : on ne les choisit qu'à la création manuelle.
+- [ ] **Retirer du registre** (déjà consigné plus bas).
+- [ ] **Jaquette** : déposer, recadrer, et l'agrandir sur la fiche (la
+      « planche »). ⚠️ *Le prototype rangeait l'image encodée dans le
+      fragment* — ce que la règle « jamais d'octets d'image dans le dépôt de
+      données » interdit. Décision à prendre avant d'écrire : **coller
+      l'adresse d'une image** (simple, conforme), ou importer un fichier
+      (il faut alors un endroit où le ranger).
+
+**4. La page des Œuvres.**
+- [ ] **La vue en grille de jaquettes**, en noir et blanc qui reprend sa
+      couleur au survol — le Répertoire a deux vues (CLAUDE.md), l'application
+      n'a que le registre dense.
+- [ ] **Ordonner par** (titre, jugement, témoins…) : absent.
+
+**5. Le reste.**
+- [ ] **Loge** : retirer son propre message (`dropPost`) — absent. Nul
+      n'efface celui d'un autre, mais chacun peut retirer le sien.
+- [ ] **Recherche IGDB et TMDb** : jamais branchée. Clés gratuites (compte
+      développeur Twitch pour IGDB, compte TMDb). Elle apportera aussi les
+      jaquettes. ⚠️ Garder le *slug* IGDB comme identité (invariant 36).
+- [ ] Signaler un défaut, modifier une quête : déjà consignés.
+- La carte du Royaume reste en sommeil, par décision — ce n'est pas un manque.
+
 ### Ce qu'on ne peut pas encore faire — signalé le 12 octobre
 
 Ce ne sont pas des défauts de code mais des **gestes manquants**. Plusieurs
