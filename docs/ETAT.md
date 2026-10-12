@@ -30,6 +30,35 @@ compte développeur Twitch avec la double authentification.
 
 ---
 
+## Défauts signalés — à corriger par lots, une zone à la fois
+
+> Nathan les relève en se servant de l'application ; on les **consigne
+> d'abord**, on les corrige ensuite **par zone** (toute la barre en une
+> passe, puis la zone suivante) : la vérification — les deux largeurs, le
+> balayage des cibles, l'image — se paie une fois par zone, pas une fois par
+> défaut. Chaque ligne dit ce qui a été vu, et ce qu'en dit le prototype.
+
+### La barre latérale repliée — signalé le 12 octobre (application Mac, v0.1.0)
+
+- [ ] **Elle ne se déplie plus.** Le bouton de bascule est masqué à l'état
+      replié (`.collapsed .tgl { display: none }`). Le prototype le garde,
+      tourné de 180°, sous le sceau (`#app.collapsed .tgl svg{rotate(180deg)}`,
+      `.rail-top{flex-direction:column}`). En attendant : la loupe, ou ⌘K.
+- [ ] **Les glyphes ne sont pas sur le même axe.** Ceux d'*Agir* (+ ◈ ⚑) et
+      du Greffe sont centrés ; ceux de *Parcourir* (≡ ◎ ❧ ❖) sont collés à
+      gauche ; le visage du pied aussi. Le prototype centre tout
+      (`.nrow a{justify-content:center}`, `.foot a{justify-content:center}`).
+- [ ] **Le sceau « C » est coupé au bord gauche** : sa marge négative
+      (pensée pour la barre dépliée) le pousse hors du cadre une fois replié.
+- [ ] **Deux filets à chaque séparation** au lieu d'un : la règle `.sep` et
+      la bordure que prend l'étiquette repliée (`.collapsed .lbl`) se
+      cumulent.
+- ⚠️ *Pourquoi ça n'a pas été vu* : l'état replié a été balayé pour la
+  taille des cibles (44 px), pas pour l'alignement ni pour la bascule — le
+  lanceur était toujours ouvert par la loupe ou ⌘K pendant les essais.
+
+---
+
 ## Pour ensuite — idées déposées, pas encore conçues
 
 ### ~~Les genres, refondus sur les vraies taxonomies~~ — ✅ faite le 11 octobre
