@@ -40,10 +40,12 @@ compte développeur Twitch avec la double authentification.
 
 ### La barre latérale repliée — signalé le 12 octobre (application Mac, v0.1.0)
 
-- [ ] **Elle ne se déplie plus.** Le bouton de bascule est masqué à l'état
-      replié (`.collapsed .tgl { display: none }`). Le prototype le garde,
-      tourné de 180°, sous le sceau (`#app.collapsed .tgl svg{rotate(180deg)}`,
-      `.rail-top{flex-direction:column}`). En attendant : la loupe, ou ⌘K.
+- [ ] **Elle ne se déplie plus par un bouton à elle.** Le bouton de bascule
+      est masqué à l'état replié (`.collapsed .tgl { display: none }`) ; seule
+      la loupe la déplie, et Nathan l'a trouvé par hasard. **Décidé par
+      Nathan le 12 octobre : un bouton « déplier » entre le sceau « C » et la
+      loupe**, toujours visible replié. (Le prototype le gardait aussi, tourné
+      de 180°, sous le sceau — c'est le portage qui l'avait perdu.)
 - [ ] **Les glyphes ne sont pas sur le même axe.** Ceux d'*Agir* (+ ◈ ⚑) et
       du Greffe sont centrés ; ceux de *Parcourir* (≡ ◎ ❧ ❖) sont collés à
       gauche ; le visage du pied aussi. Le prototype centre tout
@@ -56,6 +58,47 @@ compte développeur Twitch avec la double authentification.
 - ⚠️ *Pourquoi ça n'a pas été vu* : l'état replié a été balayé pour la
   taille des cibles (44 px), pas pour l'alignement ni pour la bascule — le
   lanceur était toujours ouvert par la loupe ou ⌘K pendant les essais.
+
+### Les panneaux d'*Agir* s'empilent — signalé le 12 octobre
+
+- [ ] « Inscrire une œuvre », puis « Ce que tu mènes » ou « Planter une
+      quête » : les panneaux se superposent. **Décidé par Nathan : le
+      précédent se ferme, sans rien garder** — une saisie en cours est
+      perdue, c'est assumé (on lui a proposé le brouillon ou la
+      confirmation, il a choisi le plus simple).
+- ⚠️ **Ce n'est pas une entorse à l'invariant 17, mais il faudra l'écrire.**
+  L'invariant protège une surface ouverte *depuis une autre* (on doit la
+  retrouver intacte en revenant). Un geste de la barre n'est pas ouvert
+  depuis un panneau : c'est une **nouvelle destination**, et choisir une
+  destination referme ce qui était ouvert — comme une navigation le fait
+  déjà (`pile.closeAll()` sur changement d'adresse). À préciser dans
+  l'invariant 17 au moment de corriger : *depuis une surface, on empile ;
+  depuis la barre, on remplace.*
+
+### L'ouverture à chaque lancement — demandé le 12 octobre
+
+- [ ] Aujourd'hui l'ouverture (le nom qui tombe lettre à lettre, les étoiles,
+      la cité) ne se joue que **dans l'entrée**, donc une seule fois dans la
+      vie d'un compte. **Décidé par Nathan : elle se joue à chaque
+      lancement** — nom, étoiles et cité, pendant que le registre se charge
+      (~1,7 s), puis elle s'efface sur l'accueil. **Un clic la passe.**
+- ⚠️ Change une ligne de `CLAUDE.md` (§ « L'entrée dans le groupe ») : à
+  réviser *et marquer*, pas effacer. Et la garder honnête : elle couvre un
+  chargement réel, elle ne l'allonge pas — si le registre est prêt avant,
+  elle finit son geste ; s'il ne l'est pas, elle attend sans boucler.
+
+### Des points flous derrière le nom — signalé le 12 octobre
+
+- [ ] Nathan voit, **dans l'application Mac**, de gros points très flous
+      derrière « Checkpoint » pendant l'ouverture, et ne les aime pas : **à
+      retirer.** Dans Chromium on ne voit que des poussières minuscules : le
+      rendu de WebKit diffère, ou bien ce sont autre chose. Deux suspects :
+      les **84 poussières fixes qui respirent** du ciel qui tombe
+      (`entry/falling.ts`, seuls « points » de l'arrière-plan), ou les
+      **lettres en pleine chute** (flou de 7 px, agrandies à 128 %). Le
+      premier est le plus probable — on retire les poussières et on garde
+      les étoiles filantes. ⚠️ *À vérifier dans l'application Mac, pas
+      dans le navigateur* : c'est là qu'il a été vu.
 
 ---
 
