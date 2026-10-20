@@ -9,6 +9,10 @@
 
 ## Prochaine action
 
+⚠️ *20 octobre* : la v0.1.5 est publiée et s'installe par le bandeau ; les
+étapes 1 à 3 ci-dessous sont faites, sauf la sauvegarde de la clé.
+**Reste : le premier ami réel** (étape 4), et la clé IGDB/TMDb.
+
 **Livrer la v0.1.0 — deux gestes de Nathan, puis le premier arrivant réel.**
 1. ~~Poser la clé comme secret du dépôt~~ ✅ fait le 12 octobre, avec
    l'accord de Nathan. ⚠️ **Reste à la sauvegarder ailleurs**
@@ -198,6 +202,32 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
       premier est le plus probable — on retire les poussières et on garde
       les étoiles filantes. ⚠️ *À vérifier dans l'application Mac, pas
       dans le navigateur* : c'est là qu'il a été vu.
+
+### La cité étirée et le repère de la barre — signalés le 20 octobre (v0.1.5, Mac)
+
+- [ ] **À l'ouverture, la cité en bas de la fenêtre paraît parfois
+      étirée.** *Piste, non vérifiée* : le canevas (`core/ui/skyline.ts`)
+      prend la largeur qu'il mesure **au premier dessin**, puis ne se
+      redessine que sur un `resize` de la fenêtre. Or il s'affiche en CSS à
+      `width: 100%` : si son conteneur change de largeur sans que la fenêtre
+      ne change (la fenêtre native qui se met en place au lancement, une
+      mise en page qui arrive après le premier dessin), l'image dessinée à
+      l'ancienne largeur est **étirée** au lieu d'être redessinée. Le
+      remède probable : observer le canevas lui-même (`ResizeObserver`),
+      pas la fenêtre — l'invariant 21 dit déjà qu'un composant interroge
+      son conteneur. La même cité sert dans le Registre : à vérifier aussi.
+- [ ] **Barre dépliée, le petit trait vertical qui marque la section en
+      cours se place mal** (repliée, il est juste). *Piste* : c'est une
+      ombre posée sur le bord gauche de la rangée (`.row.on`, `.act.here` :
+      `inset 2px 0 0`), et dépliée la rangée commence **au ras du glyphe**
+      — le trait le touche ou le chevauche au lieu de border la barre.
+      ⚠️ **Le prototype n'a pas ce trait** : la section en cours s'y dit par
+      le glyphe et le libellé à l'encre (graisse 600), et repliée par un
+      fond `--sink`. Le trait est un ajout du portage — à décider en
+      corrigeant : le replacer au bord de la barre, ou revenir au prototype.
+- ⚠️ *Nathan a joint deux visuels (la cité sans flèche, le trait avec une
+  flèche verte)* ; ils ne sont pas parvenus à la session du 20 octobre —
+  les pistes ci-dessus viennent du code, pas de l'image.
 
 ---
 
