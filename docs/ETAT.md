@@ -484,6 +484,39 @@ Aucune ne bloque le spike.
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
 
+### 27 octobre 2026 — toutes les œuvres ont leur jaquette
+
+- **Trente-trois jaquettes posées dans le fonds** (les dix-huit Carpenter,
+  les quinze FromSoftware) : plus une œuvre du catalogue sans image. Un
+  commit, « pose trente-trois jaquettes, allège les huit déjà posées ».
+- **Le plafond de la spec (§7, ~400 × 600 et 60 ko) a été tenu pour des
+  adresses aussi**, à la demande de Nathan — et il a refusé huit des onze
+  jaquettes posées une heure plus tôt : les affiches TMDb en `w500`
+  (500 × 750, jusqu'à 150 ko) et deux couvertures Open Library à 73 et
+  82 ko. Chaque adresse a été **téléchargée et mesurée**, pas déduite de sa
+  taille nominale : à `w342`, quatre affiches dépassaient encore.
+- **Règle retenue, par œuvre** : la plus grande variante sous le plafond.
+  TMDb `w342` (342 × 513), sinon `w300` — taille non documentée pour les
+  affiches, mais servie. IGDB `t_cover_big` (264 × 352, 11 à 32 ko ; le
+  `_2x` est hors plafond). Open Library `-L` (~320 × 500).
+- **Quand aucune variante ne passait, on a changé d'image, pas de
+  plafond** : *Assaut* prend une autre affiche française (`w185` l'aurait
+  rendue floue) ; *Le Hobbit* et *La Communauté de l'Anneau* quittent la
+  série Bourgois illustrée par Alan Lee pour des poches (Livre de Poche,
+  Pocket) — l'ensemble est moins homogène, mais le titre imprimé dit
+  désormais *La Communauté*, comme le catalogue.
+- **IGDB se lit dans un vrai navigateur** : `curl` reçoit un 403, et même
+  un `fetch` depuis la page rend 404 ; seule la navigation donne la page,
+  dont l'`og:image` porte l'identifiant d'image. Les quinze slugs ont tous
+  répondu — ils sont donc justes.
+- Vérifié par `parseFonds` + `migrate` + `merge` sur les fichiers en ligne :
+  46 œuvres, aucune sans jaquette.
+- ⚠️ **Appris à mes dépens** : `git add docs/ETAT.md` a d'abord embarqué
+  l'entrée d'une autre session (l'arrivée de Liaheris), non commitée, sous
+  mon message. Commit défait (local, jamais poussé) ; seule cette entrée a
+  été indexée, à partir de la version commitée du fichier. **Un fichier
+  partagé ne s'indexe pas en entier** : on regarde `git diff` avant.
+
 ### 27 octobre 2026 — « Le Légendaire », écrit directement dans le dépôt
 
 > *Renommée **Istari** le même soir, à la demande de Nathan* (« retouche une
