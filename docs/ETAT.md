@@ -484,6 +484,31 @@ Aucune ne bloque le spike.
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
 
+### 27 octobre 2026 — « Le Légendaire », écrit directement dans le dépôt
+
+- **À la demande de Nathan, une quête posée hors de l'application** : *Le
+  Légendaire*, deux épreuves au palier « achever » — les cinq livres (*Le
+  Silmarillion*, *Le Hobbit*, les trois volumes) et les six films de
+  Jackson. Elle vit dans `data/Gluenathazam.json` (invariant 28), un seul
+  commit avec le fonds (invariant 27) : « verse Le Silmarillion au fonds,
+  pose onze jaquettes, ouvre une quête ».
+- **Dix des onze œuvres étaient déjà au fonds** depuis le 12 octobre ; seul
+  *Le Silmarillion* (`ol:OL27495W`, 1977) y a été versé. ⚠️ *Une recherche
+  par mots-clés (« ring », « hobbit ») avait d'abord manqué* Les Deux Tours
+  *et* Le Retour du Roi *— aucun des deux ne contient ces mots.* On cherche
+  une œuvre par son identifiant, pas par son titre.
+- **Les jaquettes vont dans le fonds, pas dans le fragment** : Nathan ne
+  suit aucune de ces œuvres, et `merge()` prend la jaquette du fonds dès
+  qu'elle porte `coverAt`. Films : affiches françaises de TMDb
+  (`image.tmdb.org/t/p/w500`, lues sur la page publique, sans clé). Livres :
+  les éditions Bourgois de la nouvelle traduction, illustrées par Alan Lee,
+  pour que les cinq se répondent — la jaquette du tome 1 dit *La Fraternité
+  de l'anneau* (Ledoux), le titre au catalogue reste *La Communauté de
+  l'Anneau*. Aucun cadrage : affiches et couvertures sont déjà au 2/3.
+- **Vérifié par le code de l'application**, pas à l'œil : les deux fichiers
+  en ligne passés par `parseFonds`, `migrate` et `merge` — onze œuvres,
+  toutes avec jaquette, quête lue, onze adresses en `200 image/jpeg`.
+
 ### 13 octobre 2026 — v0.1.5, la jaquette cadrée
 
 - Nathan : « je ne peux pas réassigner des genres, et je ne vois pas
