@@ -486,6 +486,9 @@ Aucune ne bloque le spike.
 
 ### 27 octobre 2026 — « Le Légendaire », écrit directement dans le dépôt
 
+> *Renommée **Istari** le même soir, à la demande de Nathan* (« retouche une
+> planche », même identifiant `q-Gluenathazam-mvr3oxsm`, même date).
+
 - **À la demande de Nathan, une quête posée hors de l'application** : *Le
   Légendaire*, deux épreuves au palier « achever » — les cinq livres (*Le
   Silmarillion*, *Le Hobbit*, les trois volumes) et les six films de
