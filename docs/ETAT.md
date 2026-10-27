@@ -484,6 +484,38 @@ Aucune ne bloque le spike.
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
 
+### 27 octobre 2026 — tous les jeux FromSoftware
+
+- **Trente-trois jeux versés au fonds**, avec jaquette (IGDB
+  `t_cover_big`, toutes sous le plafond) : de *King's Field* (1995) à
+  *Shadow Assault: Tenchu* (2008), plus le remake de *Demon's Souls*. Le
+  fonds compte 48 jeux FromSoftware, le catalogue 79 œuvres.
+- **Le périmètre est celui de Nathan, mot pour mot** : sortis en Occident,
+  depuis *King's Field* ; pas de mobile ; **une entrée par jeu, jamais par
+  plateforme** ; **les remakes distingués**. D'où :
+  - *Demon's Souls* (2020, Bluepoint) est une œuvre à part,
+    `igdb:demons-souls`, titrée « Demon's Souls (remake) » — l'original
+    reste `igdb:demon-s-souls`. ⚠️ *Les deux slugs ne diffèrent que d'un
+    tiret* : un futur branchement d'IGDB ne doit pas les confondre.
+  - Les **remasters** et rééditions ne sont pas des remakes : ni *Dark Souls
+    Remastered*, ni *Scholar of the First Sin*, ni *Metal Wolf Chaos XD*
+    (dont l'original n'est jamais sorti hors du Japon), ni les portages PSP
+    d'*Armored Core 3* et *Silent Line*.
+  - Restés au Japon, donc écartés : le premier *King's Field* (1994),
+    *Spriggan*, *Frame Gride*, *Echo Night 2*, *Thousand Land*, *Shadow
+    Tower Abyss*, *Metal Wolf Chaos*, la série *Another Century's Episode*,
+    *Yoshitsune*, les jeux DS, *Monster Hunter Diary*, *Gundam Unicorn*.
+- **La numérotation des *King's Field* ment d'un pays à l'autre** : le
+  *King's Field* occidental est le II japonais, le *King's Field II*
+  occidental est le III, et le IV s'appelle *The Ancient City*. Wikidata
+  donnait le même slug à deux d'entre eux ; IGDB, lu page par page, les
+  sépare (`kings-field` 1995, `kings-field-ii` 1996). Titres et années sont
+  ceux d'IGDB.
+- **Wikipedia pour la liste, Wikidata pour les slugs, IGDB pour trancher** :
+  chacun des trente-trois slugs a été ouvert dans le navigateur, titre et
+  année relus. Vérifié ensuite par `parseFonds` + `merge` : rien d'écarté,
+  aucune œuvre sans jaquette.
+
 ### 27 octobre 2026 — toutes les œuvres ont leur jaquette
 
 - **Trente-trois jaquettes posées dans le fonds** (les dix-huit Carpenter,
