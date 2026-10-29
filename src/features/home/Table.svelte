@@ -147,8 +147,8 @@
   .bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 22px; margin-top: 12px; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--dim); }
   .lg { display: inline-flex; align-items: center; gap: 6px; }
-  .legend .sw { width: 18px; height: 14px; }
-  .legend .n { font-size: 9px; }
+  .legend .sw { width: 22px; height: 18px; }
+  .legend .n { font-size: 14px; }
   .filt { display: flex; flex-wrap: wrap; gap: 2px 4px; }
   .filt button { min-height: 44px; padding: 0 10px; font-size: 11px; font-weight: 600; color: var(--dim); }
   .filt button:hover { color: var(--ink); }
@@ -199,11 +199,18 @@
   tr:hover .w { background: var(--raise); }
 
   /* La colonne porte la teinte douce de son Ordre ; la case, l'état franc. */
-  td { height: 44px; background: color-mix(in srgb, var(--c) 7%, var(--paper));
-       border-bottom: 1px solid color-mix(in srgb, var(--c) 14%, var(--rule)); vertical-align: middle; }
+  td { height: 44px; background: color-mix(in srgb, var(--c) 7%, var(--paper)); vertical-align: middle;
+       border-bottom: 1px solid color-mix(in srgb, var(--c) 14%, var(--rule));
+       border-right: 1px solid color-mix(in srgb, var(--c) 14%, var(--rule)); }
   tr:hover td { background: color-mix(in srgb, var(--c) 13%, var(--paper)); }
-  .sw { display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: 0; line-height: 1; }
-  td .sw { height: 30px; margin: 0 5px; }
+  /* **La case est le bloc** : sa couleur dit l'état, et la note se pose
+     dessus. Un carré dans un carré faisait deux choses à lire pour une
+     seule (Nathan, 29 octobre). Le filet entre les cases reste, sinon deux
+     achevés voisins se fondraient en une barre. La note est en Instrument
+     Serif, comme tous les chiffres cérémonieux de l'application. */
+  .sw { display: grid; place-items: center; font-family: var(--fs); font-size: 20px; font-weight: 400;
+        letter-spacing: 0; line-height: 1; }
+  td .sw { height: 44px; }
 
   @media (max-width: 860px) {
     .tab { --wcol: 136px; --ccol: 50px; }
