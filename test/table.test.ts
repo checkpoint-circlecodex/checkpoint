@@ -42,3 +42,11 @@ test("la recherche lit les deux titres, sans casse ni accents", () => {
   assert.deepEqual(ledger(w, { q: "three-body", pref: "fr" }).works, ["b-3"], "le titre original, même si l'on affiche le français");
   assert.deepEqual(ledger(w, { q: "zzz" }).works, []);
 });
+
+test("le fonds vient à part, et la recherche le filtre aussi", () => {
+  const ws = merge([sh("nathan", "mage", { "g-re": re })], [{ schemaVersion: SCHEMA_VERSION, by: "nathan", updatedAt: D, works: { "b-3": war, "g-re": re } }]);
+  const L = ledger(ws, { me: "nathan" });
+  assert.deepEqual(L.works, ["g-re"], "suivie : au corpus");
+  assert.deepEqual(L.fonds, ["b-3"], "personne ne la suit : au fonds, et une seule fois");
+  assert.deepEqual(ledger(ws, { q: "resident" }).fonds, []);
+});

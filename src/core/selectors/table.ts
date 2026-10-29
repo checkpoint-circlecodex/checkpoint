@@ -4,13 +4,14 @@
    qu'elle vit à côté du Registre (demandé par Nathan le 29 octobre).
 
    Rien n'y est stocké : la grille se recalcule du monde comme le reste
-   (invariant 2). Le fonds n'y entre pas — une œuvre que personne ne suit
-   n'aurait qu'une ligne vide (invariant 36). */
+   (invariant 2). **Le fonds vient après, à part** — ce que personne ne suit
+   encore, sous un blanc (Nathan, 29 octobre) : il est au catalogue, pas au
+   corpus (invariant 36), et le Tableau le dit par la place qu'il lui donne. */
 
 import { CIRCLES, type Circle } from "../model/lexicon.ts";
 import type { MediaType } from "../model/schema.ts";
 import type { Person, Row, World } from "../model/world.ts";
-import { titlesOf, tracked } from "./works.ts";
+import { titlesOf, tracked, unfollowed } from "./works.ts";
 
 export type Ledger = {
   /** Les membres : **soi d'abord** — on lit toujours le Tableau depuis sa
@@ -20,6 +21,9 @@ export type Ledger = {
       fait groupe à elle seule, même si l'Ordre qui suit est le sien. */
   bands: { c: Circle; n: number; me: boolean }[];
   works: string[];
+  /** Les œuvres du fonds que personne ne suit encore — des lignes vides,
+      qu'on peut remplir depuis sa propre colonne. */
+  fonds: string[];
   /** La case d'une personne sur une œuvre : `cell[personId][mediaId]`. */
   cell: Record<string, Record<string, Row>>;
 };
@@ -46,8 +50,7 @@ export function ledger(w: World, opts: { kind?: MediaType; pref?: "vo" | "fr"; m
   /* **La recherche interroge toujours les deux titres**, quelle que soit la
      préférence d'affichage (invariant 9). */
   const needle = fold(q.trim());
-  const works = tracked(w, kind, pref)
-    .filter(id => !needle || titlesOf(w, id).some(t => fold(t).includes(needle)));
+  const hit = (id: string) => !needle || titlesOf(w, id).some(t => fold(t).includes(needle));
 
-  return { people, bands, works, cell };
+  return { people, bands, works: tracked(w, kind, pref).filter(hit), fonds: unfollowed(w, kind, pref).filter(hit), cell };
 }

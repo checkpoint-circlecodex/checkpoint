@@ -337,30 +337,46 @@ function drawSkylineRaw(cv){
     si le canevas n'a pas encore de taille. */
 export const drawSkyline: (cv: HTMLCanvasElement) => (() => void) | null = drawSkylineRaw;
 
-/** Action Svelte : la cité vit avec son nœud, se redessine quand la largeur
-    change, et s'arrête avec lui. La première tentative se refait par
+/** Action Svelte : la cité vit avec son nœud, se redessine quand **sa propre
+    taille** change, et s'arrête avec lui. La première tentative se refait par
     minuterie si le canevas n'est pas encore mis en page — **jamais par image
-    d'animation**, qu'une fenêtre masquée ne produit pas. */
+    d'animation**, qu'une fenêtre masquée ne produit pas.
+
+    ⚠️ *Corrigé le 29 octobre* : elle ne se redessinait qu'au `resize` de la
+    fenêtre. Or le canevas s'affiche à `width: 100%` : quand sa boîte
+    changeait sans que la fenêtre change — la fenêtre native qui se pose au
+    lancement, une mise en page qui arrive après le premier dessin —, l'image
+    dessinée à l'ancienne largeur était **étirée** au lieu d'être refaite
+    (signalé par Nathan le 20 octobre, « des fois »). On observe donc le
+    canevas lui-même (invariant 21 : un composant interroge son conteneur, pas
+    la fenêtre). */
 export function skyline(node: HTMLCanvasElement) {
   let stop: (() => void) | null = null;
-  let tries = 0, tid: ReturnType<typeof setTimeout> | null = null, width = 0;
+  let tries = 0, tid: ReturnType<typeof setTimeout> | null = null, w = 0, h = 0;
   const draw = () => {
     tid = null;
     stop?.();
     stop = drawSkyline(node);
     if (!stop && ++tries < 40) { tid = setTimeout(draw, 60); return; }
-    width = node.offsetWidth;
+    w = node.offsetWidth; h = node.offsetHeight;
   };
   draw();
+  /* Un court délai regroupe les tailles intermédiaires d'un redimensionnement :
+     on dessine la dernière, pas chacune. */
   let rt: ReturnType<typeof setTimeout> | null = null;
   const onResize = () => {
     if (rt) clearTimeout(rt);
-    rt = setTimeout(() => { if (node.offsetWidth !== width) draw(); }, 160);
+    rt = setTimeout(() => {
+      if (node.offsetWidth && (node.offsetWidth !== w || node.offsetHeight !== h)) { tries = 0; draw(); }
+    }, 120);
   };
+  const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(onResize) : null;
+  ro?.observe(node);
   addEventListener("resize", onResize);
   return {
     destroy() {
       stop?.(); if (tid) clearTimeout(tid); if (rt) clearTimeout(rt);
+      ro?.disconnect();
       removeEventListener("resize", onResize);
     },
   };

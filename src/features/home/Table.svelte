@@ -30,7 +30,7 @@
   import { Bubble, Face } from "#core/ui/index.ts";
   import { changerStatut, identity, inscrire } from "#core/model/acts.ts";
   import { KIND, KINDS, STATE_ORDER, STATUS, roman } from "#core/model/lexicon.ts";
-  import { ledger, titleOf, tracked } from "#core/selectors/index.ts";
+  import { ledger, titleOf, tracked, unfollowed } from "#core/selectors/index.ts";
   import type { MediaType, Status } from "#core/model/schema.ts";
   import { vue } from "./side.svelte.ts";
 
@@ -40,10 +40,10 @@
   const L = $derived(ledger(w, { kind: vue.kind ?? undefined, pref, me, q: vue.q }));
   /* Une recherche qui ne trouve rien laisse la grille en place, champ
      compris : sinon on ne pourrait plus corriger ce qu'on a tapé. */
-  const any = $derived(tracked(w).length > 0);
+  const any = $derived(tracked(w).length > 0 || unfollowed(w).length > 0);
   /* Le filtre ne propose que les natures présentes : un choix qui mène à
      une grille vide n'est pas un choix. */
-  const kinds = $derived((Object.keys(KINDS) as MediaType[]).filter(k => tracked(w, k).length));
+  const kinds = $derived((Object.keys(KINDS) as MediaType[]).filter(k => tracked(w, k).length || unfollowed(w, k).length));
   const firsts = $derived(new Set(L.bands.map((b, i) =>
     L.people[L.bands.slice(0, i).reduce((s, x) => s + x.n, 0)]?.id)));
 
@@ -60,6 +60,30 @@
     untrack(() => { sheet!.scrollLeft = vue.x; sheet!.scrollTop = vue.y; });
   });
   const keep = () => { if (sheet) { vue.x = sheet.scrollLeft; vue.y = sheet.scrollTop; } };
+
+  /* **Les colonnes qui attendent leur membre.** La grille ne s'arrête pas au
+     dernier membre : elle va jusqu'au bord, en colonnes vides et sans
+     couleur — un tableur a des colonnes avant d'avoir des noms (Nathan,
+     29 octobre). On en compte assez pour remplir la feuille et pas une de
+     plus : la dernière prend ce qui reste, sans faire défiler. On mesure la
+     feuille, pas la fenêtre (invariant 21) — et sa largeur ne dépend pas de
+     son contenu, donc compter ne relance pas le comptage. */
+  let spare = $state(0);
+  $effect(() => {
+    const el = sheet, n = L.people.length;
+    if (!el) return;
+    const count = () => {
+      const css = getComputedStyle(el);
+      const wcol = parseFloat(css.getPropertyValue("--wcol")) || 250;
+      const ccol = parseFloat(css.getPropertyValue("--ccol")) || 46;
+      spare = Math.max(0, Math.floor((el.clientWidth - wcol - n * ccol) / ccol));
+    };
+    count();
+    const ro = new ResizeObserver(count);
+    ro.observe(el);
+    return () => ro.disconnect();
+  });
+  const spares = $derived(Array.from({ length: spare }, (_, i) => i));
 
   const label = (pid: string, id: string) => {
     const r = L.cell[pid]?.[id], p = w.people[pid], m = w.catalog[id];
@@ -121,39 +145,54 @@
                 </a>
               </th>
             {/each}
+            {#each spares as i (i)}<th class="spare" aria-hidden="true"></th>{/each}
           </tr>
         </thead>
+        {#snippet line(id: string)}
+          {@const m = w.catalog[id]}
+          <tr>
+            <th scope="row" class="w">
+              <a href="#/fiche/{id}">
+                <span class="t">{titleOf(w, id, pref)}</span>
+                <span class="k">{KIND[m.mediaType]} · {m.year}</span>
+              </a>
+            </th>
+            {#each L.people as p (p.id)}
+              {@const r = L.cell[p.id]?.[id]}
+              <td class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
+                {#if p.id === me}
+                  <button class="sw {r ? `st-${r.status}` : 'empty'}" class:open={open?.id === id}
+                          aria-label={r ? `${label(p.id, id)} — changer` : `Inscrire « ${titleOf(w, id, pref)} »`}
+                          aria-expanded={open?.id === id} onclick={e => toggle(id, e)}>
+                    {r ? (typeof r.rating === "number" ? r.rating : "") : "+"}
+                  </button>
+                {:else if r}
+                  <span class="sw st-{r.status}" role="img" aria-label={label(p.id, id)} title={label(p.id, id)}>
+                    {typeof r.rating === "number" ? r.rating : ""}
+                  </span>
+                {/if}
+              </td>
+            {/each}
+            {#each spares as i (i)}<td class="spare"></td>{/each}
+          </tr>
+        {/snippet}
         <tbody>
-          {#each L.works as id (id)}
-            {@const m = w.catalog[id]}
-            <tr>
-              <th scope="row" class="w">
-                <a href="#/fiche/{id}">
-                  <span class="t">{titleOf(w, id, pref)}</span>
-                  <span class="k">{KIND[m.mediaType]} · {m.year}</span>
-                </a>
-              </th>
-              {#each L.people as p (p.id)}
-                {@const r = L.cell[p.id]?.[id]}
-                <td class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
-                  {#if p.id === me}
-                    <button class="sw {r ? `st-${r.status}` : 'empty'}" class:open={open?.id === id}
-                            aria-label={r ? `${label(p.id, id)} — changer` : `Inscrire « ${titleOf(w, id, pref)} »`}
-                            aria-expanded={open?.id === id} onclick={e => toggle(id, e)}>
-                      {r ? (typeof r.rating === "number" ? r.rating : "") : "+"}
-                    </button>
-                  {:else if r}
-                    <span class="sw st-{r.status}" role="img" aria-label={label(p.id, id)} title={label(p.id, id)}>
-                      {typeof r.rating === "number" ? r.rating : ""}
-                    </span>
-                  {/if}
-                </td>
-              {/each}
-            </tr>
-          {/each}
+          {#each L.works as id (id)}{@render line(id)}{/each}
         </tbody>
+        {#if L.fonds.length}
+          <!-- **Un blanc, puis le fonds** : ce que personne ne suit encore.
+               Ses lignes sont vides, sauf la sienne, où chaque case inscrit
+               l'œuvre — elle remonte alors au-dessus du blanc. -->
+          <tbody class="fonds">
+            <tr class="gap">
+              <th scope="rowgroup" class="w"><span class="gl">Au fonds — personne ne les suit encore</span></th>
+              <td colspan={L.people.length + spare}></td>
+            </tr>
+            {#each L.fonds as id (id)}{@render line(id)}{/each}
+          </tbody>
+        {/if}
       </table>
-      {#if !L.works.length}
+      {#if !L.works.length && !L.fonds.length}
         <p class="none miss">Aucune œuvre ne répond à « {vue.q.trim()} ».</p>
       {/if}
     </div>
@@ -240,6 +279,12 @@
 
   .ppl th { width: var(--ccol); min-width: var(--ccol); max-width: var(--ccol);
             background: color-mix(in srgb, var(--c) 18%, var(--paper)); border-bottom: 1.5px solid var(--ink); }
+  /* L'angle est dans la même rangée que les noms, mais il n'a pas d'Ordre :
+     la teinte d'Ordre, sans `--c`, devenait une couleur invalide — donc
+     transparente —, et les titres défilaient en se lisant au travers (vu le
+     29 octobre, après le retrait de la rangée des Ordres). Il reprend le
+     papier, et sa largeur à lui. */
+  .ppl th.corner { background: var(--paper); max-width: var(--wcol); }
   .ppl a { display: grid; justify-items: center; gap: 4px; padding: 7px 2px 6px; min-height: 44px; }
   .nm { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         font-size: 10px; font-weight: 600; color: var(--ink2); }
@@ -275,7 +320,22 @@
      côté qui la sépare des autres. Elle garde ses 44 px même en étroit :
      c'est la seule où chaque case est une cible (invariant 20). */
   th.me, td.me { width: 46px; min-width: 46px; max-width: 46px;
-                 border-left: 1.5px solid var(--ink); border-right: 1.5px solid var(--ink); }
+                 border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+
+  /* Les colonnes en attente : du papier, des filets, aucune teinte. La
+     dernière n'a pas de largeur bornée — c'est elle qui prend le reste. */
+  table { min-width: 100%; }
+  th.spare { background: var(--paper); border-bottom: 1.5px solid var(--ink); width: var(--ccol); min-width: var(--ccol); }
+  td.spare { background: var(--paper); border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+  tr:hover td.spare { background: var(--paper); }
+
+  /* Le blanc avant le fonds : une rangée sans filet, et son nom en petites
+     capitales dans la colonne des titres, qui reste à l'écran. */
+  .gap th, .gap td { height: 40px; background: var(--paper); border: none; border-bottom: 1px solid var(--rule2); }
+  .gap .w { border-right: none; vertical-align: bottom; }
+  .gl { display: block; padding: 0 12px 7px; font-size: 9px; font-weight: 700; letter-spacing: .18em;
+        text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+  tr.gap:hover .w { background: var(--paper); }
   th.me .nm { color: var(--ink); font-weight: 700; }
   td.me button { width: 100%; }
   td.me .empty { color: var(--faint); font-family: var(--fu); font-size: 15px; }

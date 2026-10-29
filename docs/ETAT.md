@@ -9,6 +9,13 @@
 
 ## Prochaine action
 
+⚠️ *29 octobre, plus tard* : la v0.1.6 est publiée, Nathan a confirmé « Le
+Tableau » dans sa bande. Faits depuis, **pas encore publiés** : la cité
+étirée (dernier défaut du 20 octobre), le fonds sous un blanc dans le
+Tableau, les colonnes en attente, le filet de sa colonne affiné — et
+**l'angle du Tableau devenu transparent dans la v0.1.6** (corrigé).
+**Prochaine action : sortir la v0.1.7.**
+
 ⚠️ *29 octobre* : **la v0.1.6 part** — le Tableau (seconde face de
 l'accueil), quatre états au lieu de six, le repère de la barre revenu au
 prototype, et le correctif d'`admit()` (l'équipe `registre`). **Prochaine
@@ -219,7 +226,10 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
 
 ### La cité étirée et le repère de la barre — signalés le 20 octobre (v0.1.5, Mac)
 
-- [ ] **À l'ouverture, la cité en bas de la fenêtre paraît parfois
+- [x] *(29 octobre : la cité observe son propre canevas — `ResizeObserver`
+      — et se redessine dès que sa boîte change, plus seulement sur un
+      `resize` de la fenêtre. Les deux cités : l'ouverture et le Registre.)*
+      **À l'ouverture, la cité en bas de la fenêtre paraît parfois
       étirée.** *Piste, non vérifiée* : le canevas (`core/ui/skyline.ts`)
       prend la largeur qu'il mesure **au premier dessin**, puis ne se
       redessine que sur un `resize` de la fenêtre. Or il s'affiche en CSS à
@@ -578,6 +588,18 @@ Aucune ne bloque le spike.
 - **Le repère de la barre (défaut du 20 octobre)** : retour au prototype,
   sans trait — libellé et icône à l'encre, libellé en gras, fond grisé
   replié.
+- **Après la v0.1.6** : sous les œuvres suivies, **un blanc puis le fonds**
+  (« Au fonds — personne ne les suit encore ») ; sa propre case y inscrit
+  l'œuvre, qui remonte au-dessus du blanc. **Des colonnes en attente**,
+  sans couleur, jusqu'au bord de la feuille — comptées sur la largeur de la
+  feuille, sans jamais la faire défiler. Le filet de sa colonne passe de
+  1,5 à 1 px. Et la cité étirée, enfin (voir les défauts).
+- ⚠️ **Un défaut parti dans la v0.1.6** : en retirant la rangée des Ordres,
+  l'angle « Œuvre / Chercher » est passé dans la rangée des noms et en a
+  pris la teinte d'Ordre — **sans `--c`, un `color-mix()` est invalide, donc
+  transparent** : les titres défilaient en se lisant au travers. *Une
+  règle de groupe qui lit une variable doit être bornée aux éléments qui la
+  portent.* Corrigé, à publier.
 - **« Suspendu » et « accompli » sont retirés partout** (Nathan : « ici et
   partout ailleurs »). Le panneau *Mes en cours* perd « De côté » et sa
   section « Mis de côté ». Les fragments qui les portent encore se lisent
