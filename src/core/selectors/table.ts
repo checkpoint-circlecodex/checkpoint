@@ -8,7 +8,7 @@
    encore, sous un blanc (Nathan, 29 octobre) : il est au catalogue, pas au
    corpus (invariant 36), et le Tableau le dit par la place qu'il lui donne. */
 
-import { CIRCLES, type Circle } from "../model/lexicon.ts";
+import { CIRCLES, ORDER, type Circle } from "../model/lexicon.ts";
 import type { MediaType } from "../model/schema.ts";
 import type { OpenQuest, Person, Row, World } from "../model/world.ts";
 import { questScore } from "./quests.ts";
@@ -36,8 +36,14 @@ export type Ledger = {
 /** Sans casse ni accents : « eveil » trouve « Les Trois Éveils ». */
 const fold = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
-export function ledger(w: World, opts: { kind?: MediaType; pref?: "vo" | "fr"; me?: string; q?: string } = {}): Ledger {
-  const { kind, pref = "fr", me = "", q = "" } = opts;
+/** `title` : par ordre alphabétique. `state` : **selon son propre état**,
+    dans l'ordre des états (le présent d'abord), puis par titre — ce qu'on n'a
+    pas inscrit vient après. Le fonds et les quêtes restent par titre : on n'y
+    a pas d'état. */
+export type LedgerSort = "title" | "state";
+
+export function ledger(w: World, opts: { kind?: MediaType; pref?: "vo" | "fr"; me?: string; q?: string; sort?: LedgerSort } = {}): Ledger {
+  const { kind, pref = "fr", me = "", q = "", sort = "title" } = opts;
   const rank = (p: Person) => (p.id === me ? -1 : CIRCLES.findIndex(c => c.id === p.circleRef.id));
   const people = Object.values(w.people)
     .sort((a, b) => rank(a) - rank(b) || a.firstName.localeCompare(b.firstName, "fr"));
@@ -62,5 +68,11 @@ export function ledger(w: World, opts: { kind?: MediaType; pref?: "vo" | "fr"; m
     .sort((a, b) => a.title.localeCompare(b.title, "fr"))
     .map(q => ({ q, done: new Set(people.filter(p => questScore(w, q, p.id).ok).map(p => p.id)) }));
 
-  return { people, bands, works: tracked(w, kind, pref).filter(hit), quests, fonds: unfollowed(w, kind, pref).filter(hit), cell };
+  const works = tracked(w, kind, pref).filter(hit);
+  if (sort === "state") {
+    const rank = (id: string) => { const r = cell[me]?.[id]; return r ? ORDER.indexOf(r.status) : ORDER.length; };
+    works.sort((a, b) => rank(a) - rank(b));   // stable : le titre départage
+  }
+
+  return { people, bands, works, quests, fonds: unfollowed(w, kind, pref).filter(hit), cell };
 }

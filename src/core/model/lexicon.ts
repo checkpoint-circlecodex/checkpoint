@@ -30,10 +30,12 @@ export const UNIT_OF: Record<MediaType, "hours" | "episodes" | "pages" | null> =
   { game: "hours", film: null, series: "episodes", book: "pages" };
 export const UNIT_LBL: Record<string, string> = { hours: "heures", episodes: "épisodes", pages: "pages", chapters: "chapitres" };
 
-/** L'ordre d'affichage d'une liste d'inscriptions : le présent d'abord. */
+/** **L'ordre des états, un seul, partout : le présent d'abord** — Entrepris,
+    Achevé, Renoncé, Convoité. Tranché par Nathan le 29 octobre. Il y en avait
+    deux : celui-ci pour les listes, et le cycle de vie (convoité d'abord) pour
+    les choix de la fiche, de la bulle et la légende — personne ne l'avait
+    décidé, et les deux se voyaient côte à côte. */
 export const ORDER: Status[] = ["playing", "completed", "dropped", "wishlist"];
-/** L'ordre du cycle de vie, pour un sélecteur d'état. */
-export const STATE_ORDER: Status[] = ["wishlist", "playing", "completed", "dropped"];
 
 export type Circle = {
   id: CircleId; name: string; one: string; order: string;

@@ -63,3 +63,16 @@ test("les quêtes disent qui les a accomplies, et s'effacent quand on filtre par
   assert.deepEqual(ledger(wq, { kind: "game" }).quests, [], "une quête traverse les natures");
   assert.deepEqual(ledger(wq, { q: "surv" }).quests.length, 1, "la recherche lit aussi les quêtes");
 });
+
+test("ranger par état : son propre état, le présent d'abord, puis le titre", () => {
+  const mk = (title: string) => ({ mediaType: "game" as const, title, year: 2020 });
+  const st = (status: "wishlist" | "playing" | "completed" | "dropped") => ({ status, rating: null, at: D });
+  const ws = merge([{
+    ...sh("nathan", "mage", {}),
+    works: { a: mk("Alpha"), b: mk("Bravo"), c: mk("Charlie"), d: mk("Delta"), e: mk("Echo") },
+    entries: { a: st("wishlist"), b: st("completed"), c: st("playing"), e: st("completed") },
+  }, sh("bob", "guerrier", { d: mk("Delta") })]);
+  assert.deepEqual(ledger(ws, { me: "nathan" }).works, ["a", "b", "c", "d", "e"], "par titre");
+  assert.deepEqual(ledger(ws, { me: "nathan", sort: "state" }).works, ["c", "b", "e", "a", "d"],
+    "entrepris, achevés (par titre), convoité, puis ce qu'on n'a pas inscrit");
+});

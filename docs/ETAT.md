@@ -275,6 +275,28 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
   flèche verte)* ; ils ne sont pas parvenus à la session du 20 octobre —
   les pistes ci-dessus viennent du code, pas de l'image.
 
+### Pour la prochaine version — demandé le 29 octobre (après la v0.1.9)
+
+- [x] *(fait le 29 octobre : `ORDER` seul, `STATE_ORDER` retiré ; « Ranger : par titre / par état » au Tableau, gardé dans le navigateur.)* **Décider de l'ordre des états, et laisser choisir l'organisation —
+      par état ou par ordre alphabétique.** Ce qu'il y a aujourd'hui, et
+      qui montre qu'aucun ordre n'a jamais été décidé : **deux ordres
+      coexistent** dans `lexicon.ts`. `STATE_ORDER` (convoité, entrepris,
+      achevé, renoncé — le cycle de vie) range les choix de la fiche, de
+      l'inscription, de la bulle et la légende du Tableau ; `ORDER`
+      (entrepris, achevé, renoncé, convoité — « le présent d'abord ») range
+      les témoins d'une fiche (`rowsFor`). Les listes d'œuvres, elles, sont
+      **toutes alphabétiques** (Tableau, Œuvres, registres). ⚠️ *À
+      préciser avec Nathan avant d'écrire* : sur quelles vues porte le choix
+      (le Tableau ? la page des Œuvres ? sa feuille ?), « par état » de
+      qui (le sien, au Tableau ; celui de la personne, sur une feuille), et
+      quel ordre unique. Le choix d'organisation est une préférence
+      d'affichage : par personne et par appareil (`localStorage`, comme la
+      vue Registre/Jaquettes), pas dans le fragment.
+      ✅ **Tranché par Nathan le 29 octobre** : un seul ordre partout, **le
+      présent d'abord** — Entrepris, Achevé, Renoncé, Convoité ; et le choix
+      « par état / par titre » **au Tableau seulement**, rangé selon *son
+      propre* état.
+
 ---
 
 ## Pour ensuite — idées déposées, pas encore conçues

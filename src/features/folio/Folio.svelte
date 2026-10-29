@@ -16,7 +16,7 @@
     accompagner, avancer, changerStatut, chroniquer, distinguer, identity, inscrire, juger,
     poserCheckpoint, poserJaquette, refaire, retirerInscription,
   } from "#core/model/acts.ts";
-  import { STATE_ORDER } from "#core/model/lexicon.ts";
+  import { ORDER } from "#core/model/lexicon.ts";
   import { FAV_MAX } from "#core/model/schema.ts";
 
   let { id }: { id: string } = $props();
@@ -226,7 +226,7 @@
         <div class="m-l">
           <span class="k">Ta position</span>
           <div class="picks">
-            {#each STATE_ORDER as st}
+            {#each ORDER as st}
               <button class="pick" class:on={mine.status === st} onclick={() => setStatus(st)}>
                 {STATUS[m.mediaType][st]}
               </button>

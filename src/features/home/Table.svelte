@@ -29,15 +29,15 @@
   import { registre } from "#core/model/store.svelte.ts";
   import { Bubble, Face } from "#core/ui/index.ts";
   import { changerStatut, identity, inscrire } from "#core/model/acts.ts";
-  import { KIND, KINDS, STATE_ORDER, STATUS, roman } from "#core/model/lexicon.ts";
+  import { KIND, KINDS, ORDER, STATUS, roman } from "#core/model/lexicon.ts";
   import { ledger, titleOf, tracked, unfollowed } from "#core/selectors/index.ts";
   import type { CircleId, MediaType, Status } from "#core/model/schema.ts";
-  import { vue } from "./side.svelte.ts";
+  import { keepSort, vue } from "./side.svelte.ts";
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
   const me = $derived(registre.me ?? "");
-  const L = $derived(ledger(w, { kind: vue.kind ?? undefined, pref, me, q: vue.q }));
+  const L = $derived(ledger(w, { kind: vue.kind ?? undefined, pref, me, q: vue.q, sort: vue.sort }));
   /* Une recherche qui ne trouve rien laisse la grille en place, champ
      compris : sinon on ne pourrait plus corriger ce qu'on a tapé. */
   const any = $derived(tracked(w).length > 0 || unfollowed(w).length > 0);
@@ -50,7 +50,7 @@
   /* La légende dit les quatre mots, les mêmes pour toutes les natures
      (29 octobre). La note, elle, ne se légende pas : un chiffre dans une
      case se lit tout seul. */
-  const LEGEND: { st: Status; l: string }[] = STATE_ORDER.map(st => ({ st, l: STATUS.game[st] }));
+  const LEGEND: { st: Status; l: string }[] = ORDER.map(st => ({ st, l: STATUS.game[st] }));
 
   /* On revient où l'on était : ouvrir une œuvre puis revenir ne doit pas
      renvoyer en haut à gauche d'une grille de cinquante lignes. */
@@ -129,6 +129,13 @@
         {#each LEGEND as x (x.st)}
           <span class="lg"><span class="sw st-{x.st}" aria-hidden="true"></span>{x.l}</span>
         {/each}
+      </div>
+      <!-- Ranger les lignes : par titre, ou selon son propre état (le présent
+           d'abord). Le choix reste sur l'appareil. -->
+      <div class="filt">
+        <span class="fk">Ranger</span>
+        <button class:on={vue.sort === "title"} aria-pressed={vue.sort === "title"} onclick={() => keepSort("title")}>Par titre</button>
+        <button class:on={vue.sort === "state"} aria-pressed={vue.sort === "state"} onclick={() => keepSort("state")}>Par état</button>
       </div>
       {#if kinds.length > 1}
         <div class="filt">
@@ -253,7 +260,7 @@
         <div class="pk">
           <span class="pk-t"><b>{titleOf(w, id, pref)}</b> · {r ? "ta position" : "pas encore à ton registre"}</span>
           <div class="pk-l">
-            {#each STATE_ORDER as st (st)}
+            {#each ORDER as st (st)}
               <button class="pk-b" class:on={r?.status === st} aria-pressed={r?.status === st} onclick={() => setStatus(id, st)}>
                 <span class="pk-sw st-{st}" aria-hidden="true"></span>{STATUS[m.mediaType][st]}
               </button>
@@ -298,6 +305,7 @@
   .legend .sw { width: 22px; height: 18px; }
   .legend .n { font-size: 14px; }
   .filt { display: flex; flex-wrap: wrap; gap: 2px 4px; }
+  .fk { font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); margin-right: 6px; align-self: center; }
   .filt button { min-height: 44px; padding: 0 10px; font-size: 11px; font-weight: 600; color: var(--dim); }
   .filt button:hover { color: var(--ink); }
   .filt button.on { color: var(--ink); box-shadow: inset 0 -1.5px 0 var(--ink); }

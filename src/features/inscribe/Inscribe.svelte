@@ -7,7 +7,7 @@
      ne l'est pas, le second chemin est le seul pour une œuvre nouvelle, et
      l'écran le dit au lieu de faire semblant de chercher. */
   import { registre } from "#core/model/store.svelte.ts";
-  import { KIND, KINDS, STATE_ORDER, STATUS } from "#core/model/lexicon.ts";
+  import { KIND, KINDS, ORDER, STATUS } from "#core/model/lexicon.ts";
   import { identity, inscrire } from "#core/model/acts.ts";
   import { matchTitle, titleOf } from "#core/selectors/index.ts";
   import { GenrePicker, pile } from "#core/ui/index.ts";
@@ -135,7 +135,7 @@
     <div class="f">
       <span class="k">Ta position</span>
       <div class="picks">
-        {#each STATE_ORDER as st}
+        {#each ORDER as st}
           <button class="pick" class:on={status === st} onclick={() => (status = st)}>{STATUS[kind][st]}</button>
         {/each}
       </div>
