@@ -204,18 +204,29 @@
   .two { padding-left: var(--edge); overflow: hidden; }
   .home { --edge: 44px; }
 
+  /* ⚠️ **Le nom couché se tourne, il ne s'écrit pas à la verticale.** Avec
+     `writing-mode` dans un bouton en flex, WebKit — le moteur de
+     l'application Mac — calculait la largeur du mot comme s'il était
+     couché à plat, et le poussait hors de la bande, par-dessus la page
+     (vu par Nathan le 29 octobre ; Chromium, lui, le centrait). Une
+     rotation ne dépend d'aucun moteur : le mot est posé au centre exact de
+     la bande, puis tourné autour de ce centre. */
   .edge {
-    position: absolute; top: 0; bottom: 0; z-index: 5; width: var(--edge);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-    background: var(--paper); color: var(--faint);
+    position: absolute; top: 0; bottom: 0; z-index: 5; width: var(--edge); padding: 0;
+    background: var(--paper); color: var(--faint); overflow: hidden;
   }
   .edge.r { right: 0; border-left: 1px solid var(--rule); }
   .edge.l { left: 0; border-right: 1px solid var(--rule); }
   .edge:hover { color: var(--ink); background: var(--raise); }
-  .ev { writing-mode: vertical-rl; font-size: 9px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
-  .edge.l .ev { transform: rotate(180deg); }
-  /* Un glyphe seul dans un carré ne se centre pas tout seul (invariant 30). */
-  .ch { display: grid; place-items: center; width: 22px; height: 22px; font-size: 18px; letter-spacing: 0; line-height: 1; }
+  .ev { position: absolute; left: 50%; top: 50%; white-space: nowrap; line-height: 1;
+        font-size: 9px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+        transform: translate(-50%, -50%) rotate(90deg); }
+  .edge.l .ev { transform: translate(-50%, -50%) rotate(-90deg); }
+  /* Le chevron sous le mot (au-dessus à gauche) : il dit le sens. Un glyphe
+     seul dans un carré ne se centre pas tout seul (invariant 30). */
+  .ch { position: absolute; left: 50%; top: calc(50% + 52px); transform: translate(-50%, -50%);
+        display: grid; place-items: center; width: 22px; height: 22px; font-size: 18px; letter-spacing: 0; line-height: 1; }
+  .edge.l .ch { top: calc(50% - 52px); }
 
   .wrap { max-width: 980px; margin: 0 auto; padding: 30px 34px 60px; }
 

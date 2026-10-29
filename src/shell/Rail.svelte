@@ -191,16 +191,24 @@
              font-size: 16px; letter-spacing: 0; line-height: 1; }
   .act:hover .t { text-decoration: underline; text-underline-offset: 3px; }
   .collapsed .act { justify-content: center; }
-  .act.here { box-shadow: inset 2px 0 0 var(--ink); }
 
   nav { display: flex; flex-direction: column; }
   .row { display: flex; align-items: center; min-height: 44px; }
   /* Le lien remplit toute la hauteur de sa rangée : centré dans 44 px, il
      n'en couvrait que 22 — la rangée avait la taille, pas la cible. */
   .row > a, nav > .row { flex: 1; align-self: stretch; display: flex; align-items: center; gap: 11px; }
-  .row .gl { width: 14px; flex: none; text-align: center; font-family: var(--fs); font-size: 15px; letter-spacing: 0; }
-  .row .t { font-size: 13px; font-weight: 600; white-space: nowrap; }
-  .row.on { box-shadow: inset 2px 0 0 var(--ink); }
+  .row .gl { width: 14px; flex: none; text-align: center; font-family: var(--fs); font-size: 15px; letter-spacing: 0; color: var(--faint); }
+  .row .t { font-size: 13px; font-weight: 400; white-space: nowrap; color: var(--ink2); }
+  /* **La section en cours, comme le prototype la marque** : l'icône et le
+     libellé passent à l'encre, le libellé en gras — et repliée, où il n'y a
+     plus de libellé, un fond grisé. Le portage y avait mis un trait au bord
+     gauche de la rangée ; replié il tombait juste, déplié il touchait
+     l'icône (signalé par Nathan le 20 octobre). Le prototype n'avait pas de
+     trait : on revient à lui. */
+  .row.on .gl, .row.on .t { color: var(--ink); }
+  .row.on .t { font-weight: 600; }
+  .row:hover .gl, .row:hover .t { color: var(--ink); }
+  .collapsed .row.on, .collapsed .act.here { background: var(--sink); }
   .row:hover .t { text-decoration: underline; text-underline-offset: 3px; }
   .collapsed .t, .collapsed .exp, .collapsed .sub, .collapsed .who { display: none; }
   /* **Un seul axe** : repliée, chaque glyphe se centre — ceux d'agir, ceux
