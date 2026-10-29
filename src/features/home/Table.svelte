@@ -88,12 +88,13 @@
   /* **Le signe d'une quête accomplie, selon l'Ordre de qui l'a accomplie**
      (Nathan, 29 octobre — « pour voir »). Chacun est tiré de la trame de sa
      chambre, pas d'un élément : *une trame doit nommer son Ordre* (CLAUDE.md).
-     L'étoile du ciel des Mages, la lance de la forêt des Guerriers, la
+     L'étoile du ciel des Mages, l'épée des Guerriers (une lance d'abord,
+     qui se lisait comme une flèche), la
      feuille des Rangers, les ondes des Soigneurs, les lignes des Bardes.
      `s` se trace, `f` se remplit ; 14 × 14. */
   const SIGN: Record<CircleId, { s: string[]; f: string[] }> = {
     mage:     { s: [], f: ["M7 1.2 8.3 5.7 12.8 7 8.3 8.3 7 12.8 5.7 8.3 1.2 7 5.7 5.7Z"] },
-    guerrier: { s: ["M7 13.4V6.2", "M5.2 6.6h3.6"], f: ["M7 .4 8.6 3.7 7 6.1 5.4 3.7Z"] },
+    guerrier: { s: ["M3.9 9.3h6.2", "M7 9.6v2.5"], f: ["M7 .5 8.1 2.1V8.8H5.9V2.1Z", "M6.1 13a.9.9 0 1 0 1.8 0 .9.9 0 1 0-1.8 0"] },
     ranger:   { s: [], f: ["M2.4 11.6C2.4 5.6 5.8 2.4 11.6 2.4 11.6 8.2 8.4 11.6 2.4 11.6Z"] },
     soigneur: { s: ["M1.8 7a5.2 5.2 0 1 0 10.4 0 5.2 5.2 0 1 0-10.4 0"], f: ["M5.1 7a1.9 1.9 0 1 0 3.8 0 1.9 1.9 0 1 0-3.8 0"] },
     barde:    { s: ["M1.2 5.2q1.45-1.8 2.9 0t2.9 0 2.9 0 2.9 0", "M1.2 9.4q1.45-1.8 2.9 0t2.9 0 2.9 0 2.9 0"], f: [] },
