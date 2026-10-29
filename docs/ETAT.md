@@ -500,6 +500,18 @@ Aucune ne bloque le spike.
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
 
+### 29 octobre 2026 — Ringbearer et Underhill
+
+- **Deux quêtes de plus dans le fragment de Nathan**, écrites directement
+  dans le dépôt comme *Istari* (« ouvre deux quêtes », un commit) :
+  *Ringbearer* — les trois films du *Seigneur des anneaux* — et
+  *Underhill* — les trois films du *Hobbit* —, une épreuve chacune, au
+  palier « achever ». Les six films étaient déjà au fonds, avec jaquette.
+- **Les quatre états du jour ne les touchent pas** : « achever » vaut
+  achevé, et l'ancien « accompli » s'y lit déjà (`LEGACY_STATUS`).
+  Vérifié par `migrate` + `merge` sur le fichier en ligne : trois quêtes,
+  chaque œuvre retrouvée au catalogue.
+
 ### 29 octobre 2026 — le Tableau, et quatre états au lieu de six
 
 - **Demandé par Nathan, avant de corriger les deux défauts du 20 octobre** :
