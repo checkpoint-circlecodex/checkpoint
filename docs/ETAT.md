@@ -25,6 +25,10 @@ passe par-dessus au lieu de pousser la page, et les choix de la bulle qui
 débordaient (« Entrepris »). **Prochaine action : attendre les retours de
 Nathan sur la v0.1.8** ; la clé IGDB/TMDb reste le seul blocage connu.
 
+⚠️ *29 octobre, plus tard encore* : **la v0.1.10 part** — un seul ordre des
+états (le présent d'abord : Entrepris, Achevé, Renoncé, Convoité), et le
+Tableau qui se range par titre ou par son propre état.
+
 ⚠️ *29 octobre, fin de soirée* : **la v0.1.9 part** — les quatre mêmes mots
 pour toutes les natures (Convoité, Entrepris, Achevé, Renoncé ; les verbes
 du fil suivent). Vérifié en passant : **Liaheris a son fragment**
