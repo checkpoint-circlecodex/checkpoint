@@ -10,7 +10,8 @@
 
 import { CIRCLES, type Circle } from "../model/lexicon.ts";
 import type { MediaType } from "../model/schema.ts";
-import type { Person, Row, World } from "../model/world.ts";
+import type { OpenQuest, Person, Row, World } from "../model/world.ts";
+import { questScore } from "./quests.ts";
 import { titlesOf, tracked, unfollowed } from "./works.ts";
 
 export type Ledger = {
@@ -21,6 +22,10 @@ export type Ledger = {
       fait groupe à elle seule, même si l'Ordre qui suit est le sien. */
   bands: { c: Circle; n: number; me: boolean }[];
   works: string[];
+  /** **Les quêtes, entre les deux** : qui les a accomplies. L'accomplissement
+      se recalcule, il ne se stocke jamais (invariant 28). Elles traversent les
+      natures, donc elles ne paraissent pas quand on filtre par nature. */
+  quests: { q: OpenQuest; done: Set<string> }[];
   /** Les œuvres du fonds que personne ne suit encore — des lignes vides,
       qu'on peut remplir depuis sa propre colonne. */
   fonds: string[];
@@ -52,5 +57,10 @@ export function ledger(w: World, opts: { kind?: MediaType; pref?: "vo" | "fr"; m
   const needle = fold(q.trim());
   const hit = (id: string) => !needle || titlesOf(w, id).some(t => fold(t).includes(needle));
 
-  return { people, bands, works: tracked(w, kind, pref).filter(hit), fonds: unfollowed(w, kind, pref).filter(hit), cell };
+  const quests = kind ? [] : w.quests
+    .filter(q => !needle || fold(q.title).includes(needle))
+    .sort((a, b) => a.title.localeCompare(b.title, "fr"))
+    .map(q => ({ q, done: new Set(people.filter(p => questScore(w, q, p.id).ok).map(p => p.id)) }));
+
+  return { people, bands, works: tracked(w, kind, pref).filter(hit), quests, fonds: unfollowed(w, kind, pref).filter(hit), cell };
 }

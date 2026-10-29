@@ -126,18 +126,27 @@
 </aside>
 
 <style>
+  /* **Dépliée, la barre passe par-dessus ; elle ne pousse rien.** Elle
+     s'élargissait dans le flux : la page se recomposait à chaque image de
+     l'animation — textes, grilles, cité —, sous un flou qui se recalculait
+     aussi, et l'application ramait (Nathan, 29 octobre). Son emprise reste
+     donc celle de la barre repliée : la marge négative compense la largeur
+     gagnée, et comme les deux suivent la même courbe sur la même durée,
+     leur somme ne bouge à aucune image. La page dessous ne se recompose
+     jamais — elle est floue de toute façon, c'est le lanceur. */
   .rail {
-    position: relative;
-    width: var(--rail); flex: none; display: flex; flex-direction: column;
+    position: relative; z-index: 20; background: var(--paper);
+    width: var(--rail); margin-right: calc(var(--railc) - var(--rail));
+    flex: none; display: flex; flex-direction: column;
     padding: 16px 16px 12px; border-right: 1px solid var(--rule);
-    transition: width var(--t2) var(--e);
+    transition: width var(--t2) var(--e), margin-right var(--t2) var(--e);
   }
   /* La barre latérale est le corps de la console : elle ne se défocalise
      jamais, et elle ne porte aucune couleur. */
   /* Repliée, la colonne utile fait **exactement 44 px** : la largeur d'une
      cible (invariant 20). Avec 10 px de marge elle en faisait 40, et tout ce
      qui mesurait 44 débordait d'un côté — le sceau sortait par la gauche. */
-  .collapsed { width: var(--railc); padding-left: 8px; padding-right: 8px; }
+  .collapsed { width: var(--railc); margin-right: 0; padding-left: 8px; padding-right: 8px; }
 
   .top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
   /* **Cibles tactiles d'au moins 44 px partout, bureau compris** (invariant

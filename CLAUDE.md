@@ -804,6 +804,10 @@ personne à convaincre, et donc rien à administrer.
 volet prend la main : on y cherche, les résultats s'affichent **en jaquettes**
 au-dessus du flou, et **choisir referme le volet sur la page atteinte**.
 L'état replié est l'état de travail, et c'est lui par défaut.
+⚠️ *Précisé le 29 octobre* : **dépliée, la barre passe par-dessus la page,
+elle ne la pousse pas.** Elle s'élargissait dans le flux et la page se
+recomposait à chaque image, sous le flou — l'application ramait. Son
+emprise reste celle de la barre repliée ; la page dessous ne bouge pas.
 
 Trois gestes s'y distinguent, et la distinction est la règle :
 

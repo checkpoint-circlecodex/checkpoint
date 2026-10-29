@@ -39,7 +39,10 @@
 </div>
 
 <style>
-  .deck { position: absolute; inset: 0; z-index: 6; overflow-y: auto; }
+  /* La barre dépliée passe par-dessus la page (voir Rail) : le lanceur
+     commence là où elle finit, pas dessous. */
+  .deck { position: absolute; inset: 0 0 0 calc(var(--rail) - var(--railc)); z-index: 6; overflow-y: auto; }
+  @media (max-width: 860px) { .deck { left: 0; } }
   .in { max-width: 980px; margin: 0 auto; padding: 34px 36px 64px; animation: lift 280ms var(--e) both; }
   /* Le départ de l'animation n'est jamais invisible : une animation figée
      garde sa première image, et un lanceur à opacité nulle serait une page

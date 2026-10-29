@@ -16,6 +16,12 @@ Tableau, les colonnes en attente, le filet de sa colonne affiné — et
 **l'angle du Tableau devenu transparent dans la v0.1.6** (corrigé).
 **La v0.1.7 part le même soir.**
 
+⚠️ *29 octobre, encore après* : faits, **pas encore publiés** — les quêtes
+au Tableau (entre les œuvres suivies et le fonds : bloc d'encre et flèche
+verte pour qui l'a accomplie), la barre dépliée qui passe par-dessus au
+lieu de pousser la page, et les choix de la bulle qui débordaient
+(« Entrepris »). **Prochaine action : sortir la v0.1.8.**
+
 ⚠️ *29 octobre* : **la v0.1.6 part** — le Tableau (seconde face de
 l'accueil), quatre états au lieu de six, le repère de la barre revenu au
 prototype, et le correctif d'`admit()` (l'équipe `registre`). **Prochaine
@@ -600,6 +606,18 @@ Aucune ne bloque le spike.
   transparent** : les titres défilaient en se lisant au travers. *Une
   règle de groupe qui lit une variable doit être bornée aux éléments qui la
   portent.* Corrigé, à publier.
+- **Après la v0.1.7.** Les **quêtes** entrent au Tableau, sous un blanc,
+  entre les œuvres suivies et le fonds : une ligne par quête, et pour qui
+  l'a accomplie un bloc d'encre portant une flèche verte — la planche
+  accomplie s'inverse déjà en encre pleine, c'est la même idée. Elles
+  traversent les natures, donc elles s'effacent quand on filtre par nature ;
+  la recherche les lit aussi. **La barre dépliée passe par-dessus la page** :
+  elle s'élargissait dans le flux, et la page entière se recomposait à chaque
+  image, sous un flou recalculé — Nathan voyait l'application ramer. Une
+  marge négative qui suit la même courbe que la largeur garde son emprise
+  constante : mesuré, la largeur de la page ne change à aucune image. Et les
+  choix de la bulle prennent la largeur de leur mot (« Entrepris »
+  touchait son cadre dans une grille à colonnes égales).
 - **« Suspendu » et « accompli » sont retirés partout** (Nathan : « ici et
   partout ailleurs »). Le panneau *Mes en cours* perd « De côté » et sa
   section « Mis de côté ». Les fragments qui les portent encore se lisent

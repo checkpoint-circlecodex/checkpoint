@@ -179,6 +179,39 @@
         <tbody>
           {#each L.works as id (id)}{@render line(id)}{/each}
         </tbody>
+        {#if L.quests.length}
+          <!-- **Un blanc, puis les quêtes** : sous ce qu'on suit, au-dessus de
+               ce que personne ne suit encore. Une case accomplie est un bloc
+               d'encre portant une flèche verte — accomplie s'inverse, comme
+               la planche (CLAUDE.md, « Une quête est une pancarte »). -->
+          <tbody class="quests">
+            <tr class="gap">
+              <th scope="rowgroup" class="w"><span class="gl">Les quêtes — qui les a accomplies</span></th>
+              <td colspan={L.people.length + spare}></td>
+            </tr>
+            {#each L.quests as x (x.q.id)}
+              {@const by = w.people[x.q.personId]}
+              <tr>
+                <th scope="row" class="w">
+                  <a href="#/quete/{x.q.id}">
+                    <span class="t">{x.q.title}</span>
+                    <span class="k">Quête{by ? ` · plantée par ${by.firstName}` : ""}</span>
+                  </a>
+                </th>
+                {#each L.people as p (p.id)}
+                  <td class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
+                    {#if x.done.has(p.id)}
+                      <span class="sw qd" role="img" aria-label="{p.firstName} a accompli « {x.q.title} »" title="{p.firstName} · accomplie">
+                        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h10M8.6 4.1 12.5 8l-3.9 3.9" /></svg>
+                      </span>
+                    {/if}
+                  </td>
+                {/each}
+                {#each spares as i (i)}<td class="spare"></td>{/each}
+              </tr>
+            {/each}
+          </tbody>
+        {/if}
         {#if L.fonds.length}
           <!-- **Un blanc, puis le fonds** : ce que personne ne suit encore.
                Ses lignes sont vides, sauf la sienne, où chaque case inscrit
@@ -192,7 +225,7 @@
           </tbody>
         {/if}
       </table>
-      {#if !L.works.length && !L.fonds.length}
+      {#if !L.works.length && !L.fonds.length && !L.quests.length}
         <p class="none miss">Aucune œuvre ne répond à « {vue.q.trim()} ».</p>
       {/if}
     </div>
@@ -315,6 +348,10 @@
   .sw { display: grid; place-items: center; font-family: var(--fs); font-size: 19px; font-weight: 400;
         letter-spacing: 0; line-height: 1; }
   td .sw { height: 44px; }
+  /* Une quête accomplie : l'encre pleine, une flèche verte dessus. */
+  .qd { background: var(--ink); }
+  .qd svg { width: 18px; height: 18px; fill: none; stroke: var(--st-completed); stroke-width: 2.2;
+            stroke-linecap: round; stroke-linejoin: round; }
 
   /* **Sa propre colonne** : en tête, et tenue à l'encre — un filet de chaque
      côté qui la sépare des autres. Elle garde ses 44 px même en étroit :
@@ -344,10 +381,15 @@
   td.me button.open { box-shadow: inset 0 0 0 2px var(--ink); }
 
   /* --- La bulle : quatre états, le sien marqué, et la fiche pour juger. --- */
-  .pk { display: grid; gap: 6px; width: min(400px, calc(100vw - 32px)); }
+  .pk { display: grid; gap: 6px; width: min(460px, calc(100vw - 32px)); }
   .pk-t { font-size: 11px; color: var(--dim); padding: 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pk-t b { font-family: var(--fs); font-weight: 400; font-size: 15px; color: var(--ink); }
-  .pk-l { display: grid; grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 4px; }
+  /* Chaque choix prend la largeur de son mot : « Entreprise » ou « En
+     lecture » débordaient d'une grille à colonnes égales (vu par Nathan le
+     29 octobre). Ils se partagent la ligne, et passent à la suivante s'il le
+     faut — jamais un mot coupé par son cadre. */
+  .pk-l { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pk-l .pk-b { flex: 1 1 auto; justify-content: center; white-space: nowrap; }
   .pk-b { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 9px; border: 1px solid var(--rule2);
           font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
   .pk-b:hover { color: var(--ink); border-color: var(--ink); }

@@ -50,3 +50,16 @@ test("le fonds vient à part, et la recherche le filtre aussi", () => {
   assert.deepEqual(L.fonds, ["b-3"], "personne ne la suit : au fonds, et une seule fois");
   assert.deepEqual(ledger(ws, { q: "resident" }).fonds, []);
 });
+
+test("les quêtes disent qui les a accomplies, et s'effacent quand on filtre par nature", () => {
+  const base = sh("nathan", "mage", { "g-re": re });
+  const wq = merge([
+    { ...base, quests: [{ id: "q", at: D, title: "Survivre", line: "", trials: [{ rung: 3, media: ["g-re"] }] }] },
+    sh("bob", "guerrier", { "b-3": war }),
+  ]);
+  const L = ledger(wq, { me: "nathan" });
+  assert.equal(L.quests.length, 1);
+  assert.deepEqual([...L.quests[0].done], ["nathan"], "Bob n'a pas achevé Resident Evil");
+  assert.deepEqual(ledger(wq, { kind: "game" }).quests, [], "une quête traverse les natures");
+  assert.deepEqual(ledger(wq, { q: "surv" }).quests.length, 1, "la recherche lit aussi les quêtes");
+});
