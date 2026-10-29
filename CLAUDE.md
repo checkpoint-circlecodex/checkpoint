@@ -889,9 +889,17 @@ C'est **le seul accord de l'application qui se déclare au lieu d'être calculé
 l'unanimité.
 
 **Ton cérémonieux, tenu partout.** « Achevé », « Renoncement », « Jugement
-moyen », « Annales de l'Ordre », chiffres romains. Le lexique est **accordé par
+moyen », « Annales de l'Ordre », chiffres romains. ~~Le lexique est **accordé par
 nature d'œuvre** : une série est achevée, un film contemplé. Une seule
-formulation neutre au milieu et tout sonne faux.
+formulation neutre au milieu et tout sonne faux.~~
+⚠️ *Révisé le 29 octobre, à la demande de Nathan* : **les états portent les
+quatre mêmes mots pour toutes les natures** — Convoité, Entrepris, Achevé,
+Renoncé —, et les verbes du fil suivent (« a achevé », pas « a contemplé »).
+À côté du Tableau, où un état se lit d'un mot pour toutes les natures, la
+fiche d'un film « Entamé » ou « Contemplé » semblait parler d'autre chose.
+Le ton cérémonieux tient ailleurs ; ce qui change, c'est qu'**un état se
+reconnaît à son nom**. La table reste indexée par nature (`lexicon.ts`) : si
+un accord revient, il se pose là.
 
 Typographie : Instrument Serif (titres d'œuvres, chiffres cérémonieux), Spectral
 (chroniques, texte à lire), Archivo (interface, étiquettes).

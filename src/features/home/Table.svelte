@@ -47,9 +47,9 @@
   const firsts = $derived(new Set(L.bands.map((b, i) =>
     L.people[L.bands.slice(0, i).reduce((s, x) => s + x.n, 0)]?.id)));
 
-  /* La légende parle au masculin du jeu ; chaque case, elle, dit le mot de
-     sa nature (invariant du lexique) dans son nom accessible. La note, elle,
-     ne se légende pas : un chiffre dans une case se lit tout seul. */
+  /* La légende dit les quatre mots, les mêmes pour toutes les natures
+     (29 octobre). La note, elle, ne se légende pas : un chiffre dans une
+     case se lit tout seul. */
   const LEGEND: { st: Status; l: string }[] = STATE_ORDER.map(st => ({ st, l: STATUS.game[st] }));
 
   /* On revient où l'on était : ouvrir une œuvre puis revenir ne doit pas

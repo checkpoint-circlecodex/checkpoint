@@ -1,22 +1,25 @@
-/* Le lexique, accordé par nature d'œuvre : une série est achevée, un film
-   contemplé. **Une seule formulation neutre au milieu et tout sonne faux** —
-   c'est pour ça que ce n'est pas une table de verbes génériques. */
+/* Le lexique des états.
+
+   ⚠️ *Révisé le 29 octobre, à la demande de Nathan* : **les quatre mêmes mots
+   pour toutes les natures** — Convoité, Entrepris, Achevé, Renoncé. Le
+   lexique était accordé par nature (un film « Entamé » puis « Contemplé »,
+   un livre « En lecture » puis « Lu », une série au féminin) ; à côté du
+   Tableau, où une case dit un état d'un seul mot pour toutes les natures,
+   la fiche d'un film semblait parler d'autre chose. Un état se reconnaît
+   mieux s'il porte toujours le même nom. La table reste indexée par nature :
+   si un accord revient un jour, il se pose ici, sans toucher aux vues. */
 
 import type { CircleId, MediaType, Status } from "./schema.ts";
 
-export const STATUS: Record<MediaType, Record<Status, string>> = {
-  game:   { wishlist:"Convoité",  playing:"Entrepris",  completed:"Achevé",    dropped:"Renoncé" },
-  film:   { wishlist:"Convoité",  playing:"Entamé",     completed:"Contemplé", dropped:"Renoncé" },
-  series: { wishlist:"Convoitée", playing:"Entreprise", completed:"Achevée",   dropped:"Renoncée" },
-  book:   { wishlist:"Convoité",  playing:"En lecture", completed:"Lu",        dropped:"Renoncé" },
-};
+const STATES: Record<Status, string> = { wishlist:"Convoité", playing:"Entrepris", completed:"Achevé", dropped:"Renoncé" };
+export const STATUS: Record<MediaType, Record<Status, string>> =
+  { game: STATES, film: STATES, series: STATES, book: STATES };
 
-export const VERB: Record<MediaType, Record<Status, string>> = {
-  game:   { completed:"a achevé",    dropped:"a renoncé à", playing:"a entrepris", wishlist:"convoite" },
-  film:   { completed:"a contemplé", dropped:"a renoncé à", playing:"a entamé",    wishlist:"convoite" },
-  series: { completed:"a achevé",    dropped:"a renoncé à", playing:"a entrepris", wishlist:"convoite" },
-  book:   { completed:"a lu",        dropped:"a renoncé à", playing:"a entamé",    wishlist:"convoite" },
-};
+/** Les verbes du fil des inscriptions suivent les mêmes mots : « a contemplé »
+    à côté d'une case « Achevé » aurait recréé l'écart qu'on vient de fermer. */
+const VERBS: Record<Status, string> = { completed:"a achevé", dropped:"a renoncé à", playing:"a entrepris", wishlist:"convoite" };
+export const VERB: Record<MediaType, Record<Status, string>> =
+  { game: VERBS, film: VERBS, series: VERBS, book: VERBS };
 
 export const KIND:  Record<MediaType, string> = { game:"Jeu",  film:"Film",  series:"Série",  book:"Livre"  };
 export const KINDS: Record<MediaType, string> = { game:"Jeux", film:"Films", series:"Séries", book:"Livres" };
