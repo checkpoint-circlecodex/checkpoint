@@ -44,7 +44,7 @@ const fail = (what: string, r: Reply) => {
 export function tauriPlatform(): Platform {
   /* Les coordonnées viennent du natif plutôt que d'être recopiées ici : une
      seule source, et un essai se règle par une variable d'environnement. */
-  let site: Promise<{ org: string; repo: string; public_repo: string }> | null = null;
+  let site: Promise<{ org: string; repo: string; public_repo: string; team: string }> | null = null;
   const where = () => (site ??= invoke("whereabouts"));
 
   /* **La relecture conditionnelle.** On garde l'arbre et son ETag : tant que
@@ -99,6 +99,12 @@ export function tauriPlatform(): Platform {
          parfois autrement quand on crée un fichier qui existe déjà — c'est
          le même accident, il mérite la même erreur. */
       if (r.status === 409 || (r.status === 422 && /sha/i.test(r.body))) throw new ConflictError(path);
+      /* 403 sans limite de débit : le compte lit le dépôt mais n'y écrit
+         pas. Vu le 27 octobre sur le premier arrivant réel — membre, mais
+         hors de l'équipe qui porte l'écriture. Le message brut de GitHub
+         (« Resource not accessible by integration ») ne disait rien. */
+      if (r.status === 403 && !/rate limit/i.test(r.body))
+        throw new Error(`GitHub refuse d'écrire ${path} : ce compte n'a pas encore le droit d'écrire dans le registre. Un greffier doit l'ajouter à l'équipe « ${(await where()).team} ».`);
       if (r.status !== 200 && r.status !== 201) throw fail(`écriture de ${path}`, r);
       return { path, sha: json(r)?.content?.sha ?? "" };
     },
@@ -150,9 +156,17 @@ export function tauriPlatform(): Platform {
     },
 
     async admit(k, note) {
-      const { org: o, public_repo } = await where();
+      const { org: o, public_repo, team } = await where();
       const r = await gh("PUT", `/orgs/${o}/memberships/${k.login}`, { role: "member" });
       if (r.status !== 200) throw fail("invitation dans l'organisation", r);
+      /* **Inviter ne donne pas le droit d'écrire** : les droits de base de
+         l'organisation sont en lecture. C'est l'équipe qui porte l'écriture
+         sur le dépôt de données — sans elle, l'arrivant entre et se voit
+         refuser son premier fragment (27 octobre). Pour une invitation en
+         attente, GitHub rend l'appartenance `pending` et l'active à
+         l'acceptation. */
+      const t = await gh("PUT", `/orgs/${o}/teams/${team}/memberships/${k.login}`, { role: "member" });
+      if (t.status !== 200) throw fail(`ajout à l'équipe « ${team} »`, t);
       await gh("POST", `/repos/${public_repo}/issues/${k.issue}/comments`, { body: note });
       await gh("PATCH", `/repos/${public_repo}/issues/${k.issue}`, { state: "closed", state_reason: "completed" });
     },

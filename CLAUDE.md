@@ -194,6 +194,13 @@ pas contourner.
    — on en sort, et une quête qui se désaccomplirait parce qu'on a changé un
    statut serait cruelle. Si un palier non monotone est demandé un jour, c'est
    là qu'il faut s'arrêter et en parler.
+   ⚠️ *Révisé le 29 octobre, à la demande de Nathan* : **il n'y a plus que
+   quatre états** — convoité, entrepris, achevé, renoncé. « Suspendu » et
+   « accompli » ne se proposent plus nulle part ; les fragments qui les
+   portent encore se lisent `paused → playing`, `mastered → completed`
+   (`LEGACY_STATUS`, dans `migrate()`). **Aucune quête n'en bouge** : c'étaient
+   déjà leurs paliers. Ce n'est pas un champ retiré (invariant 4), c'est un
+   choix qu'on ne propose plus.
 29. *(Données)* **Une parenté n'existe que déclarée des deux côtés.** `kin[]`
    porte `{ id, rel }` dans le fragment de chacun ; un lien ne compte que si les
    deux déclarations s'accordent en sens — « mon fils » appelle « mon père »,
@@ -430,6 +437,12 @@ formulaire.*
   l'invitation — il ne boucle pas en silence. ⚠️ *Le cas « invité mais pas
   encore entré » n'a pas pu être essayé contre le vrai GitHub : il faudrait
   inviter une vraie personne. Le premier arrivant réel est l'essai.*
+  ✅ *Fait le 27 octobre (Liaheris) — et l'essai a trouvé autre chose :*
+  **être membre ne donne pas le droit d'écrire.** Les droits de base de
+  l'organisation restent en lecture ; l'écriture sur `tracker-data` est
+  portée par l'**équipe `registre`**, où `admit()` inscrit l'arrivant avec
+  l'invitation. Ne jamais passer les droits de base à *write* : chaque
+  membre pourrait alors pousser dans le dépôt de l'application.
 - **Le fragment naît à l'entrée, pas à l'admission** — avec l'identité qu'on
   s'est composée, champ par champ, et la visite datée du même geste : un
   arrivant n'a rien manqué, l'encart du guetteur n'a rien à lui dire.
@@ -536,6 +549,19 @@ pas une exception de plus parce que **chacun a le sien** — aucune teinte n'est
 choisie contre une autre. C'est précisément l'argument qui l'autorise là et qui
 l'interdit au **point d'entrée**, forcément unique, donc forcément neutre.
 
+⚠️ *Révisé le 29 octobre, à la demande de Nathan* : **le Tableau** (la
+seconde face de l'accueil) porte deux couleurs. **Ses colonnes prennent la
+teinte douce de leur Ordre** — ce n'est pas une exception de plus, c'est
+l'argument de la lignée : chacun a la sienne. **Ses cases portent l'état en
+couleur franche**, et ça, c'est **une cinquième exception, assumée** :
+achevé en vert, entrepris en bleu, convoité en jaune, renoncé en rouge —
+**les teintes des Ordres, poussées à saturation**. Un premier jet les
+évitait (jaune, turquoise, encre, hachure) ; Nathan a tranché le jour même :
+l'Ordre n'est qu'un lavis sur la colonne, l'état un aplat plein, on ne les
+confond pas. Le nom de l'Ordre n'est pas écrit au-dessus des colonnes : la
+teinte suffit. L'exception ne vaut que là — l'état reste en mots partout
+ailleurs.
+
 **Deux textures ne se distinguent jamais par leur couleur, mais par leur
 mouvement.** Les Mages sont un ciel fixe traversé de comètes ; les Guerriers
 sont **une forêt de lances qui défile** — des hampes longues, le pied hors
@@ -611,9 +637,26 @@ on ne connaît pas le genre, et on n'a pas à le demander. À droite du nom,
 
 **« En cours » est un tableau de bord, pas une lecture.** Titre et commandes sur
 la même ligne, dernier checkpoint sur l'autre, tronqué. On vient y agir, pas s'y
-attarder. Et **le panneau d'accès rapide montre aussi ce qu'on a mis de côté**,
+attarder. ~~Et **le panneau d'accès rapide montre aussi ce qu'on a mis de côté**,
 avec de quoi le reprendre : suspendre était facile, reprendre ne l'était pas —
-l'œuvre tombait dans le registre général et il fallait l'y retrouver.
+l'œuvre tombait dans le registre général et il fallait l'y retrouver.~~
+⚠️ *Retiré le 29 octobre* : « suspendu » n'existe plus (invariant 28) — une
+œuvre qu'on laisse reste entreprise, donc dans le panneau, avec les autres.
+
+**L'accueil a deux faces, et on glisse de l'une à l'autre** (29 octobre, à
+la demande de Nathan). À gauche le Registre ; à droite **le Tableau** — les
+œuvres en lignes, les membres en colonnes **rangés par Ordre**, l'état dans
+chaque case et la note s'il y en a une. On passe par **une bande étroite au
+bord de la page**, nommée et visible (invariant 19), et le passage **glisse**
+— même profondeur, donc ni flou ni zoom. La colonne des titres ne quitte
+jamais l'écran au défilement horizontal, ni la ligne des noms au défilement
+vertical. Et **revenir d'une fiche ramène au Tableau**, là où on en était.
+**Sa propre colonne vient en tête**, tenue à l'encre, et **c'est la seule où
+l'on agit** : toucher une de ses cases ouvre une bulle pour changer son état
+(ou inscrire l'œuvre si la case est vide) ; le jugement se porte sur la
+fiche. Les cases des autres ne réagissent pas (invariants 1 et 32). Un champ
+au-dessus des titres filtre les lignes, sur les deux titres et sans accents
+(invariant 9).
 
 **Les pensées prises en chemin s'appellent des checkpoints.** Pas des stations :
 le contenu signature de l'application porte son nom. Un checkpoint n'est pas une
@@ -688,7 +731,8 @@ création. **C'est le premier lien de l'application qui traverse les Ordres** �
 on choisit son Ordre, on ne choisit pas sa maisonnée.
 
 **Une seule chose sur l'accueil porte une couleur : l'encart du guetteur**, et
-c'est celle de ton Ordre. Il dit ce que la synchronisation vient de révéler —
+c'est celle de ton Ordre. *(Sur la face du Registre. Le Tableau, l'autre
+face, a les siennes — voir « Noir et blanc », révisé le 29 octobre.)* Il dit ce que la synchronisation vient de révéler —
 paroles nouvelles dans ta Loge, quête que tu viens de sceller, planche à toi
 qu'un autre a accomplie. **Une annonce par ligne, un fanion en guise de tiret**,
 et sa place est **entre Le Sort et Les inscriptions** : pas en tête de page,

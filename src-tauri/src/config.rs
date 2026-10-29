@@ -11,6 +11,10 @@ pub struct Config {
     pub org: String,
     pub repo: String,
     pub public_repo: String,
+    /// L'équipe qui porte le droit d'écrire dans le dépôt de données. Les
+    /// droits de base de l'organisation restent en lecture : sinon chaque
+    /// membre pourrait aussi pousser dans le dépôt de l'application.
+    pub team: String,
 }
 
 fn var(key: &str, fallback: &str) -> String {
@@ -24,6 +28,7 @@ impl Config {
             org: var("CHECKPOINT_ORG", "checkpoint-circlecodex"),
             repo: var("CHECKPOINT_REPO", "tracker-data"),
             public_repo: var("CHECKPOINT_PUBLIC_REPO", "checkpoint-circlecodex/checkpoint"),
+            team: var("CHECKPOINT_TEAM", "registre"),
         }
     }
 }

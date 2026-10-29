@@ -9,6 +9,20 @@
 
 ## Prochaine action
 
+⚠️ *29 octobre* : **la v0.1.6 part** — le Tableau (seconde face de
+l'accueil), quatre états au lieu de six, le repère de la barre revenu au
+prototype, et le correctif d'`admit()` (l'équipe `registre`). **Prochaine
+action : Nathan confirme dans l'application Mac que « Le Tableau » est
+bien dans sa bande**, puis le dernier défaut du 20 octobre : la cité
+étirée à l'ouverture.
+
+⚠️ *27 octobre* : **le premier ami réel est passé — Liaheris (Hyram).**
+L'invitation s'est acceptée toute seule (étape 4 ✅), mais son premier
+fragment a pris un `403` : membre, sans droit d'écrire. Débloqué à la main
+(équipe `registre`, write sur `tracker-data`) ; le correctif d'`admit()` est
+dans le code, **pas encore publié. Prochaine action : sortir la v0.1.6**,
+puis vérifier que Liaheris a bien son fragment.
+
 ⚠️ *20 octobre* : la v0.1.5 est publiée et s'installe par le bandeau ; les
 étapes 1 à 3 ci-dessous sont faites, sauf la sauvegarde de la clé.
 **Reste : le premier ami réel** (étape 4), et la clé IGDB/TMDb.
@@ -216,7 +230,9 @@ demandent une décision avant d'être écrits, parce qu'ils touchent au modèle.
       remède probable : observer le canevas lui-même (`ResizeObserver`),
       pas la fenêtre — l'invariant 21 dit déjà qu'un composant interroge
       son conteneur. La même cité sert dans le Registre : à vérifier aussi.
-- [ ] **Barre dépliée, le petit trait vertical qui marque la section en
+- [x] *(29 octobre : **retour au prototype**, le trait est retiré — libellé
+      et icône à l'encre, libellé en gras, fond `--sink` replié. Le Greffe
+      aussi, replié.)* **Barre dépliée, le petit trait vertical qui marque la section en
       cours se place mal** (repliée, il est juste). *Piste* : c'est une
       ombre posée sur le bord gauche de la rangée (`.row.on`, `.act.here` :
       `inset 2px 0 0`), et dépliée la rangée commence **au ras du glyphe**
@@ -483,6 +499,110 @@ Aucune ne bloque le spike.
 > ultérieurs ont échoué en silence faute d'ancrage. **Avant d'écrire ici, relire
 > la section visée, et n'employer que des remplacements qui échouent bruyamment
 > si l'ancrage manque.** Même règle que pour republier un artifact partagé.
+
+### 29 octobre 2026 — le Tableau, et quatre états au lieu de six
+
+- **Demandé par Nathan, avant de corriger les deux défauts du 20 octobre** :
+  une seconde face à l'accueil. À droite du Registre, **le Tableau** — les
+  œuvres en lignes, les membres en colonnes rangés par Ordre, la teinte
+  douce de l'Ordre sur la colonne, l'état en couleur franche dans la case,
+  la note dedans quand il y en a une. Un clic sur une œuvre ouvre sa fiche,
+  sur un nom sa feuille. Pas encore publié : il partira avec la v0.1.6.
+- **Où ça vit.** `core/selectors/table.ts` (`ledger`), `features/home/Table.svelte`,
+  et `features/home/side.svelte.ts` qui garde, au niveau du module, la face,
+  le filtre et le défilement : **revenir d'une fiche ramène au Tableau**, au
+  même endroit — l'accueil est recréé à chaque retour, l'état du composant
+  ne survivrait pas.
+- **Le passage glisse** (transformation CSS, ni flou ni zoom : même
+  profondeur). Les deux faces sont côte à côte et chacune défile pour son
+  compte ; celle qu'on ne voit pas est `inert`. Le bord est une bande de
+  44 px, nommée en lettres couchées (« Le Tableau », « Le Registre ») : rien
+  qui ne se découvre au survol.
+- **Les en-têtes collants tiennent parce qu'un seul conteneur défile dans les
+  deux sens.** Si la page défilait verticalement et la grille
+  horizontalement, la ligne des noms ne pourrait pas coller en haut : un
+  `sticky` se règle sur l'ancêtre qui défile, et il n'y en aurait pas de
+  vertical. D'où une feuille qui occupe la hauteur restante et défile
+  elle-même.
+- **Les couleurs d'état évitent les cinq teintes d'Ordre.** Le premier jet
+  d'« entrepris » était un cyan (`#1C9FCB`) : à l'écran il se lisait comme le
+  bleu des Mages. Passé au turquoise (`#17B5B0`). Jaune pour convoité,
+  encre pour achevé, hachure pour renoncé. **Une cinquième exception au noir
+  et blanc, décidée par Nathan** — consignée dans `CLAUDE.md`, au Tableau
+  seulement.
+- ⚠️ **Puis Nathan a retourné le parti, le jour même** : les états prennent
+  **les teintes des Ordres, saturées** — achevé vert (`#1FA35F`), entrepris
+  bleu (`#246DDB`), convoité jaune (`#ECAE1D`), renoncé rouge (`#DF3020`).
+  « Il n'y aura pas de confusion tellement l'ordre est léger dans sa
+  couleur » — et c'est juste à l'image : un lavis à 7 % ne se lit pas comme
+  un aplat. *Éviter une teinte n'était pas la seule façon de ne pas la
+  confondre ; l'écart d'intensité suffit.* Et aussi : la case **est** le
+  bloc (plus de carré dans le carré), la note en Instrument Serif, le nom
+  de l'Ordre retiré au-dessus des colonnes, des colonnes plus fines
+  (46 px, 40 en étroit).
+- **Puis, sur l'avis demandé par Nathan** : sa propre colonne en tête,
+  tenue à l'encre ; **une bulle** sur ses cases pour changer son état ou
+  inscrire l'œuvre (la note reste sur la fiche — Nathan n'a pas voulu qu'un
+  clic ouvre la fiche) ; un champ de recherche au-dessus des titres, sur les
+  deux titres et sans accents ; la note retirée de la légende. **Écartés pour
+  l'instant, par Nathan** : des hachures sur « renoncé » (la paire
+  rouge-vert est la plus mal lue par les daltoniens), et un tri par témoins
+  ou par désaccord. Restent proposés : les noms à la verticale, le
+  glissement au doigt, colorer par la note.
+- **La bulle est une surface, donc dans le noyau** (`core/ui/Bubble.svelte`,
+  invariant 14). Elle se rend dans `body` : sous un ancêtre transformé — le
+  glissement de l'accueil —, un `fixed` prend cet ancêtre pour repère. Et
+  **une case touchée pendant le glissement se mesurait en mouvement** : la
+  bulle tombait à 840 px de sa case. Elle se repose à la fin de la
+  transition (invariant 18 : on mesure au repos).
+- **Le nom couché de la bande (« Le Tableau ») sortait de la bande dans
+  l'application Mac**, par-dessus la page — Chromium le centrait. Cause :
+  `writing-mode: vertical-rl` sur un enfant d'un bouton en flex ; WebKit
+  le mesure comme un mot à plat. Remplacé par une rotation autour du centre
+  de la bande, qui ne dépend d'aucun moteur. *Leçon : ce que le navigateur
+  de vérification montre n'est pas ce que voit l'application Mac — la même
+  famille que les points flous du 12 octobre.* ⚠️ À confirmer dans
+  l'application, le navigateur de la session ne peut pas le montrer.
+- **Le repère de la barre (défaut du 20 octobre)** : retour au prototype,
+  sans trait — libellé et icône à l'encre, libellé en gras, fond grisé
+  replié.
+- **« Suspendu » et « accompli » sont retirés partout** (Nathan : « ici et
+  partout ailleurs »). Le panneau *Mes en cours* perd « De côté » et sa
+  section « Mis de côté ». Les fragments qui les portent encore se lisent
+  `paused → playing`, `mastered → completed` dans `migrate()` : aucune quête
+  ne se désaccomplit, puisque c'étaient déjà leurs paliers — un essai le
+  tient. ⚠️ *Le prototype les montre encore* : il fait foi pour l'interface,
+  mais sur ce point la décision de Nathan est plus récente que lui.
+- Vérifié : `check`, couches, 80 essais ; à l'image en large et à 375 px,
+  défilement dans les deux sens, aller-retour par une fiche.
+
+### 27 octobre 2026 — le premier arrivant réel, et le droit d'écrire
+
+Liaheris a frappé (issue n° 2), Nathan l'a admis, l'application a accepté
+l'invitation à sa place — **ce cas-là, jamais essayé, tient.** Puis l'entrée a
+échoué : `403` à l'écriture de son fragment, rendu comme « Resource not
+accessible by integration », qu'il a résumé en « problème json » (le nom du
+fichier était dans le message).
+
+- **Cause** : les droits de base de l'organisation sont en *read*. Admettre
+  invitait dans l'organisation sans rien donner sur `tracker-data`. Personne
+  ne l'avait vu : le seul membre était **propriétaire**, et un propriétaire
+  écrit partout.
+- **Fait** : équipe `registre` créée (fermée), droit *push* sur
+  `tracker-data` seul, Nathan (mainteneur) et Liaheris dedans — vérifié,
+  Liaheris passe en *write*. `admit()` inscrit désormais dans l'équipe juste
+  après l'invitation (`/orgs/…/teams/registre/memberships/…`, permission
+  `members: write` déjà accordée à l'App) ; le nom de l'équipe vient du natif
+  (`CHECKPOINT_TEAM`, `whereabouts`). Un `403` hors limite de débit à
+  l'écriture dit maintenant ce qui manque. Spec v19 (D7, §8).
+- **Écarté** : passer les droits de base à *write* — plus simple, mais tout
+  membre pourrait pousser dans `checkpoint`, qui construit les versions.
+- ⚠️ **Non essayé** : l'ajout à l'équipe d'une personne dont l'invitation
+  est encore *pending* (GitHub dit rendre `pending` puis l'activer à
+  l'acceptation). Le prochain arrivant est l'essai.
+- **Appris** : *on mesure dans la condition où l'on sera* — ici, celle d'un
+  membre ordinaire. Tous les essais d'écriture avaient tourné avec un compte
+  propriétaire.
 
 ### 27 octobre 2026 — tous les jeux FromSoftware
 

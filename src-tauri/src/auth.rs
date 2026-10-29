@@ -121,10 +121,11 @@ pub struct Where {
     pub org: String,
     pub repo: String,
     pub public_repo: String,
+    pub team: String,
 }
 
 #[tauri::command]
 pub fn whereabouts() -> Where {
     let c = Config::load();
-    Where { org: c.org, repo: c.repo, public_repo: c.public_repo }
+    Where { org: c.org, repo: c.repo, public_repo: c.public_repo, team: c.team }
 }

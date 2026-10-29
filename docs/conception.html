@@ -370,10 +370,10 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 <div class="page">
 
 <header class="masthead">
-  <p class="eyebrow">Document de conception · v18 · 12 octobre 2026</p>
+  <p class="eyebrow">Document de conception · v19 · 27 octobre 2026</p>
   <h1>Checkpoint</h1>
   <p class="deck">Un tracker de jeux partagé au sein d'un groupe d'une vingtaine de personnes. Une application de bureau — Mac, Windows, Linux — distribuée librement, dont l'accès aux données passe par une adhésion validée. Pas de serveur, pas de base à administrer.</p>
-  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v18</span> ou <span class="rev">révisé v18</span> ont bougé depuis la version précédente&nbsp;: la livraison (D28), le fonds (D29), l'entrée dans le groupe telle qu'elle est construite, et la signature tranchée.</p>
+  <p class="status-note"><strong>Le cahier des charges UX/UI n'arrivera pas <span class="rev">révisé v16</span></strong> — décidé le 11 octobre. Cette ligne annonçait une révision à sa réception&nbsp;; elle était déjà contredite par les faits, trois jours de décisions d'interface ayant été prises, mesurées et consignées. <strong>Le prototype cliquable fait foi</strong> pour tout ce qui touche à l'interface&nbsp;; ce document tient l'architecture et le modèle, et ils ne dépendaient de rien. Les sections marquées <span class="rev new">nouveau v19</span> ont bougé depuis la version précédente&nbsp;: <strong>le droit d'écrire, porté par une équipe</strong> (D7, §8) — appris le 27 octobre sur le premier arrivant réel. En v18&nbsp;: la livraison (D28), le fonds (D29), l'entrée dans le groupe telle qu'elle est construite, et la signature tranchée.</p>
   <dl class="factbar">
     <div class="fact"><dt>Nom</dt><dd>Provisoire</dd></div>
     <div class="fact"><dt>Forme</dt><dd>Application de bureau, Tauri</dd></div>
@@ -558,6 +558,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
             <dt>Mécanisme</dt><dd>La demande ouvre une <em>issue</em> sur le dépôt de code public — n'importe quel compte GitHub peut le faire. Un administrateur la voit et valide depuis l'application, ce qui appelle l'API d'adhésion à l'organisation et referme l'issue.</dd>
             <dt>Qui est admin</dt><dd><strong>Les rôles GitHub, pas une liste maison.</strong> Est administrateur qui possède ce rôle dans l'organisation. Une liste dans un fichier finirait par diverger des droits réels et créerait une autorité fictive.</dd>
             <dt>Repli</dt><dd>Si l'appel d'API se heurte à une permission, l'application ouvre dans le navigateur une issue pré-remplie. Aucun droit particulier n'est alors requis.</dd>
+            <dt>Écrire <span class="rev new">nouveau v19</span></dt><dd><strong>Être membre ne donne pas le droit d'écrire.</strong> Les droits de base de l'organisation restent en <em>lecture</em> — sinon chaque membre pourrait pousser dans le dépôt de l'application, qui construit les versions. L'écriture sur <code>tracker-data</code>, et sur lui seul, est portée par l'<strong>équipe <code>registre</code></strong>&nbsp;; admettre quelqu'un l'y inscrit dans le même geste que l'invitation. Ce n'est pas une liste maison (voir «&nbsp;Qui est admin&nbsp;» ci-dessus)&nbsp;: c'est encore GitHub qui tient le droit.</dd>
           </dl>
         </div>
       </div>
@@ -1025,6 +1026,7 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
       <span class="lbl">Tel que construit — 12 octobre 2026 <span class="rev new">nouveau v18</span></span>
       <p><strong>Le profil se compose pendant l'attente</strong> et s'écrit à l'entrée&nbsp;: il ne peut pas s'écrire avant l'admission, faute de droits sur le dépôt. D'où quatre tuiles — seuil, atelier, Ordre, entrée — et un brouillon gardé sur la machine jusque-là. <strong>Le fragment naît à l'entrée</strong>, avec l'identité composée champ par champ&nbsp;; ce qu'on a dit à la porte («&nbsp;qui vous connaît&nbsp;») reste dans la demande et n'entre pas dans le profil.</p>
       <p><strong>L'admission est une invitation</strong>, et un inconnu ne sait pas qu'un courriel l'attend&nbsp;: <strong>l'écran d'attente l'accepte à sa place</strong> (<code>PATCH /user/memberships/orgs/…</code>), en regardant toutes les trente secondes et à chaque retour dans la fenêtre. Si GitHub refuse que l'application accepte, ou si l'invitation a expiré au bout de sept jours, l'écran le dit et ouvre la page de l'invitation. ⚠️ <em>Ce cas n'a pas pu être essayé contre le vrai GitHub&nbsp;: il faudrait inviter une vraie personne. Le premier arrivant réel est l'essai.</em></p>
+      <p><span class="rev new">nouveau v19</span> <strong>L'essai a eu lieu le 27 octobre, et il a trouvé ce qu'on n'avait pas vu.</strong> L'invitation a bien été acceptée par l'application — ce cas-là tient. Mais l'arrivant, membre actif, s'est vu refuser son premier fragment&nbsp;: <code>403</code>, faute de droit d'écriture. Personne ne l'avait vu parce que le seul membre était <em>propriétaire</em> de l'organisation, et un propriétaire écrit partout. <strong>L'admission inscrit désormais dans l'équipe <code>registre</code></strong> (D7), et un <code>403</code> à l'écriture dit en clair ce qui manque au lieu de rendre le message brut de GitHub. <em>On mesure dans la condition où l'on sera&nbsp;: ici, celle d'un membre ordinaire.</em></p>
       <p><strong>Une panne n'est pas une déconnexion</strong>&nbsp;: seul un <code>401</code> fait oublier le jeton.</p>
     </div>
 
@@ -1146,8 +1148,8 @@ h2{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;}
 </section>
 
 <footer>
-  <span>Checkpoint — document de conception v18</span>
-  <span>12 octobre 2026</span>
+  <span>Checkpoint — document de conception v19</span>
+  <span>27 octobre 2026</span>
   <span><a href="https://claude.ai/code/artifact/024c1ea8-cf91-4f88-b2c5-1b341bd4e053">Parcours &amp; expérience →</a></span>
 </footer>
 
