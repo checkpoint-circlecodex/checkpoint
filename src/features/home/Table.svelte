@@ -31,7 +31,7 @@
   import { changerStatut, identity, inscrire } from "#core/model/acts.ts";
   import { KIND, KINDS, STATE_ORDER, STATUS, roman } from "#core/model/lexicon.ts";
   import { ledger, titleOf, tracked, unfollowed } from "#core/selectors/index.ts";
-  import type { MediaType, Status } from "#core/model/schema.ts";
+  import type { CircleId, MediaType, Status } from "#core/model/schema.ts";
   import { vue } from "./side.svelte.ts";
 
   const w = $derived(registre.world);
@@ -84,6 +84,20 @@
     return () => ro.disconnect();
   });
   const spares = $derived(Array.from({ length: spare }, (_, i) => i));
+
+  /* **Le signe d'une quête accomplie, selon l'Ordre de qui l'a accomplie**
+     (Nathan, 29 octobre — « pour voir »). Chacun est tiré de la trame de sa
+     chambre, pas d'un élément : *une trame doit nommer son Ordre* (CLAUDE.md).
+     L'étoile du ciel des Mages, la lance de la forêt des Guerriers, la
+     feuille des Rangers, les ondes des Soigneurs, les lignes des Bardes.
+     `s` se trace, `f` se remplit ; 14 × 14. */
+  const SIGN: Record<CircleId, { s: string[]; f: string[] }> = {
+    mage:     { s: [], f: ["M7 1.2 8.3 5.7 12.8 7 8.3 8.3 7 12.8 5.7 8.3 1.2 7 5.7 5.7Z"] },
+    guerrier: { s: ["M7 13.4V6.2", "M5.2 6.6h3.6"], f: ["M7 .4 8.6 3.7 7 6.1 5.4 3.7Z"] },
+    ranger:   { s: [], f: ["M2.4 11.6C2.4 5.6 5.8 2.4 11.6 2.4 11.6 8.2 8.4 11.6 2.4 11.6Z"] },
+    soigneur: { s: ["M1.8 7a5.2 5.2 0 1 0 10.4 0 5.2 5.2 0 1 0-10.4 0"], f: ["M5.1 7a1.9 1.9 0 1 0 3.8 0 1.9 1.9 0 1 0-3.8 0"] },
+    barde:    { s: ["M1.2 5.2q1.45-1.8 2.9 0t2.9 0 2.9 0 2.9 0", "M1.2 9.4q1.45-1.8 2.9 0t2.9 0 2.9 0 2.9 0"], f: [] },
+  };
 
   const label = (pid: string, id: string) => {
     const r = L.cell[pid]?.[id], p = w.people[pid], m = w.catalog[id];
@@ -181,9 +195,8 @@
         </tbody>
         {#if L.quests.length}
           <!-- **Un blanc, puis les quêtes** : sous ce qu'on suit, au-dessus de
-               ce que personne ne suit encore. Une case accomplie est un bloc
-               d'encre portant un fanion vert — accomplie s'inverse, comme
-               la planche (CLAUDE.md, « Une quête est une pancarte »). -->
+               ce que personne ne suit encore. Une case accomplie porte le signe
+               de l'Ordre de qui l'a accomplie, à sa couleur. -->
           <tbody class="quests">
             <tr class="gap">
               <th scope="rowgroup" class="w"><span class="gl">Les quêtes — qui les a accomplies</span></th>
@@ -201,8 +214,9 @@
                 {#each L.people as p (p.id)}
                   <td class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
                     {#if x.done.has(p.id)}
+                      {@const g = SIGN[p.circleRef.id] ?? SIGN.mage}
                       <span class="sw qd" role="img" aria-label="{p.firstName} a accompli « {x.q.title} »" title="{p.firstName} · accomplie">
-                        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.6 1.4V12.6" /><path class="fl" d="M4.5 2.1 12 4.6 4.5 7.1Z" /></svg>
+                        <svg viewBox="0 0 14 14" aria-hidden="true">{#each g.s as d (d)}<path d={d} />{/each}{#each g.f as d (d)}<path class="fl" d={d} />{/each}</svg>
                       </span>
                     {/if}
                   </td>
@@ -348,15 +362,14 @@
   .sw { display: grid; place-items: center; font-family: var(--fs); font-size: 19px; font-weight: 400;
         letter-spacing: 0; line-height: 1; }
   td .sw { height: 44px; }
-  /* **Une quête accomplie : l'encre pleine, un fanion vert planté dessus.**
-     Le fanion est déjà le signe des quêtes — dans la barre (⚑ « Ouvrir une
-     quête ») et dans l'encart du guetteur, qui le dessine de la même main.
-     Une flèche disait « suivant » ; un fanion dit « atteint » (Nathan,
-     29 octobre). */
-  .qd { background: var(--ink); }
-  .qd svg { width: 17px; height: 17px; overflow: visible; fill: none; stroke: var(--st-completed);
+  /* **Une quête accomplie : le signe de son Ordre dans la case**, à sa
+     couleur — sur le lavis de la colonne, la même teinte, pleine. Le même
+     soir il y eut une flèche verte sur un bloc d'encre, puis un fanion vert,
+     puis le fanion à la couleur de l'Ordre, puis le signe de l'Ordre
+     (Nathan) : une case de quête n'a pas à peser autant qu'un état. */
+  .qd svg { width: 21px; height: 21px; overflow: visible; fill: none; stroke: var(--c);
             stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-  .qd .fl { fill: var(--st-completed); stroke-width: 1; }
+  .qd .fl { fill: var(--c); stroke: none; }
 
   /* **Sa propre colonne** : en tête, et son nom en gras — ses filets sont
      ceux de toutes les autres. Des filets d'encre l'encadraient : ils
