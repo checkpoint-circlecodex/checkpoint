@@ -5,9 +5,9 @@
      œuvre et pas cinq — le titre et ses commandes sur la même, le dernier
      checkpoint sur l'autre, tronqué. On vient y agir, pas s'y attarder.
 
-     Et **le panneau montre aussi ce qu'on a mis de côté**, avec de quoi le
-     reprendre : suspendre était facile, reprendre ne l'était pas — l'œuvre
-     tombait dans le registre général et il fallait l'y retrouver. */
+     ~~Le panneau montrait aussi ce qu'on avait mis de côté~~ : « suspendu »
+     n'existe plus depuis le 29 octobre (Nathan). Une œuvre qu'on laisse
+     reste entreprise — elle est donc ici, avec les autres. */
   import { registre } from "#core/model/store.svelte.ts";
   import { KIND, STATUS, UNIT, ago } from "#core/model/lexicon.ts";
   import { progressOf, rowsBy, titleOf } from "#core/selectors/index.ts";
@@ -21,7 +21,6 @@
   const me = $derived(registre.moi);
   const mine = $derived(me ? rowsBy(w, me.id) : []);
   const live = $derived(mine.filter(r => r.status === "playing"));
-  const aside = $derived(mine.filter(r => r.status === "paused"));
 
   const N = ["Aucune", "Une", "Deux", "Trois", "Quatre", "Cinq", "Six", "Sept", "Huit", "Neuf", "Dix"];
 
@@ -39,7 +38,6 @@
 <div class="live" style="--c:{me?.circleRef.color ?? 'var(--ink)'}">
   <p class="alt">
     {live.length ? `${N[live.length] ?? live.length} œuvre${live.length > 1 ? "s" : ""} en chemin.` : "Rien en chemin pour l'instant."}
-    Suspendre n'est pas renoncer : ce qui part d'ici se retrouve juste dessous.
   </p>
 
   {#if live.length}
@@ -54,7 +52,6 @@
             <!-- Les commandes sont là, visibles, sur la ligne du titre : le
                  survol peut confirmer, jamais découvrir. -->
             <span class="act">
-              <button onclick={() => set(r.mediaId, "paused")}>De côté</button>
               <button onclick={() => set(r.mediaId, "completed")}>{STATUS[m.mediaType].completed}</button>
               <button onclick={() => set(r.mediaId, "dropped")}>{STATUS[m.mediaType].dropped}</button>
               <button class="sq" aria-label="Consigner une pensée"
@@ -76,36 +73,16 @@
     </div>
   {/if}
 
-  {#if aside.length}
-    <h3>Mis de côté</h3>
-    <div class="box side">
-      {#each aside as r (r.mediaId)}
-        {@const m = w.catalog[r.mediaId]}
-        <div class="lv">
-          <div class="top">
-            <a class="t" href="#/fiche/{r.mediaId}" onclick={close}>{titleOf(w, r.mediaId, pref)}</a>
-            <span class="k">{KIND[m.mediaType]}{r.progress ? ` · ${progressOf(r, UNIT)}` : ""} · {ago(r.at)}</span>
-            <span class="act">
-              <button class="go" onclick={() => set(r.mediaId, "playing")}>Reprendre</button>
-              <button onclick={() => set(r.mediaId, "dropped")}>{STATUS[m.mediaType].dropped}</button>
-            </span>
-          </div>
-        </div>
-      {/each}
-    </div>
-  {/if}
 </div>
 
 <style>
   .live { display: grid; gap: 12px; }
   .alt { font-family: var(--fr); font-size: 13.5px; line-height: 1.55; color: var(--ink2); max-width: 56ch; }
-  h3 { font-family: var(--fs); font-weight: 400; font-size: 18px; margin-top: 10px; }
 
   /* Le panneau porte la couleur de son Ordre, comme le bloc de la feuille :
      c'est la même chose, vue d'ailleurs — et c'est un filet, pas un aplat. */
   .box { display: flex; flex-direction: column; border: 1px solid var(--rule);
          border-left: 2px solid color-mix(in srgb, var(--c) 70%, transparent); }
-  .side { border-left-color: color-mix(in srgb, var(--c) 35%, transparent); }
   .lv { padding: 8px 12px; }
   .lv + .lv { border-top: 1px solid var(--rule); }
 
@@ -122,7 +99,6 @@
     font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
   }
   .act button:hover { color: var(--ink); border-color: var(--ink); }
-  .act .go { color: var(--ink); border-color: var(--ink); }
   /* Un bouton carré ne centre pas son glyphe tout seul (invariant 30). */
   .act .sq { display: grid; place-items: center; width: 44px; padding: 0;
              font-size: 16px; letter-spacing: 0; line-height: 1; }

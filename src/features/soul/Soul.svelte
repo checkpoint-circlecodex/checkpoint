@@ -121,7 +121,7 @@
 
       {#if f}
         <div class="meas">
-          <div><span class="k">Achevées</span><span class="v">{roman(f.done + f.master)}</span></div>
+          <div><span class="k">Achevées</span><span class="v">{roman(f.done)}</span></div>
           <div><span class="k">En cours</span><span class="v">{roman(f.under)}</span></div>
           <div><span class="k">Jugement</span><span class="v">{f.avg === null ? "—" : dec(f.avg)}</span></div>
           <div><span class="k">Heures</span><span class="v">{roman(f.hours)}</span></div>

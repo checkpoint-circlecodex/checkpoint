@@ -5,7 +5,13 @@
      bureau, fermée par un filet d'encre. En dessous, le papier nu :
      l'instrument, qu'on vient consulter.
 
-     On sépare comme le ferait du papier, pas comme le ferait un écran. */
+     On sépare comme le ferait du papier, pas comme le ferait un écran.
+
+     **Et il a deux faces** (29 octobre, à la demande de Nathan) : à droite
+     du Registre, le Tableau — qui en est où, œuvre par œuvre. On passe de
+     l'une à l'autre par le bord de la page, et **ça glisse** : même
+     profondeur, donc ni flou ni zoom. Le bord est discret, mais il est là,
+     écrit et visible : rien ne se découvre au survol (invariant 19). */
   import { registre } from "#core/model/store.svelte.ts";
   import { Face, gestes } from "#core/ui/index.ts";
   import { KIND, STATUS, VERB, ago, roman } from "#core/model/lexicon.ts";
@@ -13,6 +19,8 @@
   import { UNIT } from "#core/model/lexicon.ts";
   import Lot from "./Lot.svelte";
   import { skyline } from "#core/ui/skyline.ts";
+  import Table from "./Table.svelte";
+  import { vue } from "./side.svelte.ts";
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
@@ -37,6 +45,9 @@
   const coveted = $derived(covetedDoneByOthers(w, me));
 </script>
 
+<div class="home" class:far={vue.side === 1}>
+<div class="track">
+<div class="face one" inert={vue.side === 1}>
 <div class="wrap">
   <!-- La feuille. Elle respire : trois halos très larges dérivent dessous et
        la font onduler entre son blanc et un blanc à peine plus clair. Ce n'est
@@ -161,8 +172,51 @@
     {/if}
   </section>
 </div>
+</div>
+
+<div class="face two" inert={vue.side === 0}><Table /></div>
+</div>
+
+<!-- Le bord : une bande étroite, un chevron et un nom couché. La face qu'on
+     quitte reste à sa place, à côté — on y revient par l'autre bord. -->
+{#if vue.side === 0}
+  <button class="edge r" onclick={() => (vue.side = 1)} aria-label="Glisser vers le Tableau">
+    <span class="ev">Le Tableau</span><span class="ch" aria-hidden="true">›</span>
+  </button>
+{:else}
+  <button class="edge l" onclick={() => (vue.side = 0)} aria-label="Revenir au Registre">
+    <span class="ch" aria-hidden="true">‹</span><span class="ev">Le Registre</span>
+  </button>
+{/if}
+</div>
 
 <style>
+  /* Les deux faces côte à côte, et la page n'en montre qu'une. **Chaque face
+     défile pour son compte** : revenir au Registre le retrouve où on
+     l'avait laissé. */
+  .home { position: relative; height: 100%; overflow: hidden; }
+  .track { display: flex; width: 200%; height: 100%; transition: transform 560ms var(--e); }
+  .far .track { transform: translateX(-50%); }
+  @media (prefers-reduced-motion: reduce) { .track { transition: none; } }
+  .face { width: 50%; height: 100%; overflow: auto; }
+  /* La bande ne recouvre rien : chaque face lui laisse sa place. */
+  .one { padding-right: var(--edge); }
+  .two { padding-left: var(--edge); overflow: hidden; }
+  .home { --edge: 44px; }
+
+  .edge {
+    position: absolute; top: 0; bottom: 0; z-index: 5; width: var(--edge);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    background: var(--paper); color: var(--faint);
+  }
+  .edge.r { right: 0; border-left: 1px solid var(--rule); }
+  .edge.l { left: 0; border-right: 1px solid var(--rule); }
+  .edge:hover { color: var(--ink); background: var(--raise); }
+  .ev { writing-mode: vertical-rl; font-size: 9px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+  .edge.l .ev { transform: rotate(180deg); }
+  /* Un glyphe seul dans un carré ne se centre pas tout seul (invariant 30). */
+  .ch { display: grid; place-items: center; width: 22px; height: 22px; font-size: 18px; letter-spacing: 0; line-height: 1; }
+
   .wrap { max-width: 980px; margin: 0 auto; padding: 30px 34px 60px; }
 
   /* La feuille posée : un seul ton d'écart et un seul filet. Assez pour qu'on
@@ -267,6 +321,10 @@
   @media (max-width: 860px) {
     .wrap { padding: 22px 18px 80px; }
     .plate { margin: -22px -18px 22px; padding: 22px 18px 18px; }
+    /* La bande tient lieu de marge de droite : elle ne la double pas. Elle
+       garde ses 44 px — c'est une cible, en étroit plus qu'ailleurs. */
+    .one .wrap { padding-right: 8px; }
+    .one .plate { margin-right: -8px; padding-right: 8px; }
     .une { grid-template-columns: 1fr; gap: 18px; }
     .aside { border-left: none; border-top: 1px solid var(--rule); padding: 12px 0 0; }
     .r { grid-template-columns: 22px 1fr auto; row-gap: 2px; }

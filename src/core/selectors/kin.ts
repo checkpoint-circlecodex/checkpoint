@@ -91,7 +91,7 @@ export function kinDeeds(w: World, ids: string[]) {
   const seen = [...new Set(rs.map(r => r.mediaId))];
   const allDone = (mid: string) => ids.every(p => {
     const r = rs.find(x => x.personId === p && x.mediaId === mid);
-    return !!r && (r.status === "completed" || r.status === "mastered");
+    return !!r && r.status === "completed";
   });
   /* Là où la maisonnée se divise : le plus grand écart de jugement sur une
      même œuvre. C'est la seule chose qui ressemble à une statistique sur

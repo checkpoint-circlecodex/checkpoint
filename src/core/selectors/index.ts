@@ -7,3 +7,4 @@ export * from "./greffe.ts";
 export * from "./soul.ts";
 export * from "./home.ts";
 export * from "./compare.ts";
+export * from "./table.ts";

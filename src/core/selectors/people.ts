@@ -58,7 +58,7 @@ export type Temper = {
 export function temper(w: World, rows: typeof w.rows): Temper {
   const all = w.rows;
   const a = avgOf(rows), ga = avgOf(all);
-  const done = (r: { status: string }) => r.status === "completed" || r.status === "mastered";
+  const done = (r: { status: string }) => r.status === "completed";
   const fin = rows.filter(done).length, eng = rows.filter(r => r.status !== "wishlist").length;
   const gfin = all.filter(done).length, geng = all.filter(r => r.status !== "wishlist").length;
   const k: Record<string, number> = {};

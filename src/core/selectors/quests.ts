@@ -2,9 +2,10 @@
    pas — c'est ce qui rend une quête honnête, on ne se réveille jamais
    désaccompli parce qu'on a changé un statut.
 
-   D'où l'échelle, et elle seule : avoir renoncé ou accompli, c'est avoir
-   entrepris ; accompli vaut achevé. **« Suspendu » n'est pas un palier**, et
-   c'est précisément parce qu'on en sort. Si un palier non monotone est
+   D'où l'échelle, et elle seule : avoir renoncé, c'est avoir entrepris.
+   (« Suspendu » et « accompli » n'existent plus depuis le 29 octobre ; ils
+   valaient entrepris et achevé, et c'est ce qu'ils sont devenus à la
+   lecture — aucune quête n'en a bougé.) Si un palier non monotone est
    demandé un jour, c'est là qu'il faut s'arrêter et en parler (invariant 28). */
 
 import type { CircleId, Status } from "../model/schema.ts";
@@ -12,14 +13,14 @@ import type { OpenQuest, Person, World } from "../model/world.ts";
 import { membersOf } from "./people.ts";
 
 export const RANK: Record<Status, number> =
-  { wishlist: 1, playing: 2, paused: 2, dropped: 2, completed: 3, mastered: 3 };
+  { wishlist: 1, playing: 2, dropped: 2, completed: 3 };
 
 export type Rung = { k: 1 | 2 | 3; v: string; pp: string; p: string; d: string };
 
 export const RUNGS: Rung[] = [
   { k: 1, v: "Convoiter",    pp: "convoité",  p: "convoitée",  d: "l'avoir inscrite, au moins" },
-  { k: 2, v: "Entreprendre", pp: "entrepris", p: "entreprise", d: "l'avoir commencée — renoncer ou accomplir comptent aussi" },
-  { k: 3, v: "Achever",      pp: "achevé",    p: "achevée",    d: "l'avoir menée au bout — accompli vaut achevé" },
+  { k: 2, v: "Entreprendre", pp: "entrepris", p: "entreprise", d: "l'avoir commencée — y avoir renoncé compte aussi" },
+  { k: 3, v: "Achever",      pp: "achevé",    p: "achevée",    d: "l'avoir menée au bout" },
 ];
 
 export const rung = (k: number): Rung => RUNGS.find(r => r.k === k) ?? RUNGS[1];

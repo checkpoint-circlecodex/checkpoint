@@ -10,8 +10,12 @@ export const SCHEMA_VERSION = 1;
 
 export type MediaType = "game" | "film" | "series" | "book";
 
-/** Les six états. `paused` n'est pas un palier de quête : on en sort. */
-export type Status = "wishlist" | "playing" | "paused" | "completed" | "mastered" | "dropped";
+/** **Les quatre états.** Il y en eut six : « suspendu » (`paused`) et
+    « accompli » (`mastered`) ont été retirés le 29 octobre, à la demande de
+    Nathan — l'un se confondait avec « entrepris », l'autre avec « achevé ».
+    Des fragments les portent encore : `migrate()` les lit comme
+    `playing` et `completed` (voir `LEGACY_STATUS`). */
+export type Status = "wishlist" | "playing" | "completed" | "dropped";
 
 export type Progress = { unit: "hours" | "episodes" | "pages" | "chapters"; value: number };
 

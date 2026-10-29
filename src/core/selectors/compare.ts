@@ -9,7 +9,7 @@ import type { Row, World } from "../model/world.ts";
 import { avgOf, rowsBy, rowsFor, tracked } from "./works.ts";
 
 const rated = (r: Row): r is Row & { rating: number } => typeof r.rating === "number";
-const done = (r: Row) => r.status === "completed" || r.status === "mastered";
+const done = (r: Row) => r.status === "completed";
 
 export type Pair = { id: string; me: number; them: number; d: number };
 

@@ -9,7 +9,15 @@
      réécrit donc jamais le fragment d'autrui, même « pour l'aider ». Elle
      corrige la copie en mémoire, et c'est tout. */
 
-import { SCHEMA_VERSION, type Shard } from "./schema.ts";
+import { SCHEMA_VERSION, type Shard, type Status } from "./schema.ts";
+
+/** **Les états retirés, et ce qu'ils deviennent à la lecture** (29 octobre).
+    Ce n'est pas un champ qu'on enlève (invariant 4) : c'est un choix qu'on ne
+    propose plus. Les paliers de quête n'en bougent pas — suspendu valait déjà
+    entrepris, accompli valait déjà achevé (invariant 28) : aucune quête ne
+    se désaccomplit. Le fragment d'autrui n'est corrigé qu'en mémoire ; le
+    sien prend la valeur nouvelle à sa prochaine écriture. */
+export const LEGACY_STATUS: Record<string, Status> = { paused: "playing", mastered: "completed" };
 
 type Step = { to: number; apply: (s: Record<string, unknown>) => void };
 
@@ -43,5 +51,7 @@ export function migrate(raw: unknown): Shard {
      au-dessus n'ait à écrire `?? []` cinquante fois. */
   s.works ??= {};
   s.entries ??= {};
+  for (const e of Object.values(s.entries as Record<string, { status?: string }>))
+    if (e && typeof e.status === "string" && LEGACY_STATUS[e.status]) e.status = LEGACY_STATUS[e.status];
   return s as unknown as Shard;
 }

@@ -20,7 +20,7 @@ const sh = (id: string, circle: CircleId, entries: Record<string, Entry>): Shard
 
 const w = merge([
   sh("moi", "mage", { a: e("completed", 9), b: e("completed", 4), c: e("wishlist", null), d: e("completed", 7) }),
-  sh("ami", "guerrier", { a: e("completed", 8), b: e("completed", 10), c: e("mastered", 10), e: e("completed", 9) }),
+  sh("ami", "guerrier", { a: e("completed", 8), b: e("completed", 10), c: e("completed", 10), e: e("completed", 9) }),
   sh("tiers", "guerrier", { b: e("completed", 9), d: e("completed", 8), e: e("dropped", 3) }),
 ]);
 

@@ -5,17 +5,17 @@
 import type { CircleId, MediaType, Status } from "./schema.ts";
 
 export const STATUS: Record<MediaType, Record<Status, string>> = {
-  game:   { wishlist:"Convoité",  playing:"Entrepris",  paused:"Suspendu",  completed:"Achevé",    mastered:"Accompli",  dropped:"Renoncé" },
-  film:   { wishlist:"Convoité",  playing:"Entamé",     paused:"Suspendu",  completed:"Contemplé", mastered:"Consacré",  dropped:"Renoncé" },
-  series: { wishlist:"Convoitée", playing:"Entreprise", paused:"Suspendue", completed:"Achevée",   mastered:"Consacrée", dropped:"Renoncée" },
-  book:   { wishlist:"Convoité",  playing:"En lecture", paused:"Suspendu",  completed:"Lu",        mastered:"Médité",    dropped:"Renoncé" },
+  game:   { wishlist:"Convoité",  playing:"Entrepris",  completed:"Achevé",    dropped:"Renoncé" },
+  film:   { wishlist:"Convoité",  playing:"Entamé",     completed:"Contemplé", dropped:"Renoncé" },
+  series: { wishlist:"Convoitée", playing:"Entreprise", completed:"Achevée",   dropped:"Renoncée" },
+  book:   { wishlist:"Convoité",  playing:"En lecture", completed:"Lu",        dropped:"Renoncé" },
 };
 
 export const VERB: Record<MediaType, Record<Status, string>> = {
-  game:   { completed:"a achevé",    mastered:"a accompli", dropped:"a renoncé à", playing:"a entrepris", paused:"a suspendu", wishlist:"convoite" },
-  film:   { completed:"a contemplé", mastered:"a consacré", dropped:"a renoncé à", playing:"a entamé",    paused:"a suspendu", wishlist:"convoite" },
-  series: { completed:"a achevé",    mastered:"a consacré", dropped:"a renoncé à", playing:"a entrepris", paused:"a suspendu", wishlist:"convoite" },
-  book:   { completed:"a lu",        mastered:"a médité",   dropped:"a renoncé à", playing:"a entamé",    paused:"a suspendu", wishlist:"convoite" },
+  game:   { completed:"a achevé",    dropped:"a renoncé à", playing:"a entrepris", wishlist:"convoite" },
+  film:   { completed:"a contemplé", dropped:"a renoncé à", playing:"a entamé",    wishlist:"convoite" },
+  series: { completed:"a achevé",    dropped:"a renoncé à", playing:"a entrepris", wishlist:"convoite" },
+  book:   { completed:"a lu",        dropped:"a renoncé à", playing:"a entamé",    wishlist:"convoite" },
 };
 
 export const KIND:  Record<MediaType, string> = { game:"Jeu",  film:"Film",  series:"Série",  book:"Livre"  };
@@ -28,9 +28,9 @@ export const UNIT_OF: Record<MediaType, "hours" | "episodes" | "pages" | null> =
 export const UNIT_LBL: Record<string, string> = { hours: "heures", episodes: "épisodes", pages: "pages", chapters: "chapitres" };
 
 /** L'ordre d'affichage d'une liste d'inscriptions : le présent d'abord. */
-export const ORDER: Status[] = ["playing", "completed", "mastered", "paused", "dropped", "wishlist"];
+export const ORDER: Status[] = ["playing", "completed", "dropped", "wishlist"];
 /** L'ordre du cycle de vie, pour un sélecteur d'état. */
-export const STATE_ORDER: Status[] = ["wishlist", "playing", "paused", "completed", "mastered", "dropped"];
+export const STATE_ORDER: Status[] = ["wishlist", "playing", "completed", "dropped"];
 
 export type Circle = {
   id: CircleId; name: string; one: string; order: string;

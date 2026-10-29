@@ -28,7 +28,7 @@ export function covetedDoneByOthers(w: World, me: string) {
     .map(r => ({
       r,
       by: w.rows.filter(x => x.mediaId === r.mediaId && x.personId !== me
-        && (x.status === "completed" || x.status === "mastered") && x.at > r.at),
+        && x.status === "completed" && x.at > r.at),
     }))
     .filter(x => x.by.length);
 }

@@ -73,7 +73,7 @@ test("une boucle d'alias ne pend pas la page", () => {
 test("un favori ne compte que s'il désigne une œuvre connue", () => {
   const w = merge([shard("nathan", {
     works: { "g-hollow": hollow },
-    entries: { "g-hollow": { status: "mastered", rating: 10, at: D("2026-06-01") } },
+    entries: { "g-hollow": { status: "completed", rating: 10, at: D("2026-06-01") } },
     favorites: ["g-hollow", "g-fantome"],
   })]);
   assert.deepEqual(favsOf(w, "nathan"), ["g-hollow"]);
@@ -104,13 +104,27 @@ test("les paliers de quête sont monotones — renoncer compte comme entrepris",
   assert.equal(questScore(w, w.quests[0], "sam").ok, true);
 });
 
-test("« suspendu » n'accomplit pas un palier d'achèvement", () => {
-  const w = merge([shard("sam", {
-    works: { "g-hollow": hollow },
-    entries: { "g-hollow": { status: "paused", rating: null, at: D("2026-02-02") } },
-    quests: [{ id: "q", at: D("2026-01-01"), title: "T", line: "", trials: [{ rung: 3, media: ["g-hollow"] }] }],
-  })]);
-  assert.equal(questScore(w, w.quests[0], "sam").ok, false);
+/* « Suspendu » et « accompli » ont été retirés le 29 octobre. Des fragments
+   les portent encore : ils se lisent comme « entrepris » et « achevé », et
+   **aucune quête n'en bouge** — c'étaient déjà leurs paliers. */
+test("un ancien « suspendu » se lit entrepris, un ancien « accompli » achevé", () => {
+  const raw = { ...shard("sam"), works: { "g-hollow": hollow, "g-outer": outer }, entries: {
+    "g-hollow": { status: "paused", rating: null, at: D("2026-02-02") },
+    "g-outer":  { status: "mastered", rating: 9, at: D("2026-02-03") },
+  }, quests: [
+    { id: "q2", at: D("2026-01-01"), title: "T", line: "", trials: [{ rung: 2, media: ["g-hollow"] }] },
+    { id: "q3", at: D("2026-01-01"), title: "T", line: "", trials: [{ rung: 3, media: ["g-hollow"] }] },
+    { id: "q4", at: D("2026-01-01"), title: "T", line: "", trials: [{ rung: 3, media: ["g-outer"] }] },
+  ] };
+  const s = migrate(JSON.parse(JSON.stringify(raw)));
+  assert.equal(s.entries["g-hollow"].status, "playing");
+  assert.equal(s.entries["g-outer"].status, "completed");
+  assert.equal(s.entries["g-outer"].rating, 9, "le jugement ne bouge pas");
+  const w = merge([s]);
+  const ok = (id: string) => questScore(w, w.quests.find(q => q.id === id)!, "sam").ok;
+  assert.equal(ok("q2"), true, "suspendu valait entrepris, et le vaut encore");
+  assert.equal(ok("q3"), false, "il n'accomplit toujours pas un palier d'achèvement");
+  assert.equal(ok("q4"), true, "accompli valait achevé, et le vaut encore");
 });
 
 test("une quête sans aucune œuvre connue n'est accomplie par personne", () => {

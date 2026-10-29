@@ -75,7 +75,7 @@ export function figures(w: World, personId: string) {
   const rs = rowsBy(w, personId);
   const n = (...s: Status[]) => rs.filter(r => s.includes(r.status)).length;
   return {
-    done: n("completed"), master: n("mastered"), under: n("playing"), gone: n("dropped"),
+    done: n("completed"), under: n("playing"), gone: n("dropped"),
     avg: avgOf(rs),
     hours: rs.reduce((s, r) => s + (r.progress?.unit === "hours" ? r.progress.value : 0), 0),
   };

@@ -61,7 +61,7 @@
     const v = prog.trim() === "" ? null : Number(prog.replace(",", "."));
     registre.act(avancer(id, unit, v));
   };
-  const done = $derived(!!mine && (mine.status === "completed" || mine.status === "mastered"));
+  const done = $derived(!!mine && mine.status === "completed");
   const others = $derived(Object.values(w.people).filter(p => p.id !== registre.me)
     .sort((a, b) => a.firstName.localeCompare(b.firstName, "fr")));
   const toggleWith = (pid: string) => {
