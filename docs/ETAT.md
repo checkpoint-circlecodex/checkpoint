@@ -14,7 +14,7 @@ Tableau » dans sa bande. Faits depuis, **pas encore publiés** : la cité
 étirée (dernier défaut du 20 octobre), le fonds sous un blanc dans le
 Tableau, les colonnes en attente, le filet de sa colonne affiné — et
 **l'angle du Tableau devenu transparent dans la v0.1.6** (corrigé).
-**Prochaine action : sortir la v0.1.7.**
+**La v0.1.7 part le même soir.**
 
 ⚠️ *29 octobre* : **la v0.1.6 part** — le Tableau (seconde face de
 l'accueil), quatre états au lieu de six, le repère de la barre revenu au
