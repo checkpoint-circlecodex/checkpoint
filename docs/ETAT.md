@@ -25,6 +25,17 @@ passe par-dessus au lieu de pousser la page, et les choix de la bulle qui
 débordaient (« Entrepris »). **Prochaine action : attendre les retours de
 Nathan sur la v0.1.8** ; la clé IGDB/TMDb reste le seul blocage connu.
 
+⚠️ *29 octobre, fin de soirée* : **la v0.1.9 part** — les quatre mêmes mots
+pour toutes les natures (Convoité, Entrepris, Achevé, Renoncé ; les verbes
+du fil suivent). Vérifié en passant : **Liaheris a son fragment**
+(`data/Liaheris.json`). Restent, proposés à Nathan : sauvegarder
+`~/.tauri/checkpoint.key` ; consigner dans la spec (et le prototype) le
+passage à quatre états, le Tableau et le lexique unifié ; un mot de
+nouveautés dans le bandeau ; et, dans la chambre d'un Ordre, montrer sous
+le Magnum opus les distinctions **à une seule voix** — à deux ou trois
+membres par Ordre, la règle des deux voix laisse l'onglet vide (Nathan
+cherchait son Sekiro).
+
 ⚠️ *29 octobre* : **la v0.1.6 part** — le Tableau (seconde face de
 l'accueil), quatre états au lieu de six, le repère de la barre revenu au
 prototype, et le correctif d'`admit()` (l'équipe `registre`). **Prochaine
