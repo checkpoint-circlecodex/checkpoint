@@ -16,11 +16,14 @@ Tableau, les colonnes en attente, le filet de sa colonne affiné — et
 **l'angle du Tableau devenu transparent dans la v0.1.6** (corrigé).
 **La v0.1.7 part le même soir.**
 
-⚠️ *29 octobre, encore après* : faits, **pas encore publiés** — les quêtes
-au Tableau (entre les œuvres suivies et le fonds : bloc d'encre et flèche
-verte pour qui l'a accomplie), la barre dépliée qui passe par-dessus au
-lieu de pousser la page, et les choix de la bulle qui débordaient
-(« Entrepris »). **Prochaine action : sortir la v0.1.8.**
+⚠️ *29 octobre, encore après* : **la v0.1.8 part** — les quêtes au Tableau
+(entre les œuvres suivies et le fonds ; pour qui l'a accomplie, **le signe
+de son Ordre à sa couleur** : étoile, épée, feuille, onde, lignes — après
+une flèche verte sur un bloc d'encre, puis un fanion, écartés par Nathan
+le même soir), sa colonne aux filets ordinaires, la barre dépliée qui
+passe par-dessus au lieu de pousser la page, et les choix de la bulle qui
+débordaient (« Entrepris »). **Prochaine action : attendre les retours de
+Nathan sur la v0.1.8** ; la clé IGDB/TMDb reste le seul blocage connu.
 
 ⚠️ *29 octobre* : **la v0.1.6 part** — le Tableau (seconde face de
 l'accueil), quatre états au lieu de six, le repère de la barre revenu au
