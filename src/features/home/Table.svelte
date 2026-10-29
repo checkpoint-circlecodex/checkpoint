@@ -182,7 +182,7 @@
         {#if L.quests.length}
           <!-- **Un blanc, puis les quêtes** : sous ce qu'on suit, au-dessus de
                ce que personne ne suit encore. Une case accomplie est un bloc
-               d'encre portant une flèche verte — accomplie s'inverse, comme
+               d'encre portant un fanion vert — accomplie s'inverse, comme
                la planche (CLAUDE.md, « Une quête est une pancarte »). -->
           <tbody class="quests">
             <tr class="gap">
@@ -202,7 +202,7 @@
                   <td class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
                     {#if x.done.has(p.id)}
                       <span class="sw qd" role="img" aria-label="{p.firstName} a accompli « {x.q.title} »" title="{p.firstName} · accomplie">
-                        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h10M8.6 4.1 12.5 8l-3.9 3.9" /></svg>
+                        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.6 1.4V12.6" /><path class="fl" d="M4.5 2.1 12 4.6 4.5 7.1Z" /></svg>
                       </span>
                     {/if}
                   </td>
@@ -348,16 +348,25 @@
   .sw { display: grid; place-items: center; font-family: var(--fs); font-size: 19px; font-weight: 400;
         letter-spacing: 0; line-height: 1; }
   td .sw { height: 44px; }
-  /* Une quête accomplie : l'encre pleine, une flèche verte dessus. */
+  /* **Une quête accomplie : l'encre pleine, un fanion vert planté dessus.**
+     Le fanion est déjà le signe des quêtes — dans la barre (⚑ « Ouvrir une
+     quête ») et dans l'encart du guetteur, qui le dessine de la même main.
+     Une flèche disait « suivant » ; un fanion dit « atteint » (Nathan,
+     29 octobre). */
   .qd { background: var(--ink); }
-  .qd svg { width: 18px; height: 18px; fill: none; stroke: var(--st-completed); stroke-width: 2.2;
-            stroke-linecap: round; stroke-linejoin: round; }
+  .qd svg { width: 17px; height: 17px; overflow: visible; fill: none; stroke: var(--st-completed);
+            stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .qd .fl { fill: var(--st-completed); stroke-width: 1; }
 
-  /* **Sa propre colonne** : en tête, et tenue à l'encre — un filet de chaque
-     côté qui la sépare des autres. Elle garde ses 44 px même en étroit :
-     c'est la seule où chaque case est une cible (invariant 20). */
-  th.me, td.me { width: 46px; min-width: 46px; max-width: 46px;
-                 border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+  /* **Sa propre colonne** : en tête, et son nom en gras — ses filets sont
+     ceux de toutes les autres. Des filets d'encre l'encadraient : ils
+     faisaient de la colonne un cadre à part, et Nathan les a retirés le
+     29 octobre. Elle garde ses 44 px même en étroit : c'est la seule où
+     chaque case est une cible (invariant 20). */
+  th.me, td.me { width: 46px; min-width: 46px; max-width: 46px; }
+  /* Elle suit la colonne des titres, qui a déjà son filet : un second filet
+     de début de groupe en faisait un double. */
+  th.me.first, td.me.first { border-left: none; }
 
   /* Les colonnes en attente : du papier, des filets, aucune teinte. La
      dernière n'a pas de largeur bornée — c'est elle qui prend le reste. */
