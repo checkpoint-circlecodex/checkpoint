@@ -12,3 +12,4 @@ export { default as Banner } from "./Banner.svelte";
 export { default as GenrePicker } from "./GenrePicker.svelte";
 export * from "./surfaces.svelte.ts";
 export { gestes } from "./gestes.ts";
+export { default as Bubble } from "./Bubble.svelte";

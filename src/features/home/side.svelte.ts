@@ -8,6 +8,7 @@ import type { MediaType } from "#core/model/schema.ts";
 export const vue = $state({
   side: 0 as 0 | 1,
   kind: null as MediaType | null,
+  q: "",
   x: 0,
   y: 0,
 });

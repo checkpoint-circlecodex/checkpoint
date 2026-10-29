@@ -16,10 +16,19 @@
      La colonne des titres ne quitte jamais l'écran au défilement
      horizontal, et la ligne des noms ne le quitte pas au défilement
      vertical : un tableur dont on perd les en-têtes n'est plus qu'une
-     mosaïque. */
+     mosaïque.
+
+     **Sa propre colonne vient en tête**, marquée à l'encre : on lit
+     toujours le Tableau depuis soi. Et **c'est la seule où l'on agit** —
+     toucher une de ses cases ouvre une bulle pour changer son état, ou
+     inscrire l'œuvre si la case est vide. Le jugement, lui, se porte sur la
+     fiche. Les cases des autres ne réagissent pas : on n'écrit jamais dans
+     le fragment d'un autre (invariant 1), et une commande qui ne peut rien
+     faire n'a pas à exister (invariant 32). */
   import { untrack } from "svelte";
   import { registre } from "#core/model/store.svelte.ts";
-  import { Face } from "#core/ui/index.ts";
+  import { Bubble, Face } from "#core/ui/index.ts";
+  import { changerStatut, identity, inscrire } from "#core/model/acts.ts";
   import { KIND, KINDS, STATE_ORDER, STATUS, roman } from "#core/model/lexicon.ts";
   import { ledger, titleOf, tracked } from "#core/selectors/index.ts";
   import type { MediaType, Status } from "#core/model/schema.ts";
@@ -27,7 +36,11 @@
 
   const w = $derived(registre.world);
   const pref = $derived(registre.titlePref);
-  const L = $derived(ledger(w, vue.kind ?? undefined, pref));
+  const me = $derived(registre.me ?? "");
+  const L = $derived(ledger(w, { kind: vue.kind ?? undefined, pref, me, q: vue.q }));
+  /* Une recherche qui ne trouve rien laisse la grille en place, champ
+     compris : sinon on ne pourrait plus corriger ce qu'on a tapé. */
+  const any = $derived(tracked(w).length > 0);
   /* Le filtre ne propose que les natures présentes : un choix qui mène à
      une grille vide n'est pas un choix. */
   const kinds = $derived((Object.keys(KINDS) as MediaType[]).filter(k => tracked(w, k).length));
@@ -35,7 +48,8 @@
     L.people[L.bands.slice(0, i).reduce((s, x) => s + x.n, 0)]?.id)));
 
   /* La légende parle au masculin du jeu ; chaque case, elle, dit le mot de
-     sa nature (invariant du lexique) dans son nom accessible. */
+     sa nature (invariant du lexique) dans son nom accessible. La note, elle,
+     ne se légende pas : un chiffre dans une case se lit tout seul. */
   const LEGEND: { st: Status; l: string }[] = STATE_ORDER.map(st => ({ st, l: STATUS.game[st] }));
 
   /* On revient où l'on était : ouvrir une œuvre puis revenir ne doit pas
@@ -52,6 +66,19 @@
     if (!r || !p || !m) return "";
     return `${p.firstName} · ${STATUS[m.mediaType][r.status]}${typeof r.rating === "number" ? ` · ${r.rating}/10` : ""}`;
   };
+
+  /* --- La bulle de sa propre colonne. --- */
+  let open = $state<{ id: string; el: HTMLElement } | null>(null);
+  const toggle = (id: string, e: MouseEvent) =>
+    (open = open?.id === id ? null : { id, el: e.currentTarget as HTMLElement });
+  function setStatus(id: string, st: Status) {
+    const had = L.cell[me]?.[id];
+    if (had?.status === st) { open = null; return; }
+    /* Une case vide de sa colonne, c'est une œuvre qu'on n'a pas encore
+       inscrite : on l'inscrit, avec son **identité seule** (invariant 37). */
+    registre.act(had ? changerStatut(id, st) : inscrire(id, { status: st }, identity(w.catalog[id])));
+    open = null;
+  }
 </script>
 
 <div class="tab">
@@ -63,7 +90,6 @@
         {#each LEGEND as x (x.st)}
           <span class="lg"><span class="sw st-{x.st}" aria-hidden="true"></span>{x.l}</span>
         {/each}
-        <span class="lg"><span class="sw st-completed n" aria-hidden="true">8</span>sa note</span>
       </div>
       {#if kinds.length > 1}
         <div class="filt">
@@ -76,14 +102,20 @@
     </div>
   </header>
 
-  {#if L.works.length && L.people.length}
+  {#if any && L.people.length}
     <div class="sheet" bind:this={sheet} onscroll={keep}>
       <table>
         <thead>
           <tr class="ppl">
-            <th class="corner" scope="col"><span>Œuvre</span></th>
+            <th class="corner" scope="col">
+              <!-- Chercher dans les deux titres, quelle que soit la
+                   préférence d'affichage (invariant 9). -->
+              <label class="q"><span class="ql">Œuvre</span>
+                <input type="search" bind:value={vue.q} placeholder="Chercher…" autocomplete="off" aria-label="Chercher une œuvre" />
+              </label>
+            </th>
             {#each L.people as p (p.id)}
-              <th scope="col" class:first={firsts.has(p.id)} style="--c:{p.circleRef.color}">
+              <th scope="col" class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
                 <a href="#/personne/{p.id}" title="{p.firstName}, {p.circleRef.one}">
                   <Face who={p} size="s" /><span class="nm">{p.firstName}</span>
                 </a>
@@ -103,8 +135,14 @@
               </th>
               {#each L.people as p (p.id)}
                 {@const r = L.cell[p.id]?.[id]}
-                <td class:first={firsts.has(p.id)} style="--c:{p.circleRef.color}">
-                  {#if r}
+                <td class:first={firsts.has(p.id)} class:me={p.id === me} style="--c:{p.circleRef.color}">
+                  {#if p.id === me}
+                    <button class="sw {r ? `st-${r.status}` : 'empty'}" class:open={open?.id === id}
+                            aria-label={r ? `${label(p.id, id)} — changer` : `Inscrire « ${titleOf(w, id, pref)} »`}
+                            aria-expanded={open?.id === id} onclick={e => toggle(id, e)}>
+                      {r ? (typeof r.rating === "number" ? r.rating : "") : "+"}
+                    </button>
+                  {:else if r}
                     <span class="sw st-{r.status}" role="img" aria-label={label(p.id, id)} title={label(p.id, id)}>
                       {typeof r.rating === "number" ? r.rating : ""}
                     </span>
@@ -115,7 +153,29 @@
           {/each}
         </tbody>
       </table>
+      {#if !L.works.length}
+        <p class="none miss">Aucune œuvre ne répond à « {vue.q.trim()} ».</p>
+      {/if}
     </div>
+
+    {#if open && w.catalog[open.id]}
+      {@const id = open.id}
+      {@const m = w.catalog[id]}
+      {@const r = L.cell[me]?.[id]}
+      <Bubble anchor={open.el} label="Ta position sur {titleOf(w, id, pref)}" close={() => (open = null)}>
+        <div class="pk">
+          <span class="pk-t"><b>{titleOf(w, id, pref)}</b> · {r ? "ta position" : "pas encore à ton registre"}</span>
+          <div class="pk-l">
+            {#each STATE_ORDER as st (st)}
+              <button class="pk-b" class:on={r?.status === st} aria-pressed={r?.status === st} onclick={() => setStatus(id, st)}>
+                <span class="pk-sw st-{st}" aria-hidden="true"></span>{STATUS[m.mediaType][st]}
+              </button>
+            {/each}
+          </div>
+          <a class="pk-a" href="#/fiche/{id}">{r ? "Juger sur la fiche" : "Ouvrir la fiche"} ›</a>
+        </div>
+      </Bubble>
+    {/if}
   {:else}
     <p class="none">Personne n'a encore rien inscrit : le tableau se remplira à la première inscription.</p>
   {/if}
@@ -130,9 +190,11 @@
      colonne, l'Ordre est trop léger pour qu'on confonde. C'est le seul
      endroit qui les montre ; elles restent ici tant qu'un second bloc n'en a
      pas besoin (invariant 13). */
-  .tab {
+  .tab, .pk {
     --st-wishlist: #ECAE1D; --st-playing: #246DDB; --st-completed: #1FA35F; --st-dropped: #DF3020;
     --wcol: 250px; --ccol: 46px;
+  }
+  .tab {
     display: flex; flex-direction: column; height: 100%; min-height: 0;
   }
   .st-wishlist  { background: var(--st-wishlist); color: var(--ink); }
@@ -168,8 +230,13 @@
     left: 0; z-index: 4 !important; width: var(--wcol); min-width: var(--wcol);
     vertical-align: bottom; text-align: left; border-bottom: 1.5px solid var(--ink); border-right: 1px solid var(--rule);
   }
-  .corner span { display: block; padding: 0 12px 9px; font-size: 9px; font-weight: 700; letter-spacing: .2em;
-                 text-transform: uppercase; color: var(--faint); }
+  .q { display: flex; align-items: center; gap: 10px; padding: 0 8px 4px 12px; }
+  .ql { flex: none; font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+  /* Le champ est une ligne d'instrument : un filet dessous, pas une boîte. */
+  .q input { flex: 1; min-width: 0; min-height: 44px; border: none; border-bottom: 1px solid var(--rule2);
+             background: none; outline: none; font-size: 12.5px; }
+  .q input:focus { border-bottom-color: var(--ink); }
+  .miss { padding: 18px 12px; }
 
   .ppl th { width: var(--ccol); min-width: var(--ccol); max-width: var(--ccol);
             background: color-mix(in srgb, var(--c) 18%, var(--paper)); border-bottom: 1.5px solid var(--ink); }
@@ -204,6 +271,32 @@
         letter-spacing: 0; line-height: 1; }
   td .sw { height: 44px; }
 
+  /* **Sa propre colonne** : en tête, et tenue à l'encre — un filet de chaque
+     côté qui la sépare des autres. Elle garde ses 44 px même en étroit :
+     c'est la seule où chaque case est une cible (invariant 20). */
+  th.me, td.me { width: 46px; min-width: 46px; max-width: 46px;
+                 border-left: 1.5px solid var(--ink); border-right: 1.5px solid var(--ink); }
+  th.me .nm { color: var(--ink); font-weight: 700; }
+  td.me button { width: 100%; }
+  td.me .empty { color: var(--faint); font-family: var(--fu); font-size: 15px; }
+  td.me button:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  td.me .empty:hover { color: var(--ink); }
+  td.me button.open { box-shadow: inset 0 0 0 2px var(--ink); }
+
+  /* --- La bulle : quatre états, le sien marqué, et la fiche pour juger. --- */
+  .pk { display: grid; gap: 6px; width: min(400px, calc(100vw - 32px)); }
+  .pk-t { font-size: 11px; color: var(--dim); padding: 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pk-t b { font-family: var(--fs); font-weight: 400; font-size: 15px; color: var(--ink); }
+  .pk-l { display: grid; grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 4px; }
+  .pk-b { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 9px; border: 1px solid var(--rule2);
+          font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+  .pk-b:hover { color: var(--ink); border-color: var(--ink); }
+  .pk-b.on { color: var(--ink); border-color: var(--ink); background: var(--paper); }
+  .pk-sw { width: 12px; height: 12px; flex: none; }
+  .pk-a { display: flex; align-items: center; justify-content: flex-end; min-height: 44px; padding: 0 4px;
+          font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+  .pk-a:hover { color: var(--ink); }
+
   @media (max-width: 860px) {
     .tab { --wcol: 136px; --ccol: 40px; }
     .head { padding: 22px 18px 12px 10px; }
@@ -211,5 +304,7 @@
     .none { padding: 0 18px 0 10px; }
     .t { font-size: 14px; }
     .w a { padding: 4px 8px; }
+    .q { padding-left: 8px; }
+    .ql { display: none; }
   }
 </style>
