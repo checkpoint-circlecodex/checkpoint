@@ -8,8 +8,10 @@
      porte la teinte douce de son Ordre** : chacun a la sienne, aucune n'est
      choisie contre une autre — l'argument qui autorise déjà la lignée.
      **La case porte l'état, en couleur franche** : c'est elle qu'on lit.
-     Les teintes d'état évitent celles des Ordres, pour qu'une case ne se
-     lise jamais comme une appartenance.
+     Les états **reprennent les teintes des Ordres, assumées** — vert, bleu,
+     jaune, rouge — et ne s'y confondent pas : l'Ordre est un lavis à peine
+     posé, l'état un aplat plein (Nathan, 29 octobre). **Le nom de l'Ordre
+     n'est pas écrit** : la teinte de la colonne suffit à le dire.
 
      La colonne des titres ne quitte jamais l'écran au défilement
      horizontal, et la ligne des noms ne le quitte pas au défilement
@@ -78,18 +80,11 @@
     <div class="sheet" bind:this={sheet} onscroll={keep}>
       <table>
         <thead>
-          <tr class="bands">
-            <th class="corner" rowspan="2" scope="col"><span>Œuvre</span></th>
-            {#each L.bands as b (b.c.id)}
-              <th class="band" colspan={b.n} scope="colgroup" style="--c:{b.c.color}">
-                <span>{b.c.name}</span>
-              </th>
-            {/each}
-          </tr>
           <tr class="ppl">
+            <th class="corner" scope="col"><span>Œuvre</span></th>
             {#each L.people as p (p.id)}
               <th scope="col" class:first={firsts.has(p.id)} style="--c:{p.circleRef.color}">
-                <a href="#/personne/{p.id}" title={p.firstName}>
+                <a href="#/personne/{p.id}" title="{p.firstName}, {p.circleRef.one}">
                   <Face who={p} size="s" /><span class="nm">{p.firstName}</span>
                 </a>
               </th>
@@ -127,19 +122,23 @@
 </div>
 
 <style>
-  /* **Les quatre états, en couleur franche** — et aucune n'est celle d'un
-     Ordre (bleu, rouge, vert, ocre, violet) : un jaune, un turquoise, l'encre, et
-     la hachure du renoncement. C'est le seul endroit qui les montre ; elles
-     restent ici tant qu'un second bloc n'en a pas besoin (invariant 13). */
+  /* **Les quatre états, en couleur franche** — la teinte de quatre Ordres,
+     poussée à saturation : achevé dans le vert des Rangers, entrepris dans le
+     bleu des Mages, convoité dans le jaune tiré de l'ocre des Soigneurs,
+     renoncé dans le rouge des Guerriers. Un premier jet évitait ces teintes
+     (jaune, turquoise, encre, hachure) ; Nathan a tranché : à 7 % sur la
+     colonne, l'Ordre est trop léger pour qu'on confonde. C'est le seul
+     endroit qui les montre ; elles restent ici tant qu'un second bloc n'en a
+     pas besoin (invariant 13). */
   .tab {
-    --st-wishlist: #F2C230; --st-playing: #17B5B0; --st-completed: var(--ink);
-    --wcol: 250px; --ccol: 62px;
+    --st-wishlist: #ECAE1D; --st-playing: #246DDB; --st-completed: #1FA35F; --st-dropped: #DF3020;
+    --wcol: 250px; --ccol: 46px;
     display: flex; flex-direction: column; height: 100%; min-height: 0;
   }
   .st-wishlist  { background: var(--st-wishlist); color: var(--ink); }
-  .st-playing   { background: var(--st-playing); color: var(--ink); }
+  .st-playing   { background: var(--st-playing); color: var(--paper); }
   .st-completed { background: var(--st-completed); color: var(--paper); }
-  .st-dropped   { background: repeating-linear-gradient(135deg, #B9B4A8 0 2px, #DEDAD0 2px 5px); color: var(--ink); }
+  .st-dropped   { background: var(--st-dropped); color: var(--paper); }
 
   .head { flex: none; padding: 30px 30px 14px 22px; }
   .eyebrow { font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
@@ -164,26 +163,19 @@
 
   /* Les en-têtes sont opaques : ce qui défile dessous ne doit pas s'y lire. */
   thead th { position: sticky; z-index: 2; background: var(--paper); }
-  .bands th { top: 0; height: 26px; }
-  .ppl th { top: 26px; }
+  .ppl th { top: 0; }
   .corner {
     left: 0; z-index: 4 !important; width: var(--wcol); min-width: var(--wcol);
     vertical-align: bottom; text-align: left; border-bottom: 1.5px solid var(--ink); border-right: 1px solid var(--rule);
   }
   .corner span { display: block; padding: 0 12px 9px; font-size: 9px; font-weight: 700; letter-spacing: .2em;
                  text-transform: uppercase; color: var(--faint); }
-  .band { background: color-mix(in srgb, var(--c) 22%, var(--paper)) !important; border-left: 1px solid color-mix(in srgb, var(--c) 45%, var(--paper)); }
-  /* Un simple nom, pas un lien : sur 26 px de haut, ce serait une cible trop
-     petite (invariant 20) — et l'Ordre se rejoint déjà par chaque visage. */
-  .band span { display: flex; align-items: center; justify-content: center; height: 26px; padding: 0 6px;
-            font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap;
-            color: color-mix(in srgb, var(--c) 75%, var(--ink)); }
 
   .ppl th { width: var(--ccol); min-width: var(--ccol); max-width: var(--ccol);
-            background: color-mix(in srgb, var(--c) 13%, var(--paper)); border-bottom: 1.5px solid var(--ink); }
-  .ppl a { display: grid; justify-items: center; gap: 4px; padding: 7px 3px 6px; min-height: 44px; }
+            background: color-mix(in srgb, var(--c) 18%, var(--paper)); border-bottom: 1.5px solid var(--ink); }
+  .ppl a { display: grid; justify-items: center; gap: 4px; padding: 7px 2px 6px; min-height: 44px; }
   .nm { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        font-size: 10.5px; font-weight: 600; color: var(--ink2); }
+        font-size: 10px; font-weight: 600; color: var(--ink2); }
   .ppl a:hover .nm { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .first { border-left: 1px solid color-mix(in srgb, var(--c) 45%, var(--paper)); }
 
@@ -208,12 +200,12 @@
      seule (Nathan, 29 octobre). Le filet entre les cases reste, sinon deux
      achevés voisins se fondraient en une barre. La note est en Instrument
      Serif, comme tous les chiffres cérémonieux de l'application. */
-  .sw { display: grid; place-items: center; font-family: var(--fs); font-size: 20px; font-weight: 400;
+  .sw { display: grid; place-items: center; font-family: var(--fs); font-size: 19px; font-weight: 400;
         letter-spacing: 0; line-height: 1; }
   td .sw { height: 44px; }
 
   @media (max-width: 860px) {
-    .tab { --wcol: 136px; --ccol: 50px; }
+    .tab { --wcol: 136px; --ccol: 40px; }
     .head { padding: 22px 18px 12px 10px; }
     h1 { font-size: 24px; }
     .none { padding: 0 18px 0 10px; }
